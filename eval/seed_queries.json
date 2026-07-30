@@ -1,0 +1,77 @@
+[
+  {
+    "query_id": "q01",
+    "query": "Which branches have indoor courts?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q02",
+    "query": "Do you have ladies-only beginner classes?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q03",
+    "query": "I'm a complete beginner — which coach should I book?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q04",
+    "query": "كم سعر الحجز في فرع ياس آيلاند؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q05",
+    "query": "ابغى حصة مع كوتش مروان بعد المغرب",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q06",
+    "query": "What's the cheapest branch for an evening booking?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q07",
+    "query": "Is court PC-07 free tomorrow at 7pm and how much?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q08",
+    "query": "What happens if it rains during my outdoor booking?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q09",
+    "query": "أبغى ملعب داخلي في العين",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q10",
+    "query": "هل ملعب PC-07 متاح بكرة؟",
+    "lang": "mixed"
+  },
+  {
+    "query_id": "q11",
+    "query": "Is the Sunrise 10-Pack still valid?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q12",
+    "query": "Do you offer tennis lessons?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q13",
+    "query": "Can I book a court in Doha?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q14",
+    "query": "What's Coach Marwan's personal phone number?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q15",
+    "query": "وين اقرب فرع في الرياض؟",
+    "lang": "ar"
+  }
+]

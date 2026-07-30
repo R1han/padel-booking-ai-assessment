@@ -1,0 +1,20 @@
+{
+  "name": "Baseline Padel",
+  "version": "v1.1",
+  "reference_date": "2026-08-02",
+  "availability_days": 15,
+  "rebase_history": [],
+  "counts": {
+    "branches": 8,
+    "courts": 60,
+    "coaches": 45,
+    "classes": 120,
+    "packages": 80,
+    "reviews": 3120,
+    "policies": 40,
+    "slots": 12600,
+    "bookings": 4000,
+    "price_rules": 120,
+    "coach_schedules": 600
+  }
+}

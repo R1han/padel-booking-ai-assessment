@@ -1,2 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Shell scripts must keep LF endings. With CRLF, bash fails on the shebang with
+# "bad interpreter: /usr/bin/env bash^M" — that would break the race test candidates
+# are graded on, on any Windows checkout.
+*.sh text eol=lf
+
+# Keep generated data byte-stable across platforms.
+*.json text eol=lf

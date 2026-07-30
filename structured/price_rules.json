@@ -1,0 +1,1862 @@
+[
+  {
+    "id": "pr_alquoz_indoor_morning_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 260,
+    "price_aed": 195
+  },
+  {
+    "id": "pr_alquoz_indoor_morning_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 260,
+    "price_aed": 225
+  },
+  {
+    "id": "pr_alquoz_indoor_afternoon_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 260,
+    "price_aed": 235
+  },
+  {
+    "id": "pr_alquoz_indoor_afternoon_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 260,
+    "price_aed": 270
+  },
+  {
+    "id": "pr_alquoz_indoor_evening_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 260,
+    "price_aed": 325
+  },
+  {
+    "id": "pr_alquoz_indoor_evening_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 260,
+    "price_aed": 375
+  },
+  {
+    "id": "pr_alquoz_indoor_late_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 260,
+    "price_aed": 220
+  },
+  {
+    "id": "pr_alquoz_indoor_late_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 260,
+    "price_aed": 255
+  },
+  {
+    "id": "pr_alquoz_outdoor_morning_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 220,
+    "price_aed": 165
+  },
+  {
+    "id": "pr_alquoz_outdoor_morning_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 220,
+    "price_aed": 190
+  },
+  {
+    "id": "pr_alquoz_outdoor_afternoon_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 220,
+    "price_aed": 200
+  },
+  {
+    "id": "pr_alquoz_outdoor_afternoon_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 220,
+    "price_aed": 230
+  },
+  {
+    "id": "pr_alquoz_outdoor_evening_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 220,
+    "price_aed": 275
+  },
+  {
+    "id": "pr_alquoz_outdoor_evening_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 220,
+    "price_aed": 315
+  },
+  {
+    "id": "pr_alquoz_outdoor_late_weekday",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 220,
+    "price_aed": 185
+  },
+  {
+    "id": "pr_alquoz_outdoor_late_weekend",
+    "branch_id": "br_alquoz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 220,
+    "price_aed": 215
+  },
+  {
+    "id": "pr_jvc_indoor_morning_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 230,
+    "price_aed": 170
+  },
+  {
+    "id": "pr_jvc_indoor_morning_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 230,
+    "price_aed": 200
+  },
+  {
+    "id": "pr_jvc_indoor_afternoon_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 230,
+    "price_aed": 205
+  },
+  {
+    "id": "pr_jvc_indoor_afternoon_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 230,
+    "price_aed": 240
+  },
+  {
+    "id": "pr_jvc_indoor_evening_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 230,
+    "price_aed": 290
+  },
+  {
+    "id": "pr_jvc_indoor_evening_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 230,
+    "price_aed": 330
+  },
+  {
+    "id": "pr_jvc_indoor_late_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 230,
+    "price_aed": 195
+  },
+  {
+    "id": "pr_jvc_indoor_late_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 230,
+    "price_aed": 225
+  },
+  {
+    "id": "pr_jvc_outdoor_morning_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 190,
+    "price_aed": 140
+  },
+  {
+    "id": "pr_jvc_outdoor_morning_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 190,
+    "price_aed": 165
+  },
+  {
+    "id": "pr_jvc_outdoor_afternoon_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 190,
+    "price_aed": 170
+  },
+  {
+    "id": "pr_jvc_outdoor_afternoon_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 190,
+    "price_aed": 195
+  },
+  {
+    "id": "pr_jvc_outdoor_evening_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 190,
+    "price_aed": 240
+  },
+  {
+    "id": "pr_jvc_outdoor_evening_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 190,
+    "price_aed": 275
+  },
+  {
+    "id": "pr_jvc_outdoor_late_weekday",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 190,
+    "price_aed": 160
+  },
+  {
+    "id": "pr_jvc_outdoor_late_weekend",
+    "branch_id": "br_jvc",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 190,
+    "price_aed": 185
+  },
+  {
+    "id": "pr_yas_indoor_morning_weekday",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 300,
+    "price_aed": 225
+  },
+  {
+    "id": "pr_yas_indoor_morning_weekend",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 300,
+    "price_aed": 260
+  },
+  {
+    "id": "pr_yas_indoor_afternoon_weekday",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 300,
+    "price_aed": 270
+  },
+  {
+    "id": "pr_yas_indoor_afternoon_weekend",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 300,
+    "price_aed": 310
+  },
+  {
+    "id": "pr_yas_indoor_evening_weekday",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 300,
+    "price_aed": 375
+  },
+  {
+    "id": "pr_yas_indoor_evening_weekend",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 300,
+    "price_aed": 430
+  },
+  {
+    "id": "pr_yas_indoor_late_weekday",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 300,
+    "price_aed": 255
+  },
+  {
+    "id": "pr_yas_indoor_late_weekend",
+    "branch_id": "br_yas",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 300,
+    "price_aed": 295
+  },
+  {
+    "id": "pr_yas_outdoor_morning_weekday",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 260,
+    "price_aed": 195
+  },
+  {
+    "id": "pr_yas_outdoor_morning_weekend",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 260,
+    "price_aed": 225
+  },
+  {
+    "id": "pr_yas_outdoor_afternoon_weekday",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 260,
+    "price_aed": 235
+  },
+  {
+    "id": "pr_yas_outdoor_afternoon_weekend",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 260,
+    "price_aed": 270
+  },
+  {
+    "id": "pr_yas_outdoor_evening_weekday",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 260,
+    "price_aed": 325
+  },
+  {
+    "id": "pr_yas_outdoor_evening_weekend",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 260,
+    "price_aed": 375
+  },
+  {
+    "id": "pr_yas_outdoor_late_weekday",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 260,
+    "price_aed": 220
+  },
+  {
+    "id": "pr_yas_outdoor_late_weekend",
+    "branch_id": "br_yas",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 260,
+    "price_aed": 255
+  },
+  {
+    "id": "pr_khalifa_indoor_morning_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 240,
+    "price_aed": 180
+  },
+  {
+    "id": "pr_khalifa_indoor_morning_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 240,
+    "price_aed": 205
+  },
+  {
+    "id": "pr_khalifa_indoor_afternoon_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 240,
+    "price_aed": 215
+  },
+  {
+    "id": "pr_khalifa_indoor_afternoon_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 240,
+    "price_aed": 250
+  },
+  {
+    "id": "pr_khalifa_indoor_evening_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 240,
+    "price_aed": 300
+  },
+  {
+    "id": "pr_khalifa_indoor_evening_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 240,
+    "price_aed": 345
+  },
+  {
+    "id": "pr_khalifa_indoor_late_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 240,
+    "price_aed": 205
+  },
+  {
+    "id": "pr_khalifa_indoor_late_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 240,
+    "price_aed": 235
+  },
+  {
+    "id": "pr_khalifa_outdoor_morning_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 200,
+    "price_aed": 150
+  },
+  {
+    "id": "pr_khalifa_outdoor_morning_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 200,
+    "price_aed": 170
+  },
+  {
+    "id": "pr_khalifa_outdoor_afternoon_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 200,
+    "price_aed": 180
+  },
+  {
+    "id": "pr_khalifa_outdoor_afternoon_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 200,
+    "price_aed": 205
+  },
+  {
+    "id": "pr_khalifa_outdoor_evening_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 200,
+    "price_aed": 250
+  },
+  {
+    "id": "pr_khalifa_outdoor_evening_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 200,
+    "price_aed": 290
+  },
+  {
+    "id": "pr_khalifa_outdoor_late_weekday",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 200,
+    "price_aed": 170
+  },
+  {
+    "id": "pr_khalifa_outdoor_late_weekend",
+    "branch_id": "br_khalifa",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 200,
+    "price_aed": 195
+  },
+  {
+    "id": "pr_alain_outdoor_morning_weekday",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 150,
+    "price_aed": 110
+  },
+  {
+    "id": "pr_alain_outdoor_morning_weekend",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 150,
+    "price_aed": 130
+  },
+  {
+    "id": "pr_alain_outdoor_afternoon_weekday",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 150,
+    "price_aed": 135
+  },
+  {
+    "id": "pr_alain_outdoor_afternoon_weekend",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 150,
+    "price_aed": 155
+  },
+  {
+    "id": "pr_alain_outdoor_evening_weekday",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 150,
+    "price_aed": 190
+  },
+  {
+    "id": "pr_alain_outdoor_evening_weekend",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 150,
+    "price_aed": 215
+  },
+  {
+    "id": "pr_alain_outdoor_late_weekday",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 150,
+    "price_aed": 130
+  },
+  {
+    "id": "pr_alain_outdoor_late_weekend",
+    "branch_id": "br_alain",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 150,
+    "price_aed": 145
+  },
+  {
+    "id": "pr_majaz_indoor_morning_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 210,
+    "price_aed": 160
+  },
+  {
+    "id": "pr_majaz_indoor_morning_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 210,
+    "price_aed": 180
+  },
+  {
+    "id": "pr_majaz_indoor_afternoon_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 210,
+    "price_aed": 190
+  },
+  {
+    "id": "pr_majaz_indoor_afternoon_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 210,
+    "price_aed": 215
+  },
+  {
+    "id": "pr_majaz_indoor_evening_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 210,
+    "price_aed": 260
+  },
+  {
+    "id": "pr_majaz_indoor_evening_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 210,
+    "price_aed": 300
+  },
+  {
+    "id": "pr_majaz_indoor_late_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 210,
+    "price_aed": 180
+  },
+  {
+    "id": "pr_majaz_indoor_late_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 210,
+    "price_aed": 205
+  },
+  {
+    "id": "pr_majaz_outdoor_morning_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 170,
+    "price_aed": 130
+  },
+  {
+    "id": "pr_majaz_outdoor_morning_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 170,
+    "price_aed": 145
+  },
+  {
+    "id": "pr_majaz_outdoor_afternoon_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 170,
+    "price_aed": 155
+  },
+  {
+    "id": "pr_majaz_outdoor_afternoon_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 170,
+    "price_aed": 175
+  },
+  {
+    "id": "pr_majaz_outdoor_evening_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 170,
+    "price_aed": 210
+  },
+  {
+    "id": "pr_majaz_outdoor_evening_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 170,
+    "price_aed": 245
+  },
+  {
+    "id": "pr_majaz_outdoor_late_weekday",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 170,
+    "price_aed": 145
+  },
+  {
+    "id": "pr_majaz_outdoor_late_weekend",
+    "branch_id": "br_majaz",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 170,
+    "price_aed": 165
+  },
+  {
+    "id": "pr_ajman_indoor_morning_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 170,
+    "price_aed": 130
+  },
+  {
+    "id": "pr_ajman_indoor_morning_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 170,
+    "price_aed": 145
+  },
+  {
+    "id": "pr_ajman_indoor_afternoon_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 170,
+    "price_aed": 155
+  },
+  {
+    "id": "pr_ajman_indoor_afternoon_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 170,
+    "price_aed": 175
+  },
+  {
+    "id": "pr_ajman_indoor_evening_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 170,
+    "price_aed": 210
+  },
+  {
+    "id": "pr_ajman_indoor_evening_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 170,
+    "price_aed": 245
+  },
+  {
+    "id": "pr_ajman_indoor_late_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 170,
+    "price_aed": 145
+  },
+  {
+    "id": "pr_ajman_indoor_late_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 170,
+    "price_aed": 165
+  },
+  {
+    "id": "pr_ajman_outdoor_morning_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 130,
+    "price_aed": 100
+  },
+  {
+    "id": "pr_ajman_outdoor_morning_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 130,
+    "price_aed": 110
+  },
+  {
+    "id": "pr_ajman_outdoor_afternoon_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 130,
+    "price_aed": 115
+  },
+  {
+    "id": "pr_ajman_outdoor_afternoon_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 130,
+    "price_aed": 135
+  },
+  {
+    "id": "pr_ajman_outdoor_evening_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 130,
+    "price_aed": 160
+  },
+  {
+    "id": "pr_ajman_outdoor_evening_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 130,
+    "price_aed": 185
+  },
+  {
+    "id": "pr_ajman_outdoor_late_weekday",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 130,
+    "price_aed": 110
+  },
+  {
+    "id": "pr_ajman_outdoor_late_weekend",
+    "branch_id": "br_ajman",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 130,
+    "price_aed": 125
+  },
+  {
+    "id": "pr_rak_indoor_morning_weekday",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 220,
+    "price_aed": 165
+  },
+  {
+    "id": "pr_rak_indoor_morning_weekend",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 220,
+    "price_aed": 190
+  },
+  {
+    "id": "pr_rak_indoor_afternoon_weekday",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 220,
+    "price_aed": 200
+  },
+  {
+    "id": "pr_rak_indoor_afternoon_weekend",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 220,
+    "price_aed": 230
+  },
+  {
+    "id": "pr_rak_indoor_evening_weekday",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 220,
+    "price_aed": 275
+  },
+  {
+    "id": "pr_rak_indoor_evening_weekend",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 220,
+    "price_aed": 315
+  },
+  {
+    "id": "pr_rak_indoor_late_weekday",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 220,
+    "price_aed": 185
+  },
+  {
+    "id": "pr_rak_indoor_late_weekend",
+    "branch_id": "br_rak",
+    "court_type": "indoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 220,
+    "price_aed": 215
+  },
+  {
+    "id": "pr_rak_outdoor_morning_weekday",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.75,
+    "base_price_aed": 180,
+    "price_aed": 135
+  },
+  {
+    "id": "pr_rak_outdoor_morning_weekend",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "morning",
+    "applies_to_start_times": [
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00"
+    ],
+    "multiplier": 0.862,
+    "base_price_aed": 180,
+    "price_aed": 155
+  },
+  {
+    "id": "pr_rak_outdoor_afternoon_weekday",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 0.9,
+    "base_price_aed": 180,
+    "price_aed": 160
+  },
+  {
+    "id": "pr_rak_outdoor_afternoon_weekend",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "afternoon",
+    "applies_to_start_times": [
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "multiplier": 1.035,
+    "base_price_aed": 180,
+    "price_aed": 185
+  },
+  {
+    "id": "pr_rak_outdoor_evening_weekday",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.25,
+    "base_price_aed": 180,
+    "price_aed": 225
+  },
+  {
+    "id": "pr_rak_outdoor_evening_weekend",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "evening",
+    "applies_to_start_times": [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00"
+    ],
+    "multiplier": 1.438,
+    "base_price_aed": 180,
+    "price_aed": 260
+  },
+  {
+    "id": "pr_rak_outdoor_late_weekday",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekday",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.85,
+    "base_price_aed": 180,
+    "price_aed": 155
+  },
+  {
+    "id": "pr_rak_outdoor_late_weekend",
+    "branch_id": "br_rak",
+    "court_type": "outdoor",
+    "day_type": "weekend",
+    "band": "late",
+    "applies_to_start_times": [
+      "22:00",
+      "23:00"
+    ],
+    "multiplier": 0.977,
+    "base_price_aed": 180,
+    "price_aed": 175
+  }
+]
