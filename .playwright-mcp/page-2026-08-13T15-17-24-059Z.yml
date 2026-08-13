@@ -1,0 +1,16 @@
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]: Baseline Padel
+    - generic [ref=f1e6]: 8 branches · UAE
+  - main [ref=f1e7]:
+    - generic [ref=f1e8]:
+      - paragraph [ref=f1e9]: Ask about branches, courts, coaches, classes or prices, in English or Arabic, and book a court in the conversation.
+      - generic [ref=f1e10]:
+        - button "Any indoor court free at Al Quoz tomorrow evening?" [ref=f1e11] [cursor=pointer]
+        - button "What happens if it rains during my outdoor booking?" [ref=f1e12] [cursor=pointer]
+        - button "ابغى ملعب داخلي في العين" [ref=f1e13] [cursor=pointer]
+        - button "Which branch is cheapest in the evening?" [ref=f1e14] [cursor=pointer]
+  - generic [ref=f1e15]:
+    - textbox "Message" [ref=f1e16]:
+      - /placeholder: Ask about courts, coaches or prices…
+    - button "Send" [disabled] [ref=f1e17]
