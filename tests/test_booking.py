@@ -205,6 +205,37 @@ def test_expired_hold_is_reclaimed():
     assert booking.create_booking([slot], "other", 60, session_id="other").status == "confirmed"
 
 
+def test_expired_hold_stops_hiding_the_slot():
+    """Reclaimable but invisible is the worse failure: the claim row outlives the hold
+    until someone writes to that slot, so availability reads filter on expiry themselves."""
+    from app.services import retrieval
+
+    slot = _free_slot()
+    with db.read_conn() as conn:
+        row = conn.execute(
+            "SELECT c.code, s.date, s.start_time FROM slots s"
+            " JOIN courts c ON c.id = s.court_id WHERE s.id=?",
+            (slot,),
+        ).fetchone()
+
+    def offered() -> bool:
+        result = retrieval.check_availability(
+            court_code=row["code"], date_=row["date"], start_time=row["start_time"]
+        )
+        return any(s["id"] == slot for s in result["slots"])
+
+    hold = booking.create_hold([slot], 60, "session-z")
+    assert not offered()
+    with db.write_txn() as conn:  # expire it without waiting out the TTL
+        conn.execute(
+            "UPDATE slot_claims SET expires_at=1 WHERE booking_id=?", (hold.hold_id,)
+        )
+    assert offered()
+    assert retrieval._exact_slot_state(row["code"], row["date"], row["start_time"])[0][
+        "status"
+    ] == "available"
+
+
 def test_released_hold_frees_the_slot():
     slot = _free_slot()
     hold = booking.create_hold([slot], 60, "session-y")

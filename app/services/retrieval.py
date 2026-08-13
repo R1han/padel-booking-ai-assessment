@@ -454,6 +454,12 @@ def is_package_valid(package: dict, on: date | None = None) -> bool:
 
 # --- availability -----------------------------------------------------------------
 
+# An expired hold is not occupancy. Cleanup is lazy -- booking._drop_stale_holds only runs
+# when someone writes to that exact slot -- so reads must filter on expiry themselves or a
+# lapsed hold keeps a bookable slot hidden. A hold with NULL expires_at counts as expired,
+# matching booking.slot_state.
+LIVE_CLAIM = "kind != 'hold' OR expires_at > unixepoch()"
+
 
 def check_availability(
     court_code: str | None = None,
@@ -469,7 +475,7 @@ def check_availability(
     reflects bookings made during the conversation."""
     from app.services.booking import _slot_ids_needed, InvalidRequest
 
-    where = ["s.id NOT IN (SELECT slot_id FROM slot_claims)"]
+    where = [f"s.id NOT IN (SELECT slot_id FROM slot_claims WHERE {LIVE_CLAIM})"]
     params: list = []
     if settings().booking_enforce_legacy_overhang:
         where.append("s.id NOT IN (SELECT slot_id FROM slot_overhang)")
@@ -542,7 +548,7 @@ def check_availability(
                 except InvalidRequest:
                     continue
                 nxt = conn.execute(
-                    "SELECT 1 FROM slot_claims WHERE slot_id IN"
+                    f"SELECT 1 FROM slot_claims WHERE ({LIVE_CLAIM}) AND slot_id IN"
                     " (SELECT id FROM slots WHERE court_id=? AND date=? AND start_time=?)",
                     (row["court_id"], row["date"],
                      f"{int(row['start_time'][:2]) + 1:02d}:00"),
@@ -578,7 +584,7 @@ def _exact_slot_state(court_code: str, on: str, at: str) -> list[dict]:
     with db.read_conn() as conn:
         rows = conn.execute(
             "SELECT s.id, s.price_aed, s.branch_id, b.name AS branch_name,"
-            " (SELECT kind FROM slot_claims WHERE slot_id = s.id) AS claim,"
+            f" (SELECT kind FROM slot_claims WHERE slot_id = s.id AND ({LIVE_CLAIM})) AS claim,"
             " (SELECT 1 FROM slot_overhang WHERE slot_id = s.id) AS overhang"
             " FROM slots s JOIN courts c ON c.id = s.court_id"
             " JOIN branches b ON b.id = s.branch_id"
@@ -633,7 +639,7 @@ def find_group_slots(
     needed = courts or (
         -(-party_size // PLAYERS_PER_COURT) if party_size else 2
     )
-    where = ["s.id NOT IN (SELECT slot_id FROM slot_claims)"]
+    where = [f"s.id NOT IN (SELECT slot_id FROM slot_claims WHERE {LIVE_CLAIM})"]
     params: list = []
     if settings().booking_enforce_legacy_overhang:
         where.append("s.id NOT IN (SELECT slot_id FROM slot_overhang)")
