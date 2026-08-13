@@ -265,6 +265,68 @@ def test_cancelling_frees_the_slot():
     assert booking.create_booking([slot], "u2", 60).status == "confirmed"
 
 
+def test_cancelling_a_legacy_booking_releases_its_overhang_hour():
+    """The unmarked second hour belongs to the booking, not to the slot grid. Left behind
+    it would be unsellable forever, and the hour before it would be listed as free for 90
+    minutes while nothing longer than an hour could actually fit."""
+    with db.read_conn() as conn:
+        row = conn.execute(
+            "SELECT o.slot_id, o.booking_id FROM slot_overhang o"
+            " JOIN bookings b ON b.id = o.booking_id WHERE b.status='confirmed' LIMIT 1"
+        ).fetchone()
+    overhang_slot, booking_id = row["slot_id"], row["booking_id"]
+
+    with pytest.raises(booking.SlotUnavailable):
+        booking.create_booking([overhang_slot], "u", 60)
+
+    assert booking.cancel_booking(booking_id)
+    with db.read_conn() as conn:
+        assert conn.execute(
+            "SELECT 1 FROM slot_overhang WHERE booking_id=?", (booking_id,)
+        ).fetchone() is None
+    assert booking.create_booking([overhang_slot], "u2", 60).status == "confirmed"
+
+
+def test_availability_never_offers_a_duration_the_booking_path_refuses():
+    """The listing and the booking path must agree. They disagreed once: the neighbour
+    check consulted slot_claims but not slot_overhang, so cancelling a legacy booking --
+    which used to strand its overhang row -- could surface a 90-minute slot that 409s."""
+    from app.services import retrieval
+
+    with db.read_conn() as conn:
+        row = conn.execute(
+            "SELECT s.id, c.code, s.date, s.start_time FROM slots s"
+            " JOIN courts c ON c.id = s.court_id"
+            " WHERE s.id NOT IN (SELECT slot_id FROM slot_claims)"
+            "   AND s.id NOT IN (SELECT slot_id FROM slot_overhang) LIMIT 1"
+        ).fetchone()
+        following = conn.execute(
+            "SELECT id FROM slots WHERE court_id=(SELECT court_id FROM slots WHERE id=?)"
+            " AND date=? AND start_time=printf('%02d:00', CAST(substr(?,1,2) AS INT)+1)",
+            (row["id"], row["date"], row["start_time"]),
+        ).fetchone()
+
+    # Mark the following hour as the overhang of some existing booking.
+    with db.write_txn() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO slot_overhang (slot_id, booking_id) VALUES (?, 'bkg_test')",
+            (following["id"],),
+        )
+    try:
+        offered = retrieval.check_availability(
+            court_code=row["code"], date_=row["date"], start_time=row["start_time"],
+            duration_min=90,
+        )["slots"]
+        assert not any(s["id"] == row["id"] for s in offered), (
+            "listed a 90-minute slot whose second hour is occupied"
+        )
+        with pytest.raises(booking.SlotUnavailable):
+            booking.create_booking([row["id"]], "u", 90)
+    finally:
+        with db.write_txn() as conn:
+            conn.execute("DELETE FROM slot_overhang WHERE booking_id='bkg_test'")
+
+
 # --- HTTP surface -----------------------------------------------------------------
 
 

@@ -248,14 +248,15 @@ def should_continue(state: AgentState) -> str:
 
 
 def build_graph():
-    """answer ⇄ tools → END.
+    """plan → answer ⇄ tools → END.
 
-    There is no separate planning call. Planning is exposed as the `note_plan` tool and
-    is emitted alongside the first retrieval call in the same round trip, which removes
-    a full model round trip from the critical path. A turn that used to cost three
-    sequential calls now costs two, and only the last of them produced visible tokens.
+    Planning gets its own cheap round trip. Merging it into the first tool call -- as a
+    `note_plan` tool emitted alongside the first retrieval call, two model calls instead
+    of three -- was built to attack time-to-first-token and measured worse on every axis:
+    refusal accuracy, precision@1, cost, TTFT and total latency (see docs/LATENCY.md).
+    The merged shape is still here.
 
-    Set AGENT_SEPARATE_PLAN_NODE=true to restore the three-call shape.
+    Set AGENT_SEPARATE_PLAN_NODE=false to use it.
     """
     graph = StateGraph(AgentState)
     graph.add_node("answer", answer_node)

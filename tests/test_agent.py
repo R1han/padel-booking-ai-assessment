@@ -134,6 +134,23 @@ def test_group_slots_never_offer_a_claimed_or_overhang_slot():
     assert not clashes, f"offered unavailable slots: {[r['slot_id'] for r in clashes]}"
 
 
+def test_group_options_are_bookable_for_the_requested_duration():
+    """A 90-minute group option is a promise about two hours on every court. The WHERE
+    clause only clears the first, so every offered slate is checked against the booking
+    path -- otherwise the agent proposes courts, holds them, and fails after the user
+    has already said yes."""
+    result = retrieval.find_group_slots(
+        band="morning", courts=2, adjacent=True, duration_min=90, limit=5
+    )
+    assert result["options"], "expected at least one 90-minute group option"
+    for option in result["options"]:
+        hold = booking.create_hold(option["slot_ids"], 90, f"group-{option['start_time']}")
+        assert len(hold.slot_ids) == len(option["slot_ids"]) * 2, (
+            "90 minutes on N courts must occupy 2N slots"
+        )
+        booking.release_hold(hold.hold_id)
+
+
 # --- provider fallback, actually exercised ------------------------------------------
 
 

@@ -473,7 +473,7 @@ def check_availability(
 ) -> dict:
     """Free slots, derived from claims rather than the static slots.status column so it
     reflects bookings made during the conversation."""
-    from app.services.booking import _slot_ids_needed, InvalidRequest
+    from app.services.booking import is_bookable
 
     where = [f"s.id NOT IN (SELECT slot_id FROM slot_claims WHERE {LIVE_CLAIM})"]
     params: list = []
@@ -542,19 +542,13 @@ def check_availability(
 
         slots = []
         for row in rows:
-            if duration_min > settings().slot_minutes:
-                try:  # a longer booking needs its following hours free too
-                    _slot_ids_needed(conn, [row["id"]], duration_min)
-                except InvalidRequest:
-                    continue
-                nxt = conn.execute(
-                    f"SELECT 1 FROM slot_claims WHERE ({LIVE_CLAIM}) AND slot_id IN"
-                    " (SELECT id FROM slots WHERE court_id=? AND date=? AND start_time=?)",
-                    (row["court_id"], row["date"],
-                     f"{int(row['start_time'][:2]) + 1:02d}:00"),
-                ).fetchone()
-                if nxt:
-                    continue
+            # A longer booking needs its following hours free too. Ask the booking path
+            # itself rather than re-deriving adjacency and occupancy here: this listing
+            # must not offer a slot that book_court would immediately reject.
+            if duration_min > settings().slot_minutes and not is_bookable(
+                conn, row["id"], duration_min
+            ):
+                continue
             slots.append({
                 "id": row["id"], "court_id": row["court_id"], "court_code": row["court_code"],
                 "court_type": row["court_type"], "branch_id": row["branch_id"],
@@ -636,6 +630,8 @@ def find_group_slots(
     booking. We report coaches whose published shift covers the hour, which is the
     strongest claim the data supports.
     """
+    from app.services.booking import is_bookable
+
     needed = courts or (
         -(-party_size // PLAYERS_PER_COURT) if party_size else 2
     )
@@ -679,6 +675,12 @@ def find_group_slots(
 
         options = []
         for (branch_id, on, at), free in sorted(buckets.items()):
+            # The WHERE clause only cleared the first hour of each court. A longer
+            # booking needs the hours after it too, or the group is offered a slate it
+            # cannot actually hold. Filter before choosing the run, so an hour with one
+            # blocked continuation can still be filled by other courts.
+            if duration_min > settings().slot_minutes:
+                free = [r for r in free if is_bookable(conn, r["id"], duration_min)]
             chosen = _adjacent_run(free, needed) if adjacent else free[:needed]
             if not chosen:
                 continue

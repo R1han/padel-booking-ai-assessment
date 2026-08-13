@@ -157,16 +157,25 @@ def _validate_request(slot_ids: list[str], duration_min: int) -> None:
 
 
 def _check_free(conn: sqlite3.Connection, needed: list[str], session_id: str | None) -> None:
-    """Reject anything already claimed by someone else. Our own live hold is fine -- the
-    caller is confirming a slot it already reserved, not competing for it."""
+    """Reject anything already claimed by someone else. Two claims do not block:
+
+    * our own live hold -- the caller is confirming a slot it already reserved, not
+      competing for it;
+    * a lapsed hold. On the write path _drop_stale_holds has already deleted those, so
+      this is belt and braces there; it is load-bearing for is_bookable, which cannot
+      write. Same rule as retrieval.LIVE_CLAIM and slot_state: a NULL expiry is expired.
+    """
     placeholders = ",".join("?" * len(needed))
     rows = conn.execute(
-        f"SELECT slot_id, kind, session_id FROM slot_claims WHERE slot_id IN ({placeholders})",
+        "SELECT slot_id, kind, session_id, expires_at FROM slot_claims"
+        f" WHERE slot_id IN ({placeholders})",
         needed,
     ).fetchall()
     for row in rows:
-        own_hold = row["kind"] == "hold" and session_id and row["session_id"] == session_id
-        if not own_hold:
+        is_hold = row["kind"] == "hold"
+        own_hold = is_hold and session_id and row["session_id"] == session_id
+        lapsed_hold = is_hold and (row["expires_at"] or 0) <= _now()
+        if not (own_hold or lapsed_hold):
             raise SlotUnavailable("That slot was taken.", needed)
 
     if settings().booking_enforce_legacy_overhang:
@@ -320,6 +329,10 @@ def cancel_booking(booking_id: str) -> bool:
             "DELETE FROM slot_claims WHERE slot_id=? AND booking_id=?",
             [(s, booking_id) for s in slot_ids],
         )
+        # A legacy 90-minute booking also owns an unmarked second hour. Leaving that row
+        # behind would keep the hour unsellable forever and strand the hour before it:
+        # free, but with an occupied neighbour, so nothing longer than an hour fits.
+        conn.execute("DELETE FROM slot_overhang WHERE booking_id=?", (booking_id,))
         conn.executemany(
             "UPDATE slots SET status='available', version=version+1 WHERE id=?",
             [(s,) for s in slot_ids],
@@ -333,6 +346,21 @@ def sweep_expired_holds() -> int:
         return conn.execute(
             "DELETE FROM slot_claims WHERE kind='hold' AND expires_at <= ?", (_now(),)
         ).rowcount
+
+
+def is_bookable(conn: sqlite3.Connection, slot_id: str, duration_min: int) -> bool:
+    """Would booking this slot for this duration succeed right now?
+
+    Availability listings call this so they cannot offer a slot the booking path would
+    then reject: same forward expansion, same claim check, same overhang rule, one
+    implementation. The caller supplies the connection, so a listing checks many slots
+    on the read connection it already holds.
+    """
+    try:
+        _check_free(conn, _slot_ids_needed(conn, [slot_id], duration_min), None)
+    except BookingError:
+        return False
+    return True
 
 
 def slot_state(slot_id: str) -> dict | None:
