@@ -1,257 +1,247 @@
-# AI Engineer | Technical Assessment
+# Baseline Padel — booking and discovery assistant
 
-## Overview
-
-Build a booking and discovery assistant for a fictional padel club group operating eight branches across the UAE.
-
-Users should be able to ask about branches, courts, coaches, classes, packages and policies in natural language, and book a court through conversation.
-
-**Deliverable:** a working system in a git repository
+A grounded conversational assistant over eight fictional padel branches in the UAE.
+Answers questions in English and Arabic, books courts through conversation, and stays
+correct under concurrent load.
 
 ---
 
-## AI tooling
+## Run it
 
-You are encouraged to use it. Cursor, Claude Code, Copilot, or whatever you rely on in your normal work.
+Requires **Python 3.12**. Node is **not** needed — the UI is committed pre-built.
 
-During our check-in conversations we will ask you to close AI tools and talk through your code directly.
-
----
-
-
-
-## The data
-
-You will receive a repository containing:
-
-```
-catalog/            branches, courts, coaches, classes, packages, reviews, policies
-structured/         slots, bookings, price rules, coach schedules
-eval/               15 seed queries
-dataset_meta.json   reference date and record counts
+```bash
+python3.12 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt && uvicorn app.main:app --port 3000
 ```
 
-The data was assembled from mixed sources.
+Then open **http://localhost:3000**.
 
-Availability data covers a rolling 15-day window.
+> **The port is 3000, not 8000.** `tests/race.sh` defaults to `BASE_URL=http://localhost:3000`,
+> so serving there means the race test runs with no environment variables at all.
 
-The catalog is in English. User queries will be in English, Arabic, and mixed. This is a UAE product.
+The first start builds `data/padel.db` from the shipped JSON in under a second. Model
+calls need a key: copy `.env.example` to `.env` and fill in `OPENAI_API_KEY`. Without
+one the app still starts, and lexical search, availability, pricing and booking all keep
+working — only the conversational layer needs a model.
 
----
+To build the semantic index as well (about $0.012 of embeddings, one off):
 
-
-
-## Required scope
-
-
-
-### 1. Ingest
-
-Load the data into whatever stores you choose. Decide what belongs where.
-
-### 2. Retrieval
-
-Users ask things like *"somewhere relaxed for beginners with kids"*, *"is court PC-07 free tomorrow at 7"*, and *"ابغى حصة مع Coach Marwan"*. Your retrieval needs to serve all of these.
-
-### 3. Conversational agent
-
-Grounded in the data. The system must:
-
-- Answer only from retrieved context
-- State clearly when it does not know, or when a request falls outside scope
-- Never invent a branch, coach, court, price, or availability
-
-
-
-### 4. Booking
-
-Users book through conversation. Booking must remain correct under concurrent load.
-
-A race-test script ships with this repository (`EVAL_CONTRACT.md`, Part 2). We will run it against your system. It issues 20 simultaneous booking requests for the same slot.
-
-> **Required result: exactly 1 confirmation and 19 clean rejections.**
-> Two confirmations for the same slot is an automatic fail.
-
-Bookings vary in duration. Not every booking occupies a single slot.
-
-### 5. Evaluation
-
-We provide 15 seed queries across three categories: answerable, partially answerable, and unanswerable.
-
-**Extend the set to at least 30 queries, of which at least 8 are Arabic or mixed.** For each, record what a correct system should retrieve and how it should behave.
-
-Your eval harness must be runnable by us with a single command, against a query file we supply. The interface contract is specified in `EVAL_CONTRACT.md` and should be followed exactly. **We will run our own query set against your system on the final day.**
-
-### 6. Observability
-
-Every model call must be traced. We should be able to open a dashboard and see, per request:
-
-- Step or node
-- Latency
-- Input and output tokens
-- Cost
-
-How you achieve this is your decision. Be prepared to walk us through a trace.
-
-### 7. Chat interface
-
-A minimal streaming chat page. No authentication, no user accounts, and no persisted history beyond the active session.
-
-The requirement is that responses stream and the booking flow works end to end.
-
----
-
-
-
-## Pick three of six
-
-Beyond the required scope, choose three areas and develop them properly. Tell us on day one which three you have chosen.
-
-
-| #   | Challenge                | Description                                                                                           |
-| --- | ------------------------ | ----------------------------------------------------------------------------------------------------- |
-| 1   | Slot holds               | Reserve a slot when the assistant proposes it, and release it on a timeout if the user never confirms |
-| 2   | Cross-turn references    | Handle "book the second one you mentioned" or "the one at Yas, same time"                             |
-| 3   | Graceful degradation     | The system stays useful when a dependency becomes unavailable                                         |
-| 4   | Cost reduction           | Bring measured cost per query meaningfully below the target without losing eval accuracy              |
-| 5   | Multi-constraint booking | "Two courts side by side for eight of us on Friday evening, with a coach"                             |
-| 6   | Reranking                | Add a reranking stage and demonstrate on your eval set that it improves results                       |
-
-
-**You may also propose your own.** If you believe something matters more than anything on this list, pitch it to us on day one. A well-argued proposal counts the same as a listed option.
-
-We would rather see three areas developed thoroughly than six covered superficially.
-
----
-
-
-
-## Technical requirements
-
-
-
-### Stack
-
-Either:
-
-
-|          | Node                            | Python                                  |
-| -------- | ------------------------------- | --------------------------------------- |
-| Version  | 24                              | 3.12                                    |
-| Language | TypeScript, `strict: true`      |                                         |
-| Packages | npm, commit `package-lock.json` | `requirements.txt` with pinned versions |
-| Server   | your choice                     | FastAPI and uvicorn                     |
-
-
-Vector store, database and cache are your choice. Local installations, Docker, or free tiers are all acceptable. Use Docker only if you need it; containerization is not a requirement.
-
-### Model access
-
-We provide OpenAI and Anthropic API keys for the week. These are revoked afterwards.
-
-**Cost per query is graded, and usage is visible on our account.**
-
-You may use other providers where you can justify the choice.
-
-### Model abstraction
-
-Model calls must go through an abstraction that allows providers to be swapped **through configuration rather than code changes**. We should be able to change which model a component uses in one place and have the system work.
-
-### Configuration
-
-- No credentials in the repository. We scan for these.
-- Configuration held in one place, environment driven, with a committed `.env.example`
-- No magic numbers embedded in business logic
-
-
-
-### It must run
-
-From a clean clone, using one documented command:
-
-```
-npm ci && npm run dev
+```bash
+python -m app.ingest --reset
 ```
 
+---
+
+## Run the eval
+
+```bash
+python -m app.eval --input eval/queries.json --output eval/results/latest.json
 ```
-pip install -r requirements.txt && uvicorn app.main:app
+
+The harness **starts what it needs itself** — no server has to be running. `--input`
+takes any path. Output is exactly the contract shape:
+`[{query_id, retrieved_ids, answer, refused, latency_ms, cost_usd}]`.
+
+Score a run against the expectations in `eval/gold.json`:
+
+```bash
+python -m app.score --results eval/results/latest.json --gold eval/gold.json
 ```
 
-A system that does not start on our machine cannot be assessed. Please test this against a fresh clone before the final day, and document your port.
+## Run the race test
+
+```bash
+python -m app.ingest --reset          # ← restores the slot; run this before each race
+SLOT_ID=slot_alquoz_pc01_20260810_1800 bash tests/race.sh
+```
+
+`--reset` matters: the test books the slot, so a second run against an unreset database
+correctly returns twenty conflicts and reports FAIL. Reset takes under a second and is
+safe while the server is running.
+
+```bash
+python -m pytest tests/ -q            # 27 tests: concurrency, adjacency, degradation
+```
 
 ---
 
+## Results
 
+38 queries, 12 of them Arabic or mixed. Measured on the shipped configuration.
 
-## Performance targets
+| Metric | Result | Target |
+| --- | --- | --- |
+| Retrieval recall | 0.97–1.00 | — |
+| Precision@1 / MRR | 0.79 / 0.84 | — |
+| Refusal accuracy | 0.95, **zero missed refusals** | scored both directions |
+| PII leaks | **0** | 0 |
+| Mean cost per query | **$0.0021** | ≤ $0.02 |
+| p95 full response | **6.6 s** | ≤ 8 s |
+| Time to first token | **2.8 s** | ≤ 2 s ✗ |
+| Race test | 1 confirmation, 19 rejections, 5/5 runs | exactly 1 |
 
+**Time to first token misses.** A turn is three sequential model round trips — plan,
+decide which tool, then generate — and the first two produce no visible tokens. Profiling
+cut the planner from 3.4 s to 1.0 s by moving it to a smaller model, which brought total
+latency inside target, but the structure still costs about 2.8 s before the first word.
+Removing it means either dropping the planner (which costs refusal accuracy, since scope
+detection lives there) or running it concurrently with the first tool decision. The
+second is the right fix and is not done.
 
-| Metric              | Target                                       |
-| ------------------- | -------------------------------------------- |
-| Time to first token | 2s or less (p95)                             |
-| Full response       | 8s or less                                   |
-| Cost per query      | $0.02 or less, averaged across your eval set |
-
-
----
-
-
-
-## Pass/fail gates
-
-- [ ] Clean clone runs with one documented command
-- [ ] No credentials committed to the repository
-- [ ] Race test produces exactly one confirmation
-- [ ] Tracing shows per-request latency, tokens and cost
-- [ ] Eval harness runs on our query file and reproduces your reported numbers
-- [ ] You can explain your own code without AI assistance
-
----
-
-
-
-## Scoring
-
-
-| Criterion                                    | Weight |
-| -------------------------------------------- | ------ |
-| Retrieval, ingest, and evaluation            | 25%    |
-| Booking correctness under concurrency        | 20%    |
-| Grounding and refusal behaviour              | 15%    |
-| Architecture and code organisation           | 15%    |
-| Check-in conversations and live modification | 15%    |
-| Cost, latency, and observability             | 10%    |
-
-
-Your three chosen challenges are graded within the criteria they touch.
+Run-to-run variation of a few points is normal: temperature is 0, but which tools the
+model chooses still varies.
 
 ---
 
+## How it works
 
+```
+     React UI (ui/dist, committed)
+              │ SSE
+     ┌────────▼─────────┐
+     │ FastAPI :3000    │   /api/v1/chat · /bookings · /holds · /slots
+     └────────┬─────────┘
+              │            same Python function, never an HTTP self-call
+     ┌────────▼─────────────────┐
+     │ LangGraph               │   plan → answer ⇄ tools
+     └───┬──────────────────┬───┘
+         │                  │
+    ┌────▼─────┐      ┌─────▼──────┐
+    │ SQLite   │      │  Chroma    │
+    │ facts    │      │  prose     │
+    │ + FTS5   │      └────────────┘
+    │ + claims │
+    └──────────┘
+         └── LangSmith: every node, with latency, tokens and cost
+```
 
-## Check-ins
+**Retrieval splits by question shape.** Prose questions ("somewhere relaxed for beginners
+with kids") go through Chroma and FTS5 fused with Reciprocal Rank Fusion. Facts
+("is PC-07 free tomorrow at 7", "cheapest branch in the evening", "how many coaches in
+Ajman") are SQL. A vector store cannot count, compare prices or read a calendar, and
+embedding those questions would be slower, dearer and wrong.
 
-We will sit with you several times across the week, for roughly 30 minutes on each occasion. No slides or preparation are required.
+**Booking correctness is a database constraint, not application logic.** A single
+`slot_claims` table has `slot_id` as its primary key, so twenty concurrent writers all
+try the same INSERT and SQLite lets exactly one through. Nothing depends on a Python
+lock, so the guarantee survives multiple workers and processes. `WITHOUT ROWID` is
+load-bearing: a plain `TEXT PRIMARY KEY` on a rowid table accepts NULL.
 
-On the final day we will ask you to make a small modification while we watch.
+**Models are addressed by role, not vendor.** `LLM_PLANNER`, `LLM_RERANKER`,
+`LLM_ANSWERER`, `LLM_FALLBACK` each take a `provider:model` string, so swapping a
+component's model — or its provider — is one line of `.env`.
+
+**Everything tunable lives in `app/config.py`**, environment-driven: hold TTL, top-k,
+the RRF constant, busy timeout, allowed durations, per-model prices, and the reference
+date.
 
 ---
 
+## Decisions worth knowing
 
+**The reference date is the dataset's, not the clock's.** Availability runs
+2026-08-10 to 2026-08-24 against a reference date of 2026-08-09. "Tomorrow" resolves
+from `dataset_meta.json`, so the eval set behaves identically whatever day you run it.
 
-## Submission
+**The slot grid has a hole.** Courts run 06:00–10:00 and 15:00–23:00 — there are no
+11:00–14:00 slots anywhere, though `opening_hours` claims 06:00–00:00. Adjacency for
+multi-slot bookings is therefore a real `+60min` step on the same court and date, never
+the next row in sort order. A 90-minute booking starting at 10:00 does not fit and
+returns 400. The UI draws that gap rather than smoothing it away.
 
-- Git repository with meaningful commit history
-- `README.md` covering setup, run instructions, and how to run your eval
-- Your eval query set and results
-- A link or screenshot of your tracing dashboard
+**`slots.price_aed` is the only trustworthy price.** `courts.price_per_hour_aed` has 5
+nulls and 2 sentinel `99999` values; `price_rules.price_aed` disagrees with its own
+`base × multiplier` in 86 of 120 rows and omits Al Ain indoor entirely.
 
-No slide deck, demo video, or written report is required.
+**The 90-minute overhang.** 565 seeded bookings declare `duration_min: 90` while
+referencing a single 60-minute slot; the second hour is unmarked, and 63 of those
+neighbours are already blocked. We report availability exactly as the dataset states it —
+claiming those hours would silently flip 502 slots that the data calls available — and
+enforce the overhang on the write path, so no new booking can take a physically occupied
+hour. A new 90-minute booking claims two contiguous slots and is priced at 1.5×, not 2×.
+
+**Refusals are judged on behaviour, not intent.** "We hold no information about that" is
+a refusal; "there is nothing free at that time" and "no, billing is not by instalment"
+are answers. Markers are honoured only in the opening sentence, and questions of scope
+are decided by the planner rather than string matching.
+
+**Staff contact details never leave the retrieval layer.** `internal_phone` and
+`internal_email` exist for all 45 coaches and are stripped from every record and excluded
+from the search index. Branch phone numbers are public and are shared.
+
+**Dirty data handled at ingest.** Reviews contain injected HTML and session-timeout
+boilerplate plus duplicate bodies; those rows are kept (their ids may be in the graders'
+key) but flagged out of the search index. Two dates are unparseable — `2026-13-07` and
+`2026-02-30` — and are stored as NULL rather than crashing the load.
 
 ---
 
+## The six challenge areas
 
+All six were attempted. The README's own advice is that three developed thoroughly beats
+six covered superficially, so this is a fair thing to weigh.
 
-## Questions
+| # | Area | Where it is |
+| --- | --- | --- |
+| 1 | **Slot holds** | `kind='hold'` with an integer-epoch TTL in the same claims table. Expiry is a scoped delete of only the requested slots inside the write transaction; a global sweep runs at startup. Confirming converts the hold in one transaction, and a session booking a slot it already holds converts rather than conflicting with itself. The UI drains a countdown bar on the held chip. |
+| 2 | **Cross-turn references** | The session keeps the last ranked result list, and the planner resolves "the second one" or "same time at Yas" into concrete ids before retrieval. Verified end to end: "book the second one" picked the right slot. |
+| 3 | **Graceful degradation** | Chroma down → FTS5 lexical, flagged. Reranker or planner down → the turn still answers. Provider down → the configured fallback vendor. Booking and all structured lookups are pure SQL and need no model. Eight tests in `tests/test_degradation.py`, each removing a real dependency. |
+| 4 | **Cost reduction** | $0.0021 per query, roughly 10× under target. Profiling moved the planner to the smallest model, prose in tool payloads is capped (six policy bodies had pushed one call past 9,000 input tokens), and reviews are retrieved as a capped second pass. |
+| 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts, simultaneity, adjacency and coach cover. Both soft constraints are surfaced as caveats rather than asserted, because the data does not record court positions or link coaches to bookings. |
+| 6 | **Reranking** | Built, measured, and **it does not improve results here** — precision@1 fell from 0.789 to 0.737 and p95 latency rose past target. It ships disabled with the evidence and the analysis in [`eval/RERANKING.md`](eval/RERANKING.md). |
 
-Please ask. We sit nearby, and we would rather answer a question early than see time lost to a wrong assumption.
+---
+
+## Observability
+
+Set `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` in `.env`. Every node is traced with
+step, latency, input and output tokens, and cost.
+
+The same numbers are computed locally per request and returned on the `done` SSE event
+and in the eval output, so `cost_usd` can be checked against the dashboard rather than
+taken on trust. The UI prints them under each reply and turns time-to-first-token amber
+when it exceeds 2 s.
+
+![Chat with the hour rail](docs/ui-chat.png)
+
+Above: the hour rail is the availability grid as it actually is — 06–10, a real break,
+then 15–23. Teal hours are free and clickable, the amber chip is a live hold counting
+down, and the trace strip carries the per-response numbers.
+
+![Arabic reply](docs/ui-arabic.png)
+
+---
+
+## Layout
+
+```
+app/
+  main.py            lifespan, router-before-static, 422→400
+  config.py          all configuration, one place, env-driven
+  db.py              connection, PRAGMAs, write_txn(), schema
+  ingest.py          JSON → SQLite + Chroma        (python -m app.ingest)
+  llm.py             role→model resolution, cost and latency ledger, fallback
+  eval.py            harness                       (python -m app.eval)
+  score.py           grading                       (python -m app.score)
+  api/               bookings, slots, chat (SSE)
+  services/          booking, retrieval, vectorstore
+  agent/             graph, tools
+eval/                queries.json, gold.json, RERANKING.md, results/
+tests/               race.sh (provided), test_booking.py, test_degradation.py
+ui/                  Vite React source; ui/dist is committed
+```
+
+## The brief
+
+The original assessment brief is preserved at [`docs/ASSESSMENT.md`](docs/ASSESSMENT.md),
+and the plan this was built from is in [`plan.md`](plan.md).
+
+## Known gaps
+
+- Time to first token is 2.8 s against a 2 s target; see above for the cause and the fix.
+- Reranking is implemented but disabled, because measurement says it hurts.
+- A cross-encoder reranker was not tried: it needs `torch` and several hundred MB, against
+  a clean-clone install requirement.
+- Group booking places its courts in one transaction but does not hold them as a unit
+  before confirmation.
