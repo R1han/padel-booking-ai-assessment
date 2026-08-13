@@ -35,7 +35,7 @@ the conversational layer needs a model.
 | Run the eval | `python -m app.eval --input eval/queries.json --output eval/results/latest.json` |
 | Score a run | `python -m app.score --results eval/results/latest.json --gold eval/gold.json` |
 | Race test | `python -m app.ingest --reset` then `SLOT_ID=slot_alquoz_pc01_20260810_1800 bash tests/race.sh` |
-| Tests (45) | `python -m pytest tests/ -q` |
+| Tests (49) | `python -m pytest tests/ -q` |
 
 The eval harness **starts what it needs itself** — no server required. `--input` accepts
 any path. Output is exactly the contract shape:

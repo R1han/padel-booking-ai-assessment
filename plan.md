@@ -314,7 +314,7 @@ plan.md        this document, copied into the repo
 
 Three config decisions worth calling out:
 
-- **`APP_REFERENCE_DATE` defaults to reading `dataset_meta.json` (2026-08-09), never `date.today()`.** The slot window is 2026-08-10 → 2026-08-24; today's real date is already past the reference date and will be different again on grading day. If "tomorrow at 7" resolves via the system clock, a large slice of the eval set silently breaks — a 25%-weighted correctness risk with a one-line fix.
+- **`REFERENCE_DATE` defaults to reading `dataset_meta.json` (2026-08-09), never `date.today()`.** The slot window is 2026-08-10 → 2026-08-24; today's real date is already past the reference date and will be different again on grading day. If "tomorrow at 7" resolves via the system clock, a large slice of the eval set silently breaks — a 25%-weighted correctness risk with a one-line fix.
 - **`BOOKING_ALLOWED_DURATIONS = [60, 90, 120]`**, whitelisted. Otherwise `ceil(30/60) = 1` sells a 30-minute booking a full hour.
 - **Pricing a 90-minute booking is 1.5× the slot price, not 2×**, even though it claims two slots. A reviewer will ask; the answer should be deliberate rather than an artifact of the occupancy model.
 
