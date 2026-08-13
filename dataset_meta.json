@@ -1,9 +1,15 @@
 {
   "name": "Baseline Padel",
   "version": "v1.1",
-  "reference_date": "2026-08-02",
+  "reference_date": "2026-08-09",
   "availability_days": 15,
-  "rebase_history": [],
+  "rebase_history": [
+    {
+      "from": "2026-08-02",
+      "to": "2026-08-09",
+      "delta_days": 7
+    }
+  ],
   "counts": {
     "branches": 8,
     "courts": 60,

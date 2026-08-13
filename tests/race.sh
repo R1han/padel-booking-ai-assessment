@@ -5,7 +5,7 @@
 # Expected outcome: exactly one 201, with the remainder 409.
 #
 # Usage:
-#   BASE_URL=http://localhost:3000 SLOT_ID=slot_alquoz_pc01_20260803_1800 ./tests/race.sh
+#   BASE_URL=http://localhost:3000 SLOT_ID=slot_alquoz_pc01_20260810_1800 ./tests/race.sh
 #
 # Optional:
 #   N=20          number of concurrent requests

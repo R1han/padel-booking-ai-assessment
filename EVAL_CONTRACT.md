@@ -100,7 +100,7 @@ POST /api/v1/bookings
 Content-Type: application/json
 
 {
-  "slot_ids": ["slot_alquoz_pc01_20260803_1800"],
+  "slot_ids": ["slot_alquoz_pc01_20260810_1800"],
   "user_id": "usr_0042",
   "duration_min": 60
 }
@@ -112,7 +112,7 @@ Content-Type: application/json
 {
   "booking_id": "bkg_01H...",
   "status": "confirmed",
-  "slot_ids": ["slot_alquoz_pc01_20260803_1800"]
+  "slot_ids": ["slot_alquoz_pc01_20260810_1800"]
 }
 ```
 
@@ -122,7 +122,7 @@ Content-Type: application/json
 {
   "error": "slot_unavailable",
   "message": "That slot was taken.",
-  "slot_ids": ["slot_alquoz_pc01_20260803_1800"]
+  "slot_ids": ["slot_alquoz_pc01_20260810_1800"]
 }
 ```
 
@@ -132,7 +132,7 @@ Content-Type: application/json
 
 ```
 BASE_URL=http://localhost:3000 \
-SLOT_ID=slot_alquoz_pc01_20260803_1800 \
+SLOT_ID=slot_alquoz_pc01_20260810_1800 \
 ./tests/race.sh
 ```
 
