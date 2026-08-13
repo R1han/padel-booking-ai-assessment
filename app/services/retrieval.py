@@ -180,10 +180,16 @@ def search_knowledge(
         return {"records": [], "degraded": degraded, "mode": "none"}
     records = hydrate(record_ids)
 
+    # Best-matching chunk per record, so the reranker judges the passage that actually
+    # matched rather than the opening of a 10KB parent document.
+    chunks = ({h["record_id"]: h.get("chunk", "")
+               for h in reversed(semantic or []) if h.get("chunk")}
+              if cfg.rerank_use_chunks else {})
+
     use_rerank = cfg.rerank_enabled if rerank_enabled is None else rerank_enabled
     reranked = False
     if use_rerank and len(records) > cfg.rerank_top_k:
-        ordered = rerank(query, records)
+        ordered = rerank(query, records, chunks)
         if ordered is not None:
             records, reranked = ordered, True
     if not reranked:
@@ -206,7 +212,8 @@ RERANK_PROMPT = (
 )
 
 
-def rerank(query: str, records: list[dict]) -> list[dict] | None:
+def rerank(query: str, records: list[dict],
+           chunks: dict[str, str] | None = None) -> list[dict] | None:
     """Listwise rerank.
 
     Earns its place on this corpus: 'rain' or 'weather' appears in 37 of the 40 policy
@@ -220,9 +227,10 @@ def rerank(query: str, records: list[dict]) -> list[dict] | None:
         return None
 
     index = {r["id"]: r for r in records}
+    chunks = chunks or {}
     candidates = "\n".join(
         f"- {r['id']} [{r['kind']}] {(r.get('title') or r.get('name') or '')[:80]}: "
-        f"{_snippet(r)}"
+        f"{_passage(r, chunks)}"
         for r in records
     )
     try:
@@ -252,6 +260,19 @@ def rerank(query: str, records: list[dict]) -> list[dict] | None:
             seen.add(record["id"])
             result.append(record)
     return result[: cfg.rerank_top_k]
+
+
+def _passage(record: dict, chunks: dict[str, str], length: int = 480) -> str:
+    """What the reranker judges the record on.
+
+    Prefers the chunk that matched the query. Policies are one record but many chunks,
+    and the deciding sentence is rarely in the first 240 characters of the parent -- that
+    was the strongest suspected cause of reranking losing to plain fusion.
+    """
+    chunk = chunks.get(record["id"])
+    if chunk:
+        return " ".join(chunk.split())[:length]
+    return _snippet(record, length)
 
 
 def _snippet(record: dict, length: int = 240) -> str:
@@ -517,7 +538,7 @@ def check_availability(
         for row in rows:
             if duration_min > settings().slot_minutes:
                 try:  # a longer booking needs its following hours free too
-                    _slot_ids_needed(conn, row["id"], duration_min)
+                    _slot_ids_needed(conn, [row["id"]], duration_min)
                 except InvalidRequest:
                     continue
                 nxt = conn.execute(

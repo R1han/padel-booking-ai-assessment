@@ -118,11 +118,16 @@ def search(
         return None
 
     hits = []
-    for meta, distance in zip(result["metadatas"][0], result["distances"][0]):
+    documents = result.get("documents") or [[]]
+    for i, (meta, distance) in enumerate(zip(result["metadatas"][0], result["distances"][0])):
         hits.append({
             "record_id": meta["record_id"],
             "type": meta["type"],
             "title": meta.get("title", ""),
             "score": 1.0 - distance,
+            # The chunk that actually matched. A policy is one ~10KB record but many
+            # chunks, so the parent record's opening is usually not the passage that
+            # answered the query.
+            "chunk": documents[0][i] if documents and documents[0] else "",
         })
     return hits

@@ -35,7 +35,7 @@ the conversational layer needs a model.
 | Run the eval | `python -m app.eval --input eval/queries.json --output eval/results/latest.json` |
 | Score a run | `python -m app.score --results eval/results/latest.json --gold eval/gold.json` |
 | Race test | `python -m app.ingest --reset` then `SLOT_ID=slot_alquoz_pc01_20260810_1800 bash tests/race.sh` |
-| Tests (39) | `python -m pytest tests/ -q` |
+| Tests (45) | `python -m pytest tests/ -q` |
 
 The eval harness **starts what it needs itself** — no server required. `--input` accepts
 any path. Output is exactly the contract shape:
@@ -325,7 +325,7 @@ key — but flagged out of the search index. Two dates are unparseable (`2026-13
 | 2 | **Cross-turn references** | The session keeps the last ranked result list; the planner resolves "the second one", "the first one" or "same time at Yas" into concrete IDs before retrieval. Records carried from an earlier turn count as retrieved, because they are what grounds the answer. 5 multi-turn eval cases (q39–q43, two Arabic) + unit tests. |
 | 3 | **Graceful degradation** | Chroma down → FTS5 lexical, flagged. Reranker or planner down → the turn still answers. Provider down → configured fallback vendor, exercised with a real primary outage. Booking and all structured lookups are pure SQL and need no model. 8 tests, each removing a real dependency. |
 | 4 | **Cost reduction** | **$0.0021/query, ~10× under target.** Planner moved to the smallest model, prose in tool payloads capped (six policy bodies had pushed one call past 9,000 input tokens), reviews retrieved as a capped second pass. Measured before/after: $0.00312 → $0.00210 with recall improving. |
-| 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts (4 players each), simultaneity, adjacency and coach cover. 4 eval cases (q44–q47) and 8 tests. Both soft constraints are surfaced as **caveats rather than asserted**: the data records no court positions and does not link coaches to bookings. |
+| 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts (4 players each), simultaneity, adjacency and coach cover, and a group is held and booked **atomically across every court**. 4 eval cases (q44–q47) and 14 tests. Both soft constraints are surfaced as **caveats rather than asserted**: the data records no court positions and does not link coaches to bookings. |
 | 6 | **Reranking** | Built, measured, **does not help here** — see below. Ships disabled. |
 
 ---
@@ -342,13 +342,23 @@ Challenge 6 asks for a reranking stage demonstrated to improve results. It does 
 | Configuration | Recall | P@1 | MRR | Cost | p95 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | **Hybrid + RRF, no rerank** | **1.000** | **0.789** | **0.835** | **$0.00205** | **7598 ms** |
-| \+ LLM rerank, 240-char snippets | 1.000 | 0.737 | 0.800 | $0.00224 | 8393 ms |
-| \+ LLM rerank, 480-char snippets | 0.987 | 0.737 | 0.800 | $0.00240 | 9171 ms |
+| \+ LLM rerank, 240-char parent snippet | 1.000 | 0.737 | 0.800 | $0.00224 | 8393 ms |
+| \+ LLM rerank, 480-char parent snippet | 0.987 | 0.737 | 0.800 | $0.00240 | 9171 ms |
+| \+ LLM rerank, **matched chunk** | 0.975 | **0.650** | **0.717** | $0.00227 | 6439 ms |
 
 Recall alone saturates at a generous *k*, so precision@1 and MRR were added to detect
-ranking quality at all. RRF over a semantic ranking and a lexical ranking is already an
-ensemble of two uncorrelated retrievers; one model re-reading truncated snippets has
-strictly less information than they had. Doubling the snippet did not recover the loss.
+ranking quality at all.
+
+The fourth row is the informative one. The suspected weakness was that the reranker
+judged policies on the parent record's opening rather than the passage that matched, so
+it was given the matched chunk instead — and got **worse**. The matched chunk is by
+construction what the *embedder* liked most, so feeding it back re-derives the semantic
+ranking and the lexical half of the ensemble stops counting.
+
+Which reframes the finding: **the value here is the ensemble, not the ranking model.**
+RRF works because its two inputs fail in uncorrelated ways; any single model re-reading
+the candidates replaces two opinions with one. The promising direction is not a better
+reranker but a *third* retriever in the fusion.
 
 ### The TTFT refactor — [`docs/LATENCY.md`](docs/LATENCY.md)
 
@@ -439,10 +449,9 @@ the plan this was built from is in [`plan.md`](plan.md).
 - **Time to first token is ~3 s against a 2 s target.** Measured, and the one
   architectural alternative was tried and rejected on evidence. The remaining untried
   lever is a smaller model for the tool-selection call only.
-- **Reranking is implemented but disabled**, because measurement says it hurts. A
-  cross-encoder would address the real weakness but needs `torch` and several hundred MB
-  against a clean-clone install requirement.
-- **Group booking** places its courts in one transaction but does not hold them as a unit
-  before confirmation.
+- **Reranking is implemented but disabled**, because four measurements say it hurts.
+- **Cross-encoder reranking** remains untried: it needs `torch` and several hundred MB
+  against a clean-clone install requirement, and on the evidence above it would likely
+  lose for the same reason — still one opinion replacing two.
 - All six challenge areas were attempted. The brief's own advice is that three developed
   thoroughly beats six covered superficially, and that is a fair thing to weigh.

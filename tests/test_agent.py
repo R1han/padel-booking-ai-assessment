@@ -11,6 +11,7 @@ from __future__ import annotations
 import pytest
 
 from app import db, llm
+from app.services import booking
 from app.agent import tools as agent_tools
 from app.api.chat import Session, session_for, summarise_context
 from app.services import retrieval
@@ -165,3 +166,80 @@ def test_configured_answerer_carries_a_fallback():
         pytest.skip("no fallback provider key configured")
     model = llm.get_model("answerer")
     assert list(getattr(model, "fallbacks", []))
+
+
+# --- group holds and bookings ------------------------------------------------------
+#
+# "Several slots" means two different things: sequential (one court, longer) and
+# parallel (several courts, same hour). Expanding only the first and ignoring the rest
+# silently held one court of a two-court group while reporting success.
+
+
+def _group_option(courts: int = 2):
+    options = retrieval.find_group_slots(band="evening", courts=courts, adjacent=True,
+                                         limit=1)["options"]
+    assert options, "fixture needs a free adjacent group"
+    return options[0]
+
+
+def test_group_hold_holds_every_court_not_just_the_first():
+    option = _group_option()
+    hold = booking.create_hold(option["slot_ids"], 60, "group-a")
+    assert set(hold.slot_ids) == set(option["slot_ids"])
+
+
+def test_a_held_group_cannot_be_taken_by_anyone_else():
+    option = _group_option()
+    booking.create_hold(option["slot_ids"], 60, "group-b")
+    for slot_id in option["slot_ids"]:
+        with pytest.raises(booking.SlotUnavailable):
+            booking.create_booking([slot_id], "outsider", 60, session_id="different")
+
+
+def test_group_booking_claims_every_court():
+    option = _group_option()
+    result = booking.create_booking(option["slot_ids"], "usr_group", 60)
+    assert set(result.slot_ids) == set(option["slot_ids"])
+    for slot_id in option["slot_ids"]:
+        assert booking.slot_state(slot_id)["status"] == "booked"
+
+
+def test_group_booking_is_priced_per_court():
+    """Two courts for an hour costs both courts, not one."""
+    option = _group_option()
+    with db.read_conn() as conn:
+        expected = sum(
+            conn.execute("SELECT price_aed FROM slots WHERE id=?", (s,)).fetchone()[0]
+            for s in option["slot_ids"]
+        )
+    result = booking.create_booking(option["slot_ids"], "usr_group", 60)
+    assert result.price_aed == expected
+
+
+def test_two_courts_for_ninety_minutes_occupies_four_slots():
+    """Sequential and parallel compose: 2 courts x 2 hours."""
+    option = _group_option()
+    try:
+        result = booking.create_booking(option["slot_ids"], "usr_group", 90)
+    except booking.BookingError:
+        pytest.skip("no adjacent group with both following hours free")
+    assert len(result.slot_ids) == 4
+    with db.read_conn() as conn:
+        courts = {conn.execute("SELECT court_id FROM slots WHERE id=?", (s,)).fetchone()[0]
+                  for s in result.slot_ids}
+    assert len(courts) == 2, "should be two courts, two hours each"
+
+
+def test_a_group_is_all_or_nothing():
+    """If one court of the group is taken, the whole group must fail and claim nothing."""
+    option = _group_option()
+    booking.create_booking([option["slot_ids"][1]], "early-bird", 60)
+    before = _claims()
+    with pytest.raises(booking.SlotUnavailable):
+        booking.create_booking(option["slot_ids"], "the-group", 60)
+    assert _claims() == before, "a failed group booking left claims behind"
+
+
+def _claims() -> int:
+    with db.read_conn() as conn:
+        return conn.execute("SELECT count(*) c FROM slot_claims").fetchone()["c"]

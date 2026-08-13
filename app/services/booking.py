@@ -69,8 +69,8 @@ def _now() -> int:
     return int(time.time())
 
 
-def _slot_ids_needed(conn: sqlite3.Connection, first: str, duration_min: int) -> list[str]:
-    """Walk forward from the first slot, one slot-length at a time.
+def _expand_one(conn: sqlite3.Connection, first: str, duration_min: int) -> list[str]:
+    """Walk forward from one slot, one slot-length at a time.
 
     Adjacency is a real time step on the same court and date, never the next row in sort
     order: the grid skips 11:00-14:00, so nothing follows 10:00 and a 90-minute booking
@@ -96,20 +96,55 @@ def _slot_ids_needed(conn: sqlite3.Connection, first: str, duration_min: int) ->
     return needed
 
 
-def _price(conn: sqlite3.Connection, slot_ids: list[str], duration_min: int) -> int:
-    """Charge for time used, not slots locked: 90 minutes over two slots costs 1.5x, not 2x."""
-    cfg = settings()
-    remaining = duration_min
-    total = 0.0
+def _slot_ids_needed(
+    conn: sqlite3.Connection, slot_ids: list[str], duration_min: int
+) -> list[str]:
+    """Every slot a request occupies.
+
+    "Several slots" means two different things and they compose:
+
+      * sequential -- one court held for longer: 18:00 and 19:00 on the same court;
+      * parallel   -- several courts at the same hour, which is what a group booking is.
+
+    So each requested slot is expanded forward by the duration and the results unioned.
+    Two courts for 90 minutes occupies four slots. Expanding only the first slot and
+    ignoring the rest is what silently held one court of a two-court group while
+    reporting success.
+    """
+    needed: list[str] = []
     for slot_id in slot_ids:
-        row = conn.execute("SELECT price_aed FROM slots WHERE id=?", (slot_id,)).fetchone()
-        used = min(remaining, cfg.slot_minutes)
-        total += (row["price_aed"] or 0) * used / cfg.slot_minutes
-        remaining -= used
+        for expanded in _expand_one(conn, slot_id, duration_min):
+            if expanded not in needed:
+                needed.append(expanded)
+    return needed
+
+
+def _price(conn: sqlite3.Connection, slot_ids: list[str], duration_min: int) -> int:
+    """Charge for time used, not slots locked.
+
+    Priced per court, then summed: 90 minutes on one court is 1.5x its hourly rate, and
+    two courts for an hour is both courts in full. Running one duration down a flat list
+    of slots would charge a two-court group for a single court.
+    """
+    cfg = settings()
+    by_court: dict[str, list[sqlite3.Row]] = {}
+    for slot_id in slot_ids:
+        row = conn.execute(
+            "SELECT court_id, start_time, price_aed FROM slots WHERE id=?", (slot_id,)
+        ).fetchone()
+        by_court.setdefault(row["court_id"], []).append(row)
+
+    total = 0.0
+    for rows in by_court.values():
+        remaining = duration_min
+        for row in sorted(rows, key=lambda r: r["start_time"]):
+            used = min(remaining, cfg.slot_minutes)
+            total += (row["price_aed"] or 0) * used / cfg.slot_minutes
+            remaining -= used
     return round(total)
 
 
-def _validate_request(slot_ids: list[str], duration_min: int) -> str:
+def _validate_request(slot_ids: list[str], duration_min: int) -> None:
     cfg = settings()
     if not slot_ids:
         raise InvalidRequest("slot_ids must contain at least one slot.")
@@ -119,7 +154,6 @@ def _validate_request(slot_ids: list[str], duration_min: int) -> str:
         raise InvalidRequest(
             f"duration_min must be one of {cfg.booking_allowed_durations}.", slot_ids
         )
-    return slot_ids[0]
 
 
 def _check_free(conn: sqlite3.Connection, needed: list[str], session_id: str | None) -> None:
@@ -183,7 +217,7 @@ def create_booking(
     session_id: str | None = None,
     idempotency_key: str | None = None,
 ) -> Booking:
-    first = _validate_request(slot_ids, duration_min)
+    _validate_request(slot_ids, duration_min)
 
     def attempt() -> Booking:
         with db.write_txn() as conn:
@@ -195,14 +229,7 @@ def create_booking(
                     return Booking(prior["id"], prior["status"],
                                    json.loads(prior["slot_ids"]), prior["price_aed"] or 0)
 
-            needed = _slot_ids_needed(conn, first, duration_min)
-            if len(slot_ids) > 1 and slot_ids != needed:
-                raise InvalidRequest(
-                    f"slot_ids does not match a {duration_min} minute booking from {first}; "
-                    f"expected {needed}.",
-                    slot_ids,
-                )
-
+            needed = _slot_ids_needed(conn, slot_ids, duration_min)
             _drop_stale_holds(conn, needed)
             _check_free(conn, needed, session_id)
 
@@ -245,12 +272,12 @@ def create_booking(
 
 def create_hold(slot_ids: list[str], duration_min: int, session_id: str) -> Hold:
     """Reserve slots while the assistant waits for the user to confirm."""
-    first = _validate_request(slot_ids, duration_min)
+    _validate_request(slot_ids, duration_min)
     cfg = settings()
 
     def attempt() -> Hold:
         with db.write_txn() as conn:
-            needed = _slot_ids_needed(conn, first, duration_min)
+            needed = _slot_ids_needed(conn, slot_ids, duration_min)
             _drop_stale_holds(conn, needed)
             _check_free(conn, needed, session_id)
             conn.executemany(

@@ -20,8 +20,12 @@ precision@1 and MRR were added to detect whether reranking puts the *best* recor
 | Configuration | Recall | P@1 | MRR | Refusal acc. | Mean cost | p95 latency |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Hybrid + RRF, no rerank** | **1.000** | **0.789** | **0.835** | **0.974** | **$0.00205** | **7598 ms** |
-| \+ LLM rerank, 240-char snippets | 1.000 | 0.737 | 0.800 | 0.947 | $0.00224 | 8393 ms |
-| \+ LLM rerank, 480-char snippets | 0.987 | 0.737 | 0.800 | 0.974 | $0.00240 | 9171 ms |
+| \+ LLM rerank, 240-char parent snippet | 1.000 | 0.737 | 0.800 | 0.947 | $0.00224 | 8393 ms |
+| \+ LLM rerank, 480-char parent snippet | 0.987 | 0.737 | 0.800 | 0.974 | $0.00240 | 9171 ms |
+| \+ LLM rerank, **matched chunk** | 0.975 | **0.650** | **0.717** | 0.979 | $0.00227 | 6439 ms |
+
+Four configurations, all pointing the same way. Reranking loses, and the variant built
+specifically to fix its suspected weakness loses hardest.
 
 Reranking cost 5 points of precision@1 and 3.5 points of MRR, added roughly $0.0002 per
 query, and pushed p95 latency from inside the 8s target to outside it. Giving the

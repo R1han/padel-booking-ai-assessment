@@ -86,6 +86,10 @@ class Settings(BaseSettings):
     # Reviews are 3120 of 3942 indexed documents and would otherwise dominate every
     # result set, so they are retrieved separately and capped.
     review_results: int = 3
+    # Feed the reranker the chunk that matched instead of the parent record's opening.
+    # Measured worse (P@1 0.65 vs 0.737) -- it re-does the semantic ranking and collapses
+    # the lexical half of the ensemble. Kept for reproducibility; see eval/RERANKING.md.
+    rerank_use_chunks: bool = False
     # Cap on prose returned to the model per record. Policy bodies average ~10KB and six
     # of them in one tool result pushed a generation call past 9000 input tokens.
     tool_prose_chars: int = 700
