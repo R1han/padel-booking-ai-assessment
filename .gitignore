@@ -10,6 +10,17 @@ __pycache__/
 
 # Node
 node_modules/
+# ui/dist IS committed on purpose: it keeps the documented run command working
+# without Node installed. Do not add it here.
+
+# Built at startup from the shipped JSON; never committed.
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# Test artefacts
+.pytest_cache/
 
 # OS
 .DS_Store
