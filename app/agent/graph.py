@@ -107,6 +107,17 @@ STYLE:
   rest of your reply is in Arabic.
 """
 
+# Used when planning rides along with the first tool call rather than getting a round
+# trip of its own. Emitting note_plan in parallel with the first retrieval call is what
+# removes a full model round trip from time-to-first-token.
+FIRST_TURN_RULES = """
+FIRST, IN THE SAME BATCH OF TOOL CALLS:
+* Call note_plan once to record the language, whether the request is out of scope, and
+  whether it asks for private staff details. Emit it alongside your first retrieval
+  call, not in a separate turn.
+* Search in English even when the user wrote Arabic. Reply in their language.
+"""
+
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
 # an explicit instruction the model answered English questions in Arabic.
 LANGUAGE_RULE = {
@@ -131,6 +142,23 @@ def _window() -> dict[str, str]:
     with db.read_conn() as conn:
         row = conn.execute("SELECT MIN(date) a, MAX(date) b FROM slots").fetchone()
     return {"window_start": row["a"], "window_end": row["b"]}
+
+
+ARABIC = re.compile(r"[؀-ۿ]")
+LATIN = re.compile(r"[A-Za-z]")
+
+
+def detect_language(text: str) -> str:
+    """Which script the user wrote in.
+
+    Deterministic on purpose. Asking the model to report this was both slower and
+    unreliable -- it labelled Arabic questions "en", which then instructed the answer
+    step to reply in English. A script check cannot get that wrong.
+    """
+    arabic, latin = len(ARABIC.findall(text)), len(LATIN.findall(text))
+    if arabic and latin:
+        return "mixed" if latin > arabic * 0.5 else "ar"
+    return "ar" if arabic else "en"
 
 
 def _last_user_text(state: AgentState) -> str:
@@ -172,10 +200,21 @@ def plan_node(state: AgentState) -> dict:
 
 
 def answer_node(state: AgentState) -> dict:
-    plan = state.get("plan", {})
-    model = llm.get_model("answerer").bind_tools(agent_tools.ALL_TOOLS)
+    # Either the plan node ran, or note_plan was called alongside the first tool call.
+    plan = state.get("plan") or agent_tools.current_plan()
+    tools = (agent_tools.ANSWER_TOOLS if settings().agent_separate_plan_node
+             else agent_tools.ALL_TOOLS)
+    model = llm.get_model("answerer").bind_tools(tools)
 
     system = ANSWER_PROMPT.format(today=retrieval.today().isoformat(), **_window())
+
+    if not settings().agent_separate_plan_node:
+        system += FIRST_TURN_RULES
+    if state.get("context"):
+        system += (
+            "\nWhat you showed the user last turn, for resolving references like "
+            f"\"the second one\" or \"the same time at Yas\":\n{state['context']}\n"
+        )
     if plan.get("english_query") and plan["english_query"] != _last_user_text(state):
         system += (
             f"\nSearch using this English reading of the request: "
@@ -185,7 +224,8 @@ def answer_node(state: AgentState) -> dict:
         system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
     if plan.get("asks_for_personal_data"):
         system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
-    system += "\n" + LANGUAGE_RULE.get(plan.get("language", "en"), LANGUAGE_RULE["en"])
+    language = detect_language(_last_user_text(state))
+    system += "\n" + LANGUAGE_RULE[language]
 
     messages = [SystemMessage(system), *state["messages"]]
     if state.get("loops", 0) >= MAX_TOOL_LOOPS:
@@ -208,12 +248,28 @@ def should_continue(state: AgentState) -> str:
 
 
 def build_graph():
+    """answer ⇄ tools → END.
+
+    There is no separate planning call. Planning is exposed as the `note_plan` tool and
+    is emitted alongside the first retrieval call in the same round trip, which removes
+    a full model round trip from the critical path. A turn that used to cost three
+    sequential calls now costs two, and only the last of them produced visible tokens.
+
+    Set AGENT_SEPARATE_PLAN_NODE=true to restore the three-call shape.
+    """
     graph = StateGraph(AgentState)
-    graph.add_node("plan", plan_node)
     graph.add_node("answer", answer_node)
-    graph.add_node("tools", ToolNode(agent_tools.ALL_TOOLS))
-    graph.set_entry_point("plan")
-    graph.add_edge("plan", "answer")
+    graph.add_node("tools", ToolNode(
+        agent_tools.ANSWER_TOOLS if settings().agent_separate_plan_node
+        else agent_tools.ALL_TOOLS))
+
+    if settings().agent_separate_plan_node:
+        graph.add_node("plan", plan_node)
+        graph.set_entry_point("plan")
+        graph.add_edge("plan", "answer")
+    else:
+        graph.set_entry_point("answer")
+
     graph.add_conditional_edges("answer", should_continue, {"tools": "tools", END: END})
     graph.add_edge("tools", "answer")
     return graph.compile()
@@ -339,7 +395,8 @@ async def run_query(
             answer = msg.text if isinstance(msg.text, str) else str(msg.content)
             break
 
-    plan = result.get("plan", {})
+    plan = {**(result.get("plan") or agent_tools.current_plan()),
+            "language": detect_language(message)}
     return {
         "answer": answer,
         "retrieved_ids": list(surfaced),

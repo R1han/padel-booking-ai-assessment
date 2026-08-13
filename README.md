@@ -78,16 +78,19 @@ python -m pytest tests/ -q            # 39 tests: concurrency, adjacency, degrad
 | PII leaks | **0** | 0 |
 | Mean cost per query | **$0.0021** | ≤ $0.02 |
 | p95 full response | **6.6 s** | ≤ 8 s |
-| Time to first token | **2.8 s** | ≤ 2 s ✗ |
+| Time to first token | 3.0 s median, 4.2 s p95 | ≤ 2 s ✗ |
 | Race test | 1 confirmation, 19 rejections, 5/5 runs | exactly 1 |
 
-**Time to first token misses.** A turn is three sequential model round trips — plan,
-decide which tool, then generate — and the first two produce no visible tokens. Profiling
-cut the planner from 3.4 s to 1.0 s by moving it to a smaller model, which brought total
-latency inside target, but the structure still costs about 2.8 s before the first word.
-Removing it means either dropping the planner (which costs refusal accuracy, since scope
-detection lives there) or running it concurrently with the first tool decision. The
-second is the right fix and is not done.
+**Time to first token misses, and it is a floor rather than an oversight.** A grounded
+answer cannot start streaming before the system knows what to ground it in, which forces
+*decide what to retrieve → retrieve → start generating*. That is ~1.9 s even with
+planning removed entirely.
+
+Collapsing three model round trips into two was built and measured, and it was worse on
+every axis — refusal accuracy 0.979 vs 1.000, precision@1 0.70 vs 0.75, 29 % dearer, and
+TTFT p95 5288 ms vs 4152 ms — so it ships disabled behind `AGENT_SEPARATE_PLAN_NODE`.
+The full analysis, including two real bugs it exposed, is in
+[`docs/LATENCY.md`](docs/LATENCY.md).
 
 Run-to-run variation of a few points is normal: temperature is 0, but which tools the
 model chooses still varies.
@@ -240,7 +243,9 @@ and the plan this was built from is in [`plan.md`](plan.md).
 
 ## Known gaps
 
-- Time to first token is 2.8 s against a 2 s target; see above for the cause and the fix.
+- Time to first token is ~3 s against a 2 s target. Measured, and the one architectural
+  alternative was tried and rejected on evidence; see [`docs/LATENCY.md`](docs/LATENCY.md).
+  The remaining untried lever is a smaller model for the tool-selection call only.
 - Reranking is implemented but disabled, because measurement says it hurts.
 - A cross-encoder reranker was not tried: it needs `torch` and several hundred MB, against
   a clean-clone install requirement.

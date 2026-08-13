@@ -64,6 +64,11 @@ class Settings(BaseSettings):
     llm_planner: str = "openai:gpt-4.1-nano"
     llm_reranker: str = "openai:gpt-4.1-mini"
     llm_answerer: str = "openai:gpt-4.1-mini"
+    # Planning gets its own cheap round trip before the tool decision. Merging it into
+    # the first tool call was tried and measured worse on every axis -- see
+    # docs/LATENCY.md -- so the separate node is the default.
+    agent_separate_plan_node: bool = True
+
     llm_fallback: str = "anthropic:claude-haiku-4-5-20251001"
     embedding_model: str = "text-embedding-3-small"
 

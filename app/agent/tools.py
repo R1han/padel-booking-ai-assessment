@@ -27,12 +27,22 @@ log = logging.getLogger("padel.tools")
 _surfaced: ContextVar[list[str] | None] = ContextVar("padel_surfaced", default=None)
 _records: ContextVar[dict[str, dict] | None] = ContextVar("padel_records", default=None)
 _session: ContextVar[str] = ContextVar("padel_session", default="anonymous")
+# Mutated in place, never rebound. LangGraph runs tools in their own context, so a
+# ContextVar.set() inside a tool is invisible to the caller -- only mutation of an
+# object the caller already holds propagates back.
+_plan: ContextVar[dict | None] = ContextVar("padel_plan", default=None)
+
+DEFAULT_PLAN = {
+    "language": "en", "out_of_scope": False,
+    "asks_for_personal_data": False, "referenced_ids": [],
+}
 
 
 def start_request(session_id: str = "anonymous") -> list[str]:
     surfaced: list[str] = []
     _surfaced.set(surfaced)
     _records.set({})
+    _plan.set(dict(DEFAULT_PLAN))
     _session.set(session_id)
     return surfaced
 
@@ -102,6 +112,51 @@ def _trim(payload):
 
 def _dump(payload: dict) -> str:
     return json.dumps(_trim(payload), ensure_ascii=False, default=str)
+
+
+def current_plan() -> dict:
+    return {**DEFAULT_PLAN, **(_plan.get() or {})}
+
+
+@tool
+def note_plan(
+    language: str,
+    out_of_scope: bool = False,
+    asks_for_personal_data: bool = False,
+    referenced_ids: list[str] | None = None,
+) -> str:
+    """Record your reading of the request. Call this once, in the SAME turn as your first
+    retrieval tool call, before answering.
+
+    language: "en", "ar" or "mixed" -- the language the user wrote in.
+
+    out_of_scope: true ONLY when the club could not possibly serve the request -- a
+    different sport, or a city or country with no branch. FALSE for every ordinary
+    question about our branches, courts, coaches, classes, packages, prices,
+    availability, policies or reviews, including counting and comparison questions and
+    questions whose answer happens to be no. Default false when unsure.
+
+    asks_for_personal_data: true ONLY for a staff member's private details -- personal
+    phone, email address, home address, salary. FALSE for a coach's name, specialities,
+    experience, rates or working hours, and FALSE for a branch's public phone number.
+
+    referenced_ids: when the message points back at something from an earlier turn
+    ("the second one", "same time at Yas"), the ids it refers to. Otherwise [].
+    """
+    plan = {
+        "language": language if language in ("en", "ar", "mixed") else "en",
+        "out_of_scope": bool(out_of_scope),
+        "asks_for_personal_data": bool(asks_for_personal_data),
+        "referenced_ids": referenced_ids or [],
+    }
+    current = _plan.get()
+    if current is None:  # called outside a request; nothing to update
+        _plan.set(plan)
+    else:
+        current.update(plan)
+    # Records carried from an earlier turn ground the answer as much as a fresh lookup.
+    note_referenced(plan["referenced_ids"])
+    return _dump({"noted": True})
 
 
 @tool
@@ -289,8 +344,11 @@ def book_court(slot_ids: list[str], user_id: str, duration_min: int = 60) -> str
 
 
 RETRIEVAL_TOOLS = [
-    find_group_slots,
+    note_plan, find_group_slots,
     search_knowledge, find_records, check_availability, price_summary, coach_availability
 ]
 BOOKING_TOOLS = [hold_slots, book_court]
 ALL_TOOLS = RETRIEVAL_TOOLS + BOOKING_TOOLS
+# note_plan only exists for the merged shape, where planning has no round trip of its
+# own. With a separate plan node it would just be noise in the tool list.
+ANSWER_TOOLS = [t for t in ALL_TOOLS if t is not note_plan]
