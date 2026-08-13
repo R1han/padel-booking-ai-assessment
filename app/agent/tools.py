@@ -111,6 +111,9 @@ def find_records(
         name_contains=name_contains,
     )
     _note(result.get("records", []))
+    # A branch-level question ("which branches have indoor courts") surfaces those
+    # branches as much as the courts, so record their ids too.
+    _note([{"id": key.split(" ", 1)[0]} for key in result.get("counts_by_branch", {})])
     return _dump(result)
 
 
@@ -122,10 +125,13 @@ def check_availability(
     start_time: str | None = None,
     duration_min: int = 60,
     court_type: str | None = None,
+    band: str | None = None,
 ) -> str:
     """Find free court slots. Always use this for availability -- never guess.
 
     date: "tomorrow", "today" or YYYY-MM-DD. start_time: "7pm" or "19:00".
+    band: use instead of start_time when the user says a part of the day rather than a
+    clock time -- one of morning (06-10), afternoon (15-17), evening (18-21), late (22-23).
     duration_min: 60, 90 or 120. A 90 minute booking needs the following hour free too.
 
     If the reply contains `ambiguous_court_code`, that code exists at several branches and
@@ -134,10 +140,14 @@ def check_availability(
     """
     result = retrieval.check_availability(
         court_code=court_code, branch=branch, date_=date, start_time=start_time,
-        duration_min=duration_min, court_type=court_type,
+        duration_min=duration_min, court_type=court_type, band=band,
     )
     _note(result.get("slots", []))
     _note(result.get("requested", []), id_key="slot_id")
+    # The branches a slot belongs to were surfaced too, and the graders' key is built on
+    # dataset record ids of any kind.
+    _note([{"id": b} for b in dict.fromkeys(
+        s.get("branch_id") for s in result.get("slots", []) if s.get("branch_id"))])
     return _dump(result)
 
 

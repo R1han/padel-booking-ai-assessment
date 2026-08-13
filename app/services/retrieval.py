@@ -382,17 +382,41 @@ def find_records(
     return result
 
 
+# The catalog is entirely English but users write place names in Arabic. Without this,
+# "فرع الشارقة" resolves to nothing and the assistant wrongly reports no such branch.
+ARABIC_PLACES = {
+    "الشارقة": "Sharjah", "دبي": "Dubai", "أبوظبي": "Abu Dhabi", "ابوظبي": "Abu Dhabi",
+    "أبو ظبي": "Abu Dhabi", "ابو ظبي": "Abu Dhabi", "عجمان": "Ajman",
+    "رأس الخيمة": "Ras Al Khaimah", "راس الخيمة": "Ras Al Khaimah",
+    "العين": "Al Ain", "عين": "Al Ain", "ياس": "Yas", "ياس آيلاند": "Yas",
+    "خليفة": "Khalifa", "المجاز": "Majaz", "الماجاز": "Majaz",
+    "القوز": "Al Quoz", "الquoz": "Al Quoz", "جي في سي": "JVC",
+}
+
+
+def translate_place(text: str) -> str:
+    value = text.strip()
+    for arabic, english in ARABIC_PLACES.items():
+        if arabic in value:
+            return english
+    return value
+
+
 def resolve_branches(text: str) -> list[str]:
     """Match a branch by id, name, area or emirate. Returns every match rather than
     guessing, so an ambiguous reference can be surfaced to the user."""
-    needle = f"%{text.strip().lower()}%"
+    candidates = {text.strip().lower(), translate_place(text).lower()}
+    found: list[str] = []
     with db.read_conn() as conn:
-        rows = conn.execute(
-            "SELECT id FROM branches WHERE lower(id) LIKE ? OR lower(name) LIKE ?"
-            " OR lower(area) LIKE ? OR lower(emirate) LIKE ?",
-            (needle, needle, needle, needle),
-        ).fetchall()
-    return [r["id"] for r in rows]
+        for candidate in candidates:
+            needle = f"%{candidate}%"
+            rows = conn.execute(
+                "SELECT id FROM branches WHERE lower(id) LIKE ? OR lower(name) LIKE ?"
+                " OR lower(area) LIKE ? OR lower(emirate) LIKE ?",
+                (needle, needle, needle, needle),
+            ).fetchall()
+            found += [r["id"] for r in rows if r["id"] not in found]
+    return found
 
 
 def is_package_valid(package: dict, on: date | None = None) -> bool:
@@ -418,6 +442,7 @@ def check_availability(
     start_time: str | None = None,
     duration_min: int = 60,
     court_type: str | None = None,
+    band: str | None = None,
     limit: int = 20,
 ) -> dict:
     """Free slots, derived from claims rather than the static slots.status column so it
@@ -464,10 +489,19 @@ def check_availability(
     if resolved_date:
         where.append("s.date = ?")
         params.append(resolved_date)
+    # "tomorrow evening" carries no clock time. Without a band filter the result is the
+    # 20 earliest slots of the day and the evening never appears in what the model sees.
+    if not band and start_time and start_time.strip().lower() in BANDS:
+        band, start_time = start_time.strip().lower(), None
+
     resolved_time = normalise_time(start_time)
     if resolved_time:
         where.append("s.start_time = ?")
         params.append(resolved_time)
+    elif band and band.lower() in BANDS:
+        times = BANDS[band.lower()]
+        where.append(f"s.start_time IN ({','.join('?' * len(times))})")
+        params += times
     if court_type:
         where.append("c.type = ?")
         params.append(court_type)

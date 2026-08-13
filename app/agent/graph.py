@@ -215,26 +215,61 @@ def graph():
 
 # --- refusal detection ------------------------------------------------------------
 
+# Declining to answer. Kept narrow: these say "I do not hold this", not "the answer is no".
 REFUSAL_MARKERS = (
     "i don't have", "i do not have", "i don't hold", "no information",
-    "not something", "we don't offer", "we do not offer", "don't offer",
-    "no branch", "outside", "cannot share", "can't share", "not able to share",
-    "unable to", "i can't help", "cannot help", "no record", "not in our",
-    "don't provide", "do not provide", "لا يوجد", "لا نقدم", "ليس لدينا",
-    "لا أستطيع", "لا نملك", "غير متاح", "لا توجد",
+    "cannot share", "can't share", "not able to share", "cannot provide",
+    "can't provide", "i can't help", "cannot help", "no record",
+    "don't provide", "do not provide", "outside the",
+    "لا أستطيع", "لا يمكنني", "ليس لدي معلومات", "لا نملك معلومات", "لا توجد معلومات",
 )
+
+# Reporting that nothing is free IS an answer, not a refusal.
+ANSWERED_NEGATIVES = (
+    "no available", "no free", "not available", "fully booked", "is booked",
+    "no slots", "no courts available", "already booked",
+    "غير متاح", "محجوز", "لا يوجد ملاعب متاحة", "لا توجد ملاعب",
+)
+
+# A reply that opens affirmatively has answered, whatever caveats follow.
+AFFIRMATIVE_OPENERS = ("yes", "نعم", "sure", "certainly", "أجل")
+
+REFUSAL_WINDOW = 160
+
+
+def _opening(answer: str) -> str:
+    """The first sentence. A genuine refusal declines there; a caveat further down
+    ('...but we hold no information about pools') belongs to an answer."""
+    for separator in ("\n", ". ", "؟ ", "! ", "? "):
+        answer = answer.split(separator)[0]
+    return answer.strip().lower()
 
 
 def looks_like_refusal(answer: str, surfaced: list[str], plan: dict) -> bool:
     """The eval contract scores `refused` in both directions, so this has to be honest
-    rather than optimistic. Signals, strongest first."""
+    rather than optimistic.
+
+    Two distinctions cost us accuracy before they were made explicit:
+
+    * "we hold no such information" is a refusal; "there is nothing free at that time"
+      is an answer. Availability negatives are therefore checked first.
+    * "no, we don't do instalments, billing is monthly" is a grounded negative answer,
+      not a refusal. So markers are only honoured near the start of the reply, and
+      questions of scope are decided by the planner rather than by string matching.
+    """
     if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return True
-    lowered = answer.lower()
-    if any(marker in lowered for marker in REFUSAL_MARKERS):
+
+    lowered = (answer or "").lower()
+    opening = _opening(answer or "")
+    if opening.startswith(AFFIRMATIVE_OPENERS):
+        return False
+    if any(marker in lowered for marker in ANSWERED_NEGATIVES):
+        return False
+    if any(marker in opening for marker in REFUSAL_MARKERS):
         return True
-    # Nothing retrieved and nothing to say is a refusal however it is phrased.
-    return not surfaced and len(answer) < 200
+    # Nothing retrieved and nothing substantive said.
+    return not surfaced and len(answer) < REFUSAL_WINDOW
 
 
 # --- one-shot entry point ---------------------------------------------------------
