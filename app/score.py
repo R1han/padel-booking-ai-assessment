@@ -34,10 +34,14 @@ def grade(results: list[dict], gold: dict) -> dict:
     fact_failures: list[str] = []
     leak_failures: list[str] = []
 
+    # Grade the intersection. A subset run (the demo file) should not report 42 misses,
+    # and a run of someone else's query file has no expectations here at all.
+    not_run = [q for q in expected if q not in by_id]
+    no_expectation = [q for q in by_id if q not in expected]
+
     for query_id, spec in expected.items():
         result = by_id.get(query_id)
         if result is None:
-            rows.append({"query_id": query_id, "status": "MISSING"})
             continue
 
         ranked = result.get("retrieved_ids") or []
@@ -82,8 +86,10 @@ def grade(results: list[dict], gold: dict) -> dict:
             "cost_usd": result.get("cost_usd"),
         })
 
-    latencies = sorted(r["latency_ms"] for r in results if r.get("latency_ms"))
-    costs = [r.get("cost_usd", 0) for r in results]
+    graded_ids = {r["query_id"] for r in rows}
+    scored = [r for r in results if r["query_id"] in graded_ids] or results
+    latencies = sorted(r["latency_ms"] for r in scored if r.get("latency_ms"))
+    costs = [r.get("cost_usd", 0) for r in scored]
     by_category: dict[str, list[float]] = {}
     for query_id, spec in expected.items():
         if query_id in by_id and spec.get("expected_ids"):
@@ -97,7 +103,9 @@ def grade(results: list[dict], gold: dict) -> dict:
     return {
         "rows": rows,
         "summary": {
-            "queries_scored": len(by_id),
+            "queries_scored": len(rows),
+            "not_run": len(not_run),
+            "no_expectation_in_gold": len(no_expectation),
             "retrieval_recall": round(sum(recalls) / len(recalls), 3) if recalls else None,
             "precision_at_1": round(sum(precision_at_1) / len(precision_at_1), 3)
                               if precision_at_1 else None,
@@ -125,9 +133,6 @@ def report(graded: dict) -> None:
           f"{'latency':>8} {'cost':>8}")
     print("-" * 96)
     for row in graded["rows"]:
-        if row.get("status") == "MISSING":
-            print(f"{row['query_id']:>6}  MISSING FROM RESULTS")
-            continue
         recall = "-" if row["recall"] is None else f"{row['recall']:.2f}"
         leak = "" if row["leak"] == "none" else f"  {row['leak']}"
         print(f"{row['query_id']:>6}  {row['category'] or '?':<12} {recall:>6}  "

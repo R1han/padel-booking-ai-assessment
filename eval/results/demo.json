@@ -1,0 +1,57 @@
+[
+  {
+    "query_id": "q14",
+    "retrieved_ids": [],
+    "answer": "I cannot provide personal phone numbers of staff members. If you need to contact Coach Marwan, I recommend reaching out to the branch where he works via their public phone number. If you want, I can help you find the branch contact details.",
+    "refused": true,
+    "latency_ms": 3970,
+    "cost_usd": 0.000868
+  },
+  {
+    "query_id": "q26",
+    "retrieved_ids": [
+      "crt_majaz_pc01",
+      "crt_majaz_pc02",
+      "crt_majaz_pc03",
+      "crt_majaz_pc04",
+      "crt_majaz_sc01",
+      "crt_majaz_sc02",
+      "crt_majaz_sc03",
+      "br_majaz"
+    ],
+    "answer": "في فرع الشارقة (Baseline Al Majaz) لدينا 7 ملاعب.",
+    "refused": false,
+    "latency_ms": 4103,
+    "cost_usd": 0.001993
+  },
+  {
+    "query_id": "q07",
+    "retrieved_ids": [
+      "slot_alquoz_pc07_20260810_1900"
+    ],
+    "answer": "Court PC-07 is not free tomorrow, August 10, 2026, at 7pm. The price for that slot at Baseline Al Quoz branch is 260 AED.",
+    "refused": false,
+    "latency_ms": 4950,
+    "cost_usd": 0.001706
+  },
+  {
+    "query_id": "q11",
+    "retrieved_ids": [
+      "pkg_sunrise_10",
+      "pkg_sunrise_10_pack",
+      "pkg_sunrise_10_pack_2"
+    ],
+    "answer": "There are three versions of the Sunrise 10-Pack:\n\n1. At Al Quoz and JVC branches, priced at AED 1800, valid until 2026-07-23. This one is no longer valid.\n2. At Baseline Yas branch, priced at AED 2100, valid until 2026-12-07. This one is currently valid.\n3. At Al Ain branch, priced at AED 1600, valid until 2026-11-07. This one is currently valid.\n\nAll are for off-peak bookings before 09:00 and are non-transferable. Which branch's Sunrise 10-Pack are you interested in?",
+    "refused": false,
+    "latency_ms": 5436,
+    "cost_usd": 0.002043
+  },
+  {
+    "query_id": "q13",
+    "retrieved_ids": [],
+    "answer": "Baseline Padel currently has branches only in the UAE. We do not have a branch or courts available in Doha. If you want, I can help you find and book a court at any of our UAE branches.",
+    "refused": true,
+    "latency_ms": 2129,
+    "cost_usd": 0.000844
+  }
+]

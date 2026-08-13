@@ -33,6 +33,7 @@ the conversational layer needs a model.
 | --- | --- |
 | Build the semantic index (~$0.012, one off) | `python -m app.ingest --reset` |
 | Run the eval | `python -m app.eval --input eval/queries.json --output eval/results/latest.json` |
+| Five-query smoke run (~7 s) | `python -m app.eval --input eval/demo_queries.json --output eval/results/demo.json` |
 | Score a run | `python -m app.score --results eval/results/latest.json --gold eval/gold.json` |
 | Race test | `python -m app.ingest --reset` then `SLOT_ID=slot_alquoz_pc01_20260810_1800 bash tests/race.sh` |
 | Tests (49) | `python -m pytest tests/ -q` |
