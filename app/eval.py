@@ -58,12 +58,14 @@ async def run_one(item: dict, semaphore: asyncio.Semaphore) -> dict:
                 "latency_ms": result["latency_ms"],
                 "cost_usd": result["cost_usd"],
             }
-        except Exception as exc:  # noqa: BLE001 - one bad query must not stop the run
+        except Exception:  # noqa: BLE001 - one bad query must not stop the run
+            # Logged in full, but never echoed into `answer`: provider exceptions carry
+            # internal detail that has no business in a user-facing reply.
             log.exception("query %s failed", item["query_id"])
             return {
                 "query_id": item["query_id"],
                 "retrieved_ids": [],
-                "answer": f"The system could not answer this request ({exc}).",
+                "answer": "Sorry, I could not answer that. Please try again.",
                 "refused": True,
                 "latency_ms": round((time.perf_counter() - started) * 1000),
                 "cost_usd": 0.0,

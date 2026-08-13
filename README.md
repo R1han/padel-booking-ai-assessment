@@ -196,7 +196,9 @@ six covered superficially, so this is a fair thing to weigh.
 ## Observability
 
 Set `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` in `.env`. Every node is traced with
-step, latency, input and output tokens, and cost.
+step, latency, input and output tokens, and cost. A captured per-node breakdown of a real
+request is in [`docs/TRACING.md`](docs/TRACING.md); the dashboard is at
+<https://smith.langchain.com> under project `baseline-padel`.
 
 The same numbers are computed locally per request and returned on the `done` SSE event
 and in the eval output, so `cost_usd` can be checked against the dashboard rather than

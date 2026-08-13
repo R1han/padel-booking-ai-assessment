@@ -105,9 +105,11 @@ async def _stream(req: ChatRequest) -> AsyncIterator[str]:
             for call in getattr(chunk, "tool_calls", None) or []:
                 if call.get("name"):
                     yield _sse("tool", {"name": call["name"]})
-    except Exception as exc:  # noqa: BLE001 - the stream must always close cleanly
+    except Exception:  # noqa: BLE001 - the stream must always close cleanly
+        # Logged in full; the user sees a plain sentence. Provider exceptions carry
+        # internal detail that should not reach the page.
         log.exception("chat stream failed")
-        yield _sse("error", {"message": f"Something went wrong: {exc}"})
+        yield _sse("error", {"message": "Something went wrong. Please try again."})
 
     answer = "".join(answer_parts)
     records = agent_tools.surfaced_records()
