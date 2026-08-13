@@ -61,20 +61,20 @@ correctly returns twenty conflicts and reports FAIL. Reset takes under a second 
 safe while the server is running.
 
 ```bash
-python -m pytest tests/ -q            # 27 tests: concurrency, adjacency, degradation
+python -m pytest tests/ -q            # 39 tests: concurrency, adjacency, degradation, agent
 ```
 
 ---
 
 ## Results
 
-38 queries, 12 of them Arabic or mixed. Measured on the shipped configuration.
+47 queries, 14 Arabic or mixed, 5 multi-turn. Measured on the shipped configuration.
 
 | Metric | Result | Target |
 | --- | --- | --- |
 | Retrieval recall | 0.97–1.00 | — |
-| Precision@1 / MRR | 0.79 / 0.84 | — |
-| Refusal accuracy | 0.95, **zero missed refusals** | scored both directions |
+| Precision@1 / MRR | 0.75 / 0.80 | — |
+| Refusal accuracy | **1.00** — no false and no missed refusals | scored both directions |
 | PII leaks | **0** | 0 |
 | Mean cost per query | **$0.0021** | ≤ $0.02 |
 | p95 full response | **6.6 s** | ≤ 8 s |
@@ -179,16 +179,15 @@ key) but flagged out of the search index. Two dates are unparseable — `2026-13
 
 ## The six challenge areas
 
-All six were attempted. The README's own advice is that three developed thoroughly beats
-six covered superficially, so this is a fair thing to weigh.
+All six were attempted.
 
 | # | Area | Where it is |
 | --- | --- | --- |
 | 1 | **Slot holds** | `kind='hold'` with an integer-epoch TTL in the same claims table. Expiry is a scoped delete of only the requested slots inside the write transaction; a global sweep runs at startup. Confirming converts the hold in one transaction, and a session booking a slot it already holds converts rather than conflicting with itself. The UI drains a countdown bar on the held chip. |
-| 2 | **Cross-turn references** | The session keeps the last ranked result list, and the planner resolves "the second one" or "same time at Yas" into concrete ids before retrieval. Verified end to end: "book the second one" picked the right slot. |
+| 2 | **Cross-turn references** | The session keeps the last ranked result list and the planner resolves "the second one", "the first one" or "same time at Yas" into concrete ids before retrieval. Five multi-turn eval cases (q39–q43, two of them Arabic) plus unit tests. Records carried from an earlier turn are counted as retrieved, since they are what grounds the answer. |
 | 3 | **Graceful degradation** | Chroma down → FTS5 lexical, flagged. Reranker or planner down → the turn still answers. Provider down → the configured fallback vendor. Booking and all structured lookups are pure SQL and need no model. Eight tests in `tests/test_degradation.py`, each removing a real dependency. |
 | 4 | **Cost reduction** | $0.0021 per query, roughly 10× under target. Profiling moved the planner to the smallest model, prose in tool payloads is capped (six policy bodies had pushed one call past 9,000 input tokens), and reviews are retrieved as a capped second pass. |
-| 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts, simultaneity, adjacency and coach cover. Both soft constraints are surfaced as caveats rather than asserted, because the data does not record court positions or link coaches to bookings. |
+| 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts, simultaneity, adjacency and coach cover. Four eval cases (q44–q47) and eight tests covering the conversion, the adjacency run, simultaneity, and that no claimed or overhang slot is ever offered. Both soft constraints are surfaced as caveats rather than asserted, because the data records no court positions and does not link coaches to bookings. |
 | 6 | **Reranking** | Built, measured, and **it does not improve results here** — precision@1 fell from 0.789 to 0.737 and p95 latency rose past target. It ships disabled with the evidence and the analysis in [`eval/RERANKING.md`](eval/RERANKING.md). |
 
 ---

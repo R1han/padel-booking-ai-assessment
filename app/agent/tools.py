@@ -47,6 +47,23 @@ def surfaced_records() -> list[dict]:
     return [records[rid] for rid in surfaced_ids() if rid in records]
 
 
+def note_referenced(record_ids: list[str]) -> None:
+    """Record ids the planner resolved from an earlier turn.
+
+    A follow-up like "how much is the second one" is answered from records surfaced last
+    turn without calling a tool again. Those records are still what grounds the answer,
+    so they belong in retrieved_ids -- and without them the turn looks like it retrieved
+    nothing, which the refusal detector reads as declining to answer.
+    """
+    if not record_ids:
+        return
+    resolved = retrieval.hydrate([r for r in record_ids if isinstance(r, str)])
+    _note(resolved)
+    # Slots are not catalog records, so hydrate cannot find them; keep the ids anyway.
+    found = {r["id"] for r in resolved}
+    _note([{"id": r} for r in record_ids if isinstance(r, str) and r not in found])
+
+
 def _note(records: list[dict], id_key: str = "id") -> None:
     bucket = _surfaced.get()
     store = _records.get()

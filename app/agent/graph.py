@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from typing import Annotated, Any, TypedDict
 
 from langchain_core.messages import AIMessage, AnyMessage, SystemMessage
@@ -163,6 +164,10 @@ def plan_node(state: AgentState) -> dict:
         plan.update({k: v for k, v in parsed.items() if k in plan})
     except Exception as exc:  # noqa: BLE001 - a planner failure degrades, never fails
         log.warning("planner unavailable, using the raw query: %s", exc)
+
+    # Records carried over from an earlier turn ground this answer just as much as a
+    # fresh tool call would, so they count as retrieved.
+    agent_tools.note_referenced(plan.get("referenced_ids") or [])
     return {"plan": plan}
 
 
@@ -238,8 +243,16 @@ REFUSAL_MARKERS = (
 # Reporting that nothing is free IS an answer, not a refusal.
 ANSWERED_NEGATIVES = (
     "no available", "no free", "not available", "fully booked", "is booked",
-    "no slots", "no courts available", "already booked",
+    "no slots", "already booked",
     "غير متاح", "محجوز", "لا يوجد ملاعب متاحة", "لا توجد ملاعب",
+)
+
+# A fixed list cannot catch every phrasing of "nothing is free": "no two adjacent courts
+# available" and "no courts available" are the same answer with words in between.
+NO_AVAILABILITY = re.compile(
+    r"\bno\b[^.!?]{0,60}\b(available|availability|free|slots?|courts?)\b"
+    r"|لا (يوجد|توجد|تتوفر)[^.!?]{0,40}(متاح|متاحة|متجاور|ملعب|ملاعب)",
+    re.IGNORECASE,
 )
 
 # A reply that opens affirmatively has answered, whatever caveats follow.
@@ -256,7 +269,9 @@ def _opening(answer: str) -> str:
     return answer.strip().lower()
 
 
-def looks_like_refusal(answer: str, surfaced: list[str], plan: dict) -> bool:
+def looks_like_refusal(
+    answer: str, surfaced: list[str], plan: dict, had_context: bool = False
+) -> bool:
     """The eval contract scores `refused` in both directions, so this has to be honest
     rather than optimistic.
 
@@ -268,19 +283,26 @@ def looks_like_refusal(answer: str, surfaced: list[str], plan: dict) -> bool:
       not a refusal. So markers are only honoured near the start of the reply, and
       questions of scope are decided by the planner rather than by string matching.
     """
-    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
-        return True
-
     lowered = (answer or "").lower()
     opening = _opening(answer or "")
-    if opening.startswith(AFFIRMATIVE_OPENERS):
+
+    # An affirmative opening backed by real records is an answer, whatever the planner
+    # guessed. "Do you have a pool or a gym" gets flagged out-of-scope because of the
+    # pool, but "yes, these branches have a gym" plainly answered half of it.
+    if opening.startswith(AFFIRMATIVE_OPENERS) and surfaced:
         return False
-    if any(marker in lowered for marker in ANSWERED_NEGATIVES):
+
+    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
+        return True
+    if any(marker in lowered for marker in ANSWERED_NEGATIVES) or NO_AVAILABILITY.search(lowered):
         return False
     if any(marker in opening for marker in REFUSAL_MARKERS):
         return True
-    # Nothing retrieved and nothing substantive said.
-    return not surfaced and len(answer) < REFUSAL_WINDOW
+
+    # Nothing retrieved and nothing substantive said. A follow-up turn is exempt: it
+    # legitimately answers short from records surfaced earlier in the conversation,
+    # without calling a tool again.
+    return not surfaced and not had_context and len(answer) < REFUSAL_WINDOW
 
 
 # --- one-shot entry point ---------------------------------------------------------
@@ -321,7 +343,7 @@ async def run_query(
     return {
         "answer": answer,
         "retrieved_ids": list(surfaced),
-        "refused": looks_like_refusal(answer, surfaced, plan),
+        "refused": looks_like_refusal(answer, surfaced, plan, bool(context)),
         "latency_ms": latency_ms,
         "cost_usd": usage.cost_usd,
         "input_tokens": usage.input_tokens,

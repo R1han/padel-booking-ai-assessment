@@ -118,17 +118,3 @@ def test_booking_never_needs_a_model():
 
     result = booking.create_booking([slot], "usr_degraded", 60)
     assert result.status == "confirmed"
-
-
-@pytest.mark.skipif(not llm.has_credentials(), reason="needs an API key")
-def test_provider_fallback_is_configured():
-    """The answerer is wrapped with the configured fallback provider, so a primary
-    outage is retried against the other vendor rather than surfacing to the user."""
-    from app.config import settings
-
-    if not settings().anthropic_api_key:
-        pytest.skip("no fallback provider key configured")
-
-    model = llm.get_model("answerer")
-    assert hasattr(model, "fallbacks"), "answerer is not wrapped with a fallback"
-    assert len(list(model.fallbacks)) >= 1

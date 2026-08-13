@@ -39,17 +39,38 @@ def load_queries(path: Path) -> list[dict]:
         queries.append({
             "query_id": str(item.get("query_id") or f"q{i + 1:02d}"),
             "query": item.get("query") or item.get("text") or "",
+            # Optional and ours alone: earlier user turns replayed in the same session
+            # before the scored query, so cross-turn reference resolution can be
+            # measured. Absent from the graders' file, which is scored as-is.
+            "setup": list(item.get("setup") or []),
         })
     return queries
 
 
 async def run_one(item: dict, semaphore: asyncio.Semaphore) -> dict:
+    from langchain_core.messages import AIMessage, HumanMessage
+
     from app.agent.graph import run_query
+    from app.api.chat import summarise_context
+    from app.agent import tools as agent_tools
+
+    session = f"eval-{item['query_id']}"
 
     async with semaphore:
         started = time.perf_counter()
         try:
-            result = await run_query(item["query"], session_id=f"eval-{item['query_id']}")
+            # Replay any setup turns first so a reference like "the second one" has
+            # something to point at. Only the final query is scored.
+            history: list = []
+            context = ""
+            for earlier in item.get("setup") or []:
+                prior = await run_query(earlier, session_id=session,
+                                        history=history, context=context)
+                history = [*history, HumanMessage(earlier), AIMessage(prior["answer"])]
+                context = summarise_context(agent_tools.surfaced_records(), prior["answer"])
+
+            result = await run_query(item["query"], session_id=session,
+                                     history=history, context=context)
             return {
                 "query_id": item["query_id"],
                 "retrieved_ids": result["retrieved_ids"],

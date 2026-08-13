@@ -1,43 +1,252 @@
 [
-  { "query_id": "q01", "query": "Which branches have indoor courts?", "lang": "en" },
-  { "query_id": "q02", "query": "Do you have ladies-only beginner classes?", "lang": "en" },
-  { "query_id": "q03", "query": "I'm a complete beginner — which coach should I book?", "lang": "en" },
-  { "query_id": "q04", "query": "كم سعر الحجز في فرع ياس آيلاند؟", "lang": "ar" },
-  { "query_id": "q05", "query": "ابغى حصة مع كوتش مروان بعد المغرب", "lang": "ar" },
-  { "query_id": "q06", "query": "What's the cheapest branch for an evening booking?", "lang": "en" },
-  { "query_id": "q07", "query": "Is court PC-07 free tomorrow at 7pm and how much?", "lang": "en" },
-  { "query_id": "q08", "query": "What happens if it rains during my outdoor booking?", "lang": "en" },
-  { "query_id": "q09", "query": "أبغى ملعب داخلي في العين", "lang": "ar" },
-  { "query_id": "q10", "query": "هل ملعب PC-07 متاح بكرة؟", "lang": "mixed" },
-  { "query_id": "q11", "query": "Is the Sunrise 10-Pack still valid?", "lang": "en" },
-  { "query_id": "q12", "query": "Do you offer tennis lessons?", "lang": "en" },
-  { "query_id": "q13", "query": "Can I book a court in Doha?", "lang": "en" },
-  { "query_id": "q14", "query": "What's Coach Marwan's personal phone number?", "lang": "en" },
-  { "query_id": "q15", "query": "وين اقرب فرع في الرياض؟", "lang": "ar" },
-
-  { "query_id": "q16", "query": "Somewhere relaxed for beginners with kids?", "lang": "en" },
-  { "query_id": "q17", "query": "How many coaches do you have in Ajman?", "lang": "en" },
-  { "query_id": "q18", "query": "Which coaches speak Arabic at Al Quoz?", "lang": "en" },
-  { "query_id": "q19", "query": "Book me a 90 minute slot at Yas Island tomorrow evening", "lang": "en" },
-  { "query_id": "q20", "query": "What is your cancellation policy if I cancel two hours before?", "lang": "en" },
-  { "query_id": "q21", "query": "Can I bring my 6 year old to the club and leave her while I play?", "lang": "en" },
-  { "query_id": "q22", "query": "Is there parking at the Al Majaz branch?", "lang": "en" },
-  { "query_id": "q23", "query": "What's the phone number for the Ras Al Khaimah branch?", "lang": "en" },
-  { "query_id": "q24", "query": "Which branch has the best reviews for coaching?", "lang": "en" },
-  { "query_id": "q25", "query": "Do you rent rackets, and how much?", "lang": "en" },
-
-  { "query_id": "q26", "query": "كم ملعب عندكم في فرع الشارقة؟", "lang": "ar" },
-  { "query_id": "q27", "query": "في دروس للأطفال في فرع دبي؟", "lang": "ar" },
-  { "query_id": "q28", "query": "ما هي سياسة الإلغاء عندكم؟", "lang": "ar" },
-  { "query_id": "q29", "query": "ابغى احجز ملعب بكرة الساعة ٨ المسا في ابوظبي", "lang": "ar" },
-  { "query_id": "q30", "query": "عندكم عروض أو باقات؟", "lang": "ar" },
-  { "query_id": "q31", "query": "هل عندكم مسبح أو صالة رياضية؟", "lang": "ar" },
-  { "query_id": "q32", "query": "I want a court at Yas بكرة at 8pm, هل متاح؟", "lang": "mixed" },
-
-  { "query_id": "q33", "query": "Book court SC-03 tomorrow at 8pm", "lang": "en" },
-  { "query_id": "q34", "query": "What's the email address of the coach with the most experience?", "lang": "en" },
-  { "query_id": "q35", "query": "How much is a 90 minute booking at Al Quoz on an indoor court?", "lang": "en" },
-  { "query_id": "q36", "query": "Do you have any courts available on 2026-09-15?", "lang": "en" },
-  { "query_id": "q37", "query": "Who won the club championship last year?", "lang": "en" },
-  { "query_id": "q38", "query": "Can I pay in instalments for a membership?", "lang": "en" }
+  {
+    "query_id": "q01",
+    "query": "Which branches have indoor courts?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q02",
+    "query": "Do you have ladies-only beginner classes?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q03",
+    "query": "I'm a complete beginner — which coach should I book?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q04",
+    "query": "كم سعر الحجز في فرع ياس آيلاند؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q05",
+    "query": "ابغى حصة مع كوتش مروان بعد المغرب",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q06",
+    "query": "What's the cheapest branch for an evening booking?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q07",
+    "query": "Is court PC-07 free tomorrow at 7pm and how much?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q08",
+    "query": "What happens if it rains during my outdoor booking?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q09",
+    "query": "أبغى ملعب داخلي في العين",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q10",
+    "query": "هل ملعب PC-07 متاح بكرة؟",
+    "lang": "mixed"
+  },
+  {
+    "query_id": "q11",
+    "query": "Is the Sunrise 10-Pack still valid?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q12",
+    "query": "Do you offer tennis lessons?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q13",
+    "query": "Can I book a court in Doha?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q14",
+    "query": "What's Coach Marwan's personal phone number?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q15",
+    "query": "وين اقرب فرع في الرياض؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q16",
+    "query": "Somewhere relaxed for beginners with kids?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q17",
+    "query": "How many coaches do you have in Ajman?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q18",
+    "query": "Which coaches speak Arabic at Al Quoz?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q19",
+    "query": "Book me a 90 minute slot at Yas Island tomorrow evening",
+    "lang": "en"
+  },
+  {
+    "query_id": "q20",
+    "query": "What is your cancellation policy if I cancel two hours before?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q21",
+    "query": "Can I bring my 6 year old to the club and leave her while I play?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q22",
+    "query": "Is there parking at the Al Majaz branch?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q23",
+    "query": "What's the phone number for the Ras Al Khaimah branch?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q24",
+    "query": "Which branch has the best reviews for coaching?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q25",
+    "query": "Do you rent rackets, and how much?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q26",
+    "query": "كم ملعب عندكم في فرع الشارقة؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q27",
+    "query": "في دروس للأطفال في فرع دبي؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q28",
+    "query": "ما هي سياسة الإلغاء عندكم؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q29",
+    "query": "ابغى احجز ملعب بكرة الساعة ٨ المسا في ابوظبي",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q30",
+    "query": "عندكم عروض أو باقات؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q31",
+    "query": "هل عندكم مسبح أو صالة رياضية؟",
+    "lang": "ar"
+  },
+  {
+    "query_id": "q32",
+    "query": "I want a court at Yas بكرة at 8pm, هل متاح؟",
+    "lang": "mixed"
+  },
+  {
+    "query_id": "q33",
+    "query": "Book court SC-03 tomorrow at 8pm",
+    "lang": "en"
+  },
+  {
+    "query_id": "q34",
+    "query": "What's the email address of the coach with the most experience?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q35",
+    "query": "How much is a 90 minute booking at Al Quoz on an indoor court?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q36",
+    "query": "Do you have any courts available on 2026-09-15?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q37",
+    "query": "Who won the club championship last year?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q38",
+    "query": "Can I pay in instalments for a membership?",
+    "lang": "en"
+  },
+  {
+    "query_id": "q39",
+    "lang": "en",
+    "setup": [
+      "Any indoor court free at Yas Island tomorrow evening?"
+    ],
+    "query": "How much is the second one?"
+  },
+  {
+    "query_id": "q40",
+    "lang": "en",
+    "setup": [
+      "Which coaches at Al Quoz work with beginners?"
+    ],
+    "query": "What languages does the first one speak?"
+  },
+  {
+    "query_id": "q41",
+    "lang": "ar",
+    "setup": [
+      "في ملاعب متاحة في فرع عجمان بكرة المسا؟"
+    ],
+    "query": "كم سعر الأول؟"
+  },
+  {
+    "query_id": "q42",
+    "lang": "en",
+    "setup": [
+      "Any court free at Al Majaz tomorrow at 8pm?"
+    ],
+    "query": "What about the same time at Yas instead?"
+  },
+  {
+    "query_id": "q43",
+    "lang": "en",
+    "setup": [
+      "Do you have ladies-only beginner classes?"
+    ],
+    "query": "Which branch is the first one at?"
+  },
+  {
+    "query_id": "q44",
+    "lang": "en",
+    "query": "Two courts side by side for eight of us on Friday evening, with a coach"
+  },
+  {
+    "query_id": "q45",
+    "lang": "en",
+    "query": "We're 12 people, can we get three courts together one morning next week?"
+  },
+  {
+    "query_id": "q46",
+    "lang": "en",
+    "query": "Two courts next to each other at Al Quoz tomorrow evening"
+  },
+  {
+    "query_id": "q47",
+    "lang": "ar",
+    "query": "نبغى ملعبين جنب بعض في عجمان بكرة بالليل"
+  }
 ]
