@@ -172,6 +172,41 @@ def check_availability(
 
 
 @tool
+def find_group_slots(
+    branch: str | None = None,
+    date: str | None = None,
+    band: str | None = None,
+    start_time: str | None = None,
+    party_size: int | None = None,
+    courts: int | None = None,
+    adjacent: bool = True,
+    with_coach: bool = False,
+    duration_min: int = 60,
+) -> str:
+    """Find several courts free at the same branch, date and hour, for a group.
+
+    Use for requests like "two courts side by side for eight of us on Friday evening,
+    with a coach". Give party_size and it works out how many courts are needed at four
+    players each, or pass courts directly.
+
+    adjacent=True requires consecutive court numbers. The reply explains how adjacency
+    was decided -- tell the user, because the dataset records no court positions.
+    with_coach=True keeps only hours where a coach is on shift at that branch. Coaching
+    is not linked to court bookings in the data, so say that the court booking does not
+    reserve the coach.
+    """
+    result = retrieval.find_group_slots(
+        branch=branch, date_=date, band=band, start_time=start_time,
+        party_size=party_size, courts=courts, adjacent=adjacent,
+        with_coach=with_coach, duration_min=duration_min,
+    )
+    for option in result.get("options", []):
+        _note([{"id": s} for s in option["slot_ids"]])
+        _note(option.get("coaches_on_shift", []))
+    return _dump(result)
+
+
+@tool
 def price_summary(
     branch: str | None = None, band: str | None = None, court_type: str | None = None
 ) -> str:
@@ -237,6 +272,7 @@ def book_court(slot_ids: list[str], user_id: str, duration_min: int = 60) -> str
 
 
 RETRIEVAL_TOOLS = [
+    find_group_slots,
     search_knowledge, find_records, check_availability, price_summary, coach_availability
 ]
 BOOKING_TOOLS = [hold_slots, book_court]

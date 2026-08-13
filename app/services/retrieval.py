@@ -582,6 +582,149 @@ def _exact_slot_state(court_code: str, on: str, at: str) -> list[dict]:
     return states
 
 
+PLAYERS_PER_COURT = 4
+
+
+def find_group_slots(
+    branch: str | None = None,
+    date_: str | None = None,
+    band: str | None = None,
+    start_time: str | None = None,
+    party_size: int | None = None,
+    courts: int | None = None,
+    adjacent: bool = True,
+    with_coach: bool = False,
+    duration_min: int = 60,
+    limit: int = 6,
+) -> dict:
+    """Several courts at the same branch, date and hour, optionally side by side and
+    with a coach on shift.
+
+    "Side by side" is a judgement call the data does not make for us: courts carry no
+    adjacency or coordinate information. We treat consecutive numbers within the same
+    code prefix at the same branch as adjacent -- PC-03 next to PC-04 -- and say so in
+    the reply rather than presenting it as fact.
+
+    Coaching is likewise not joinable: nothing links a coach shift to a slot or a
+    booking. We report coaches whose published shift covers the hour, which is the
+    strongest claim the data supports.
+    """
+    needed = courts or (
+        -(-party_size // PLAYERS_PER_COURT) if party_size else 2
+    )
+    where = ["s.id NOT IN (SELECT slot_id FROM slot_claims)"]
+    params: list = []
+    if settings().booking_enforce_legacy_overhang:
+        where.append("s.id NOT IN (SELECT slot_id FROM slot_overhang)")
+    if branch:
+        branch_ids = resolve_branches(branch)
+        if not branch_ids:
+            return {"options": [], "note": f"No branch matches {branch!r}."}
+        where.append(f"s.branch_id IN ({','.join('?' * len(branch_ids))})")
+        params += branch_ids
+    resolved_date = resolve_date(date_)
+    if resolved_date:
+        where.append("s.date = ?")
+        params.append(resolved_date)
+    resolved_time = normalise_time(start_time)
+    if resolved_time:
+        where.append("s.start_time = ?")
+        params.append(resolved_time)
+    elif band and band.lower() in BANDS:
+        times = BANDS[band.lower()]
+        where.append(f"s.start_time IN ({','.join('?' * len(times))})")
+        params += times
+
+    with db.read_conn() as conn:
+        rows = conn.execute(
+            "SELECT s.id, s.branch_id, s.date, s.start_time, s.price_aed,"
+            " c.code, c.type, b.name AS branch_name"
+            " FROM slots s JOIN courts c ON c.id = s.court_id"
+            " JOIN branches b ON b.id = s.branch_id"
+            f" WHERE {' AND '.join(where)} ORDER BY s.date, s.start_time, c.code",
+            params,
+        ).fetchall()
+
+        # Group by (branch, date, hour); a group booking must be simultaneous.
+        buckets: dict[tuple, list] = {}
+        for row in rows:
+            buckets.setdefault((row["branch_id"], row["date"], row["start_time"]), []).append(row)
+
+        options = []
+        for (branch_id, on, at), free in sorted(buckets.items()):
+            chosen = _adjacent_run(free, needed) if adjacent else free[:needed]
+            if not chosen:
+                continue
+            coaches = _coaches_on_shift(conn, branch_id, on, at) if with_coach else []
+            if with_coach and not coaches:
+                continue
+            options.append({
+                "branch_id": branch_id, "branch_name": free[0]["branch_name"],
+                "date": on, "start_time": at, "duration_min": duration_min,
+                "courts": [
+                    {"slot_id": r["id"], "code": r["code"], "type": r["type"],
+                     "price_aed": r["price_aed"]} for r in chosen
+                ],
+                "slot_ids": [r["id"] for r in chosen],
+                "adjacent": adjacent,
+                "total_price_aed": sum(r["price_aed"] for r in chosen)
+                                   * (duration_min / settings().slot_minutes),
+                "coaches_on_shift": coaches,
+            })
+            if len(options) >= limit:
+                break
+
+    result: dict = {
+        "options": options,
+        "courts_required": needed,
+        "capacity": needed * PLAYERS_PER_COURT,
+        "adjacency_rule": (
+            "Consecutive court numbers within the same code prefix at one branch. The"
+            " dataset records no court positions, so this is our interpretation of"
+            " 'side by side', not a fact from the data."
+        ) if adjacent else None,
+    }
+    if with_coach:
+        result["coach_caveat"] = (
+            "Coach shifts are not linked to court bookings in the data. These coaches are"
+            " on shift at that branch and hour; the court booking does not reserve them."
+        )
+    if not options:
+        result["note"] = "No combination matches those constraints."
+    return result
+
+
+def _adjacent_run(free: list, needed: int) -> list:
+    """The first run of `needed` consecutive court numbers sharing a code prefix."""
+    parsed = []
+    for row in free:
+        match = re.fullmatch(r"([A-Za-z]+)-?(\d+)", row["code"] or "")
+        if match:
+            parsed.append((match.group(1).upper(), int(match.group(2)), row))
+    parsed.sort(key=lambda item: (item[0], item[1]))
+
+    run: list = []
+    for prefix, number, row in parsed:
+        if run and prefix == run[-1][0] and number == run[-1][1] + 1:
+            run.append((prefix, number, row))
+        else:
+            run = [(prefix, number, row)]
+        if len(run) == needed:
+            return [item[2] for item in run]
+    return []
+
+
+def _coaches_on_shift(conn, branch_id: str, on: str, at: str) -> list[dict]:
+    rows = conn.execute(
+        "SELECT co.id, co.name, cs.start_time, cs.end_time, cs.status"
+        " FROM coach_schedules cs JOIN coaches co ON co.id = cs.coach_id"
+        " WHERE cs.branch_id = ? AND cs.date = ? AND cs.status = 'available'"
+        "   AND cs.start_time <= ? AND cs.end_time > ?",
+        (branch_id, on, at, at),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
 def price_summary(
     branch: str | None = None, band: str | None = None, court_type: str | None = None,
     date_: str | None = None,
