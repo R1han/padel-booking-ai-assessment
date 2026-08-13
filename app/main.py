@@ -29,9 +29,10 @@ async def lifespan(app: FastAPI):
     # race.sh honours an N= override; the default anyio limiter is 40.
     anyio.to_thread.current_default_thread_limiter().total_tokens = cfg.threadpool_tokens
 
-    from app import db
+    from app import db, llm
     from app.ingest import ingest, is_ingested
 
+    llm.configure_tracing()  # before any model call, and a no-op without a key
     db.init_schema()
     if not is_ingested():
         log.warning("database empty, running ingest")

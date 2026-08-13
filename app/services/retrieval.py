@@ -142,26 +142,124 @@ def reciprocal_rank_fusion(rankings: list[list[dict]], k: int) -> list[str]:
 
 
 def search_knowledge(
-    query: str, types: list[str] | None = None, branch_id: str | None = None, k: int | None = None
+    query: str,
+    types: list[str] | None = None,
+    branch_id: str | None = None,
+    k: int | None = None,
+    rerank_enabled: bool | None = None,
 ) -> dict:
     """Hybrid prose search. Degrades to lexical-only when the vector store is unavailable."""
     cfg = settings()
     k = k or cfg.retrieval_top_k
 
-    semantic = vectorstore.search(query, k=k, types=types, branch_id=branch_id)
-    lexical = lexical_search(query, k=k, types=types)
+    # Reviews are 3120 of the 3942 indexed documents. Searched together with everything
+    # else they crowd out the record that actually answers the question, so they are
+    # retrieved as a capped second pass and treated as supporting evidence.
+    if types:
+        primary_types, review_budget = types, (cfg.review_results if "review" in types else 0)
+    else:
+        primary_types = [t for t in ENTITY_KINDS if t != "review"]
+        review_budget = cfg.review_results
+
+    semantic = vectorstore.search(query, k=k, types=primary_types, branch_id=branch_id)
+    lexical = lexical_search(query, k=k, types=primary_types)
     degraded = semantic is None
 
     rankings = [r for r in (semantic, lexical) if r]
-    if not rankings:
-        return {"records": [], "degraded": degraded, "mode": "none"}
+    record_ids = reciprocal_rank_fusion(rankings, k) if rankings else []
 
-    record_ids = reciprocal_rank_fusion(rankings, k)
+    if review_budget:
+        review_hits = vectorstore.search(query, k=review_budget, types=["review"],
+                                         branch_id=branch_id)
+        if review_hits is None:
+            review_hits = lexical_search(query, k=review_budget, types=["review"])
+        record_ids += [h["record_id"] for h in review_hits[:review_budget]
+                       if h["record_id"] not in record_ids]
+
+    if not record_ids:
+        return {"records": [], "degraded": degraded, "mode": "none"}
+    records = hydrate(record_ids)
+
+    use_rerank = cfg.rerank_enabled if rerank_enabled is None else rerank_enabled
+    reranked = False
+    if use_rerank and len(records) > cfg.rerank_top_k:
+        ordered = rerank(query, records)
+        if ordered is not None:
+            records, reranked = ordered, True
+    if not reranked:
+        records = records[: cfg.rerank_top_k]
+
     return {
-        "records": hydrate(record_ids),
+        "records": records,
         "degraded": degraded,
         "mode": "lexical" if degraded else "hybrid",
+        "reranked": reranked,
     }
+
+
+RERANK_PROMPT = (
+    "Rank these candidate records by how well each one answers the question.\n"
+    "Return exactly {k} ids, most relevant first, one per line, nothing else.\n"
+    "Rank every candidate you are given -- do not filter. If a candidate is a poor "
+    "match, put it last rather than dropping it.\n\n"
+    "Question: {query}\n\nCandidates:\n{candidates}"
+)
+
+
+def rerank(query: str, records: list[dict]) -> list[dict] | None:
+    """Listwise rerank.
+
+    Earns its place on this corpus: 'rain' or 'weather' appears in 37 of the 40 policy
+    documents, so lexical scores barely separate them and fusion alone often puts the
+    wrong policy first. Returns None on any failure so the caller keeps the fused order.
+    """
+    from app import llm
+
+    cfg = settings()
+    if not llm.has_credentials():
+        return None
+
+    index = {r["id"]: r for r in records}
+    candidates = "\n".join(
+        f"- {r['id']} [{r['kind']}] {(r.get('title') or r.get('name') or '')[:80]}: "
+        f"{_snippet(r)}"
+        for r in records
+    )
+    try:
+        model = llm.get_model("reranker")
+        response = model.invoke(
+            RERANK_PROMPT.format(k=cfg.rerank_top_k, query=query, candidates=candidates)
+        )
+        llm.record_response(response, llm.model_spec("reranker"), step="rerank")
+    except Exception as exc:  # noqa: BLE001 - a reranker outage must not fail the query
+        log.warning("rerank unavailable, keeping fused order: %s", exc)
+        return None
+
+    text = response.content if isinstance(response.content, str) else str(response.content)
+    ordered = [rid for rid in re.findall(r"[a-z]+_[a-z0-9_]+", text) if rid in index]
+    seen, result = set(), []
+    for rid in ordered:
+        if rid not in seen:
+            seen.add(rid)
+            result.append(index[rid])
+    if not result:
+        return None
+    # Backfill from the fused order so reranking can only reorder, never shrink, the
+    # result set. A terse model reply must not cost us recall.
+    for record in records:
+        if len(result) >= cfg.rerank_top_k:
+            break
+        if record["id"] not in seen:
+            seen.add(record["id"])
+            result.append(record)
+    return result[: cfg.rerank_top_k]
+
+
+def _snippet(record: dict, length: int = 160) -> str:
+    for field in ("description", "bio", "body", "text", "conditions"):
+        if record.get(field):
+            return " ".join(str(record[field]).split())[:length]
+    return ""
 
 
 TABLE_FOR_TYPE = {
@@ -199,7 +297,7 @@ def find_records(
     specialty: str | None = None,
     language: str | None = None,
     name_contains: str | None = None,
-    limit: int = 25,
+    limit: int = 60,
 ) -> dict:
     """Filtered lookups over the catalog. This is what answers counting and listing
     questions, which vector search cannot do reliably."""
@@ -254,11 +352,34 @@ def find_records(
         ).fetchone()["c"]
         rows = conn.execute(sql + " LIMIT ?", params + [limit]).fetchall()
 
+        # Counting questions ("which branches have indoor courts") must be answered from
+        # an aggregate, not by tallying a truncated record list.
+        counts_by_branch = {}
+        if kind in ("court", "coach", "class"):
+            grouped = conn.execute(
+                sql.replace(f"SELECT * FROM {table}",
+                            f"SELECT branch_id, count(*) c FROM {table}") + " GROUP BY branch_id",
+                params,
+            ).fetchall()
+            names = {r["id"]: r["name"] for r in conn.execute("SELECT id, name FROM branches")}
+            counts_by_branch = {
+                f"{r['branch_id']} ({names.get(r['branch_id'], '?')})": r["c"] for r in grouped
+            }
+
     records = [_row_to_record(r, kind) for r in rows]
     if kind == "package":
         for record in records:
             record["is_valid_now"] = is_package_valid(record)
-    return {"records": records, "total": total}
+
+    result = {"records": records, "total": total}
+    if counts_by_branch:
+        result["counts_by_branch"] = counts_by_branch
+    if total > len(records):
+        result["truncated"] = (
+            f"Showing {len(records)} of {total}. Use `total` and `counts_by_branch` for "
+            "counting, never the record list."
+        )
+    return result
 
 
 def resolve_branches(text: str) -> list[str]:

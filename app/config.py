@@ -73,6 +73,9 @@ class Settings(BaseSettings):
     rerank_top_k: int = 6
     rrf_k: int = 60
     rerank_enabled: bool = True
+    # Reviews are 3120 of 3942 indexed documents and would otherwise dominate every
+    # result set, so they are retrieved separately and capped.
+    review_results: int = 3
 
     # --- observability ------------------------------------------------------
     langsmith_tracing: bool = False
