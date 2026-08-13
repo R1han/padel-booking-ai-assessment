@@ -1,0 +1,704 @@
+[
+  {
+    "query_id": "q13",
+    "retrieved_ids": [],
+    "answer": "Baseline Padel does not have any branches in Doha. Our branches are located across the UAE only. If you want, I can help you find and book a court at one of our UAE branches.",
+    "refused": true,
+    "latency_ms": 3783,
+    "cost_usd": 0.000724
+  },
+  {
+    "query_id": "q35",
+    "retrieved_ids": [
+      "slot_alquoz_pc02_20260810_0600",
+      "slot_alquoz_pc03_20260810_0600",
+      "slot_alquoz_pc04_20260810_0600",
+      "slot_alquoz_pc05_20260810_0600",
+      "slot_alquoz_pc06_20260810_0600",
+      "slot_alquoz_pc01_20260810_0600",
+      "slot_alquoz_pc02_20260810_0700",
+      "slot_alquoz_pc03_20260810_0700",
+      "slot_alquoz_pc04_20260810_0700",
+      "slot_alquoz_pc05_20260810_0700",
+      "slot_alquoz_pc06_20260810_0700",
+      "slot_alquoz_pc01_20260810_0700",
+      "slot_alquoz_pc02_20260810_0800",
+      "slot_alquoz_pc03_20260810_0800",
+      "slot_alquoz_pc04_20260810_0800",
+      "slot_alquoz_pc05_20260810_0800",
+      "slot_alquoz_pc06_20260810_0800",
+      "slot_alquoz_pc01_20260810_0800",
+      "slot_alquoz_pc02_20260810_0900",
+      "slot_alquoz_pc03_20260810_0900",
+      "br_alquoz"
+    ],
+    "answer": "The price for a 90-minute booking on an indoor court at the Al Quoz branch starts from 190 AED and goes up to 210 AED depending on the specific court and time. Would you like to book a specific time slot? If yes, please let me know your preferred start time.",
+    "refused": false,
+    "latency_ms": 5759,
+    "cost_usd": 0.002296
+  },
+  {
+    "query_id": "q01",
+    "retrieved_ids": [
+      "crt_alquoz_pc01",
+      "crt_alquoz_pc02",
+      "crt_alquoz_pc03",
+      "crt_alquoz_pc04",
+      "crt_alquoz_pc05",
+      "crt_alquoz_pc06",
+      "crt_jvc_pc01",
+      "crt_jvc_pc02",
+      "crt_jvc_pc03",
+      "crt_jvc_pc04",
+      "crt_yas_cc01",
+      "crt_yas_cc02",
+      "crt_yas_cc03",
+      "crt_yas_cc04",
+      "crt_yas_cc05",
+      "crt_khalifa_pc01",
+      "crt_khalifa_pc02",
+      "crt_khalifa_pc03",
+      "crt_alain_sc04",
+      "crt_majaz_pc01",
+      "crt_majaz_pc02",
+      "crt_majaz_pc03",
+      "crt_majaz_pc04",
+      "crt_ajman_pc01",
+      "crt_ajman_pc02",
+      "crt_rak_rc01",
+      "crt_rak_rc02",
+      "crt_rak_rc03",
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "answer": "The branches with indoor courts are:\n\n- Baseline Al Quoz (6 indoor courts)\n- Baseline JVC (4 indoor courts)\n- Baseline Yas Island (5 indoor courts)\n- Baseline Khalifa City (3 indoor courts)\n- Baseline Al Majaz (4 indoor courts)\n- Baseline RAK Marina (3 indoor courts)\n- Baseline Ajman Corniche (2 indoor courts)\n- Baseline Al Ain (1 indoor court)\n\nIf you want details about any specific branch or court, let me know!",
+    "refused": false,
+    "latency_ms": 6374,
+    "cost_usd": 0.00326
+  },
+  {
+    "query_id": "q06",
+    "retrieved_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_majaz",
+      "br_rak",
+      "br_jvc",
+      "br_khalifa",
+      "br_alquoz",
+      "br_yas"
+    ],
+    "answer": "The cheapest branch for an evening padel booking is Baseline Ajman Corniche, with prices starting at 160 AED. Here is the price range for evening bookings at each branch:\n\n- Baseline Ajman Corniche: 160 to 245 AED\n- Baseline Al Ain: 190 to 245 AED\n- Baseline Al Majaz: 210 to 330 AED\n- Baseline RAK Marina: 210 to 345 AED\n- Baseline JVC: 225 to 360 AED\n- Baseline Khalifa City: 240 to 360 AED\n- Baseline Al Quoz: 260 to 400 AED\n- Baseline Yas Island: 310 to 460 AED\n\nWould you like to check availability or book a court at Baseline Ajman Corniche or another branch?",
+    "refused": false,
+    "latency_ms": 7164,
+    "cost_usd": 0.001782
+  },
+  {
+    "query_id": "q14",
+    "retrieved_ids": [],
+    "answer": "I cannot provide personal phone numbers of staff members. If you need to contact Coach Marwan, please reach out to the branch where he works, and they can assist you. Would you like the phone number of a specific branch?",
+    "refused": true,
+    "latency_ms": 2497,
+    "cost_usd": 0.000749
+  },
+  {
+    "query_id": "q07",
+    "retrieved_ids": [
+      "slot_alquoz_pc07_20260810_1900"
+    ],
+    "answer": "Court PC-07 is not free tomorrow at 7pm; it is already booked. The price for that slot at Baseline Al Quoz is 260 AED.",
+    "refused": false,
+    "latency_ms": 3836,
+    "cost_usd": 0.001473
+  },
+  {
+    "query_id": "q36",
+    "retrieved_ids": [],
+    "answer": "The bookable dates for Baseline Padel courts run from 2026-08-10 to 2026-08-24. Therefore, I do not have availability information for 2026-09-15 as it is outside the bookable date range. If you want, I can check availability for any date within the bookable range.",
+    "refused": true,
+    "latency_ms": 3011,
+    "cost_usd": 0.000811
+  },
+  {
+    "query_id": "q28",
+    "retrieved_ids": [
+      "pol_cancellation",
+      "pol_coach_cancellation",
+      "pol_no_show",
+      "pol_refunds",
+      "pol_group_bookings",
+      "pol_pricing_structure"
+    ],
+    "answer": "سياسة الإلغاء لدينا كالتالي:\n\n1. يمكن للأعضاء إلغاء حجز أي ملعب مجاناً حتى ست ساعات قبل وقت بدء الحجز.\n2. الإلغاءات التي تتم خلال هذه الفترة تتم تلقائياً عبر التطبيق أو بوابة الأعضاء دون الحاجة للتواصل مع الموظفين.\n3. الإلغاءات التي تتم بعد هذه الفترة وحتى قبل بدء الجلسة تخضع لشروط إلغاء متأخر.\n4. في حال استحقاق استرداد، يتم إرجاع المبلغ إلى محفظة العضو في نادي Baseline Padel لاستخدامها في حجوزات أو خدمات مستقبلية.\n5. الحجوزات في أوقات الذروة (الصباح الباكر، المساء، وعطلات نهاية الأسبوع) تخضع لشروط إلغاء أكثر صرامة، حيث لا يتم استرداد المبلغ إذا تم الإلغاء خلال 12 ساعة من وقت الحجز.\n6. يمكن للأعضاء نقل الحجز إلى لاعب آخر مسجل بدلاً من الإلغاء.\n7. عدم الحضور (No-Show) يتم تحصيل رسومه كاملة بدون استرداد.\n8. جلسات التدريب الخاصة لها سياسة إلغاء منفصلة بمدة إشعار 24 ساعة.\n\nهل ترغب في معرفة تفاصيل أكثر عن بند معين في السياسة؟",
+    "refused": false,
+    "latency_ms": 10224,
+    "cost_usd": 0.006495
+  },
+  {
+    "query_id": "q21",
+    "retrieved_ids": [
+      "pol_kids_supervision",
+      "pol_kids_academy",
+      "pol_kids_safeguarding",
+      "pol_coaching_terms",
+      "cls_junior_academy_majaz",
+      "cls_kids_padel_starters_majaz"
+    ],
+    "answer": "You can bring your 6-year-old child to the club, but children under 12 must be accompanied by a parent, guardian, or a nominated adult of at least 18 years who must remain within the club premises or confirm an agreed collection window with reception before leaving. The club staff and coaches are not permitted to take responsibility for children under 12 without this documented handover.\n\nSo, you cannot leave your 6-year-old child unattended at the club while you play. The child must be supervised by you or a responsible adult you nominate who stays on-site. \n\nIf you want your child to participate in activities, there is a \"Kids Padel Starters\" class for children aged 5 to 8 at Baseline Al Majaz branch on Friday evenings, which might be suitable for your child. Would you like more information about that?",
+    "refused": false,
+    "latency_ms": 9711,
+    "cost_usd": 0.005099
+  },
+  {
+    "query_id": "q29",
+    "retrieved_ids": [
+      "slot_alain_sc02_20260810_2000",
+      "slot_khalifa_sc03_20260810_2000",
+      "slot_yas_sc02_20260810_2000",
+      "slot_yas_sc04_20260810_2000",
+      "slot_yas_cc03_20260810_2000",
+      "slot_yas_cc05_20260810_2000",
+      "br_alain",
+      "br_khalifa",
+      "br_yas"
+    ],
+    "answer": "عندنا ملاعب متاحة في أبوظبي بكرة الساعة 8 مساءً، وهذه الخيارات مع الأسعار:\n\n- Baseline Khalifa City، ملعب SC-03، سعره 240 درهم.\n- Baseline Yas Island، ملاعب SC-02 بسعر 325 درهم، SC-04 بسعر 340 درهم، CC-03 بسعر 390 درهم، وCC-05 بسعر 400 درهم.\n\nأي فرع وتحديد ملعب تفضل للحجز؟",
+    "refused": false,
+    "latency_ms": 4995,
+    "cost_usd": 0.001785
+  },
+  {
+    "query_id": "q15",
+    "retrieved_ids": [],
+    "answer": "نادي Baseline Padel لديه فروع في الإمارات العربية المتحدة فقط، ولا يوجد فروع في الرياض. هل يمكنني مساعدتك بشيء آخر يخص الفروع المتوفرة في الإمارات؟",
+    "refused": true,
+    "latency_ms": 2224,
+    "cost_usd": 0.000734
+  },
+  {
+    "query_id": "q22",
+    "retrieved_ids": [
+      "br_majaz",
+      "br_rak",
+      "br_ajman",
+      "br_khalifa",
+      "br_jvc",
+      "br_alquoz"
+    ],
+    "answer": "Yes, the Al Majaz branch of Baseline Padel has parking available. There are dedicated parking bays close to the entrance, making parking straightforward and convenient. If you need more information, you can contact the branch at +971-6-494-2606.",
+    "refused": false,
+    "latency_ms": 6489,
+    "cost_usd": 0.002785
+  },
+  {
+    "query_id": "q08",
+    "retrieved_ids": [
+      "pol_court_transfers",
+      "pol_refunds",
+      "pol_cancellation",
+      "pol_heat",
+      "rev_00458",
+      "rev_01065"
+    ],
+    "answer": "If it rains during your outdoor booking at Baseline Padel, the booking will be cancelled due to weather conditions, and you will receive a full credit to your member account within 48 hours. This credit expires 90 days from the date it is issued. You do not need to submit a claim as weather-related cancellations are logged automatically by club staff once a court is deemed unplayable. This policy applies only to outdoor bookings; indoor bookings are not eligible for weather credit.",
+    "refused": false,
+    "latency_ms": 6432,
+    "cost_usd": 0.004977
+  },
+  {
+    "query_id": "q37",
+    "retrieved_ids": [],
+    "answer": "I do not have information about who won the club championship last year. If you have any other questions about the club or its services, feel free to ask!",
+    "refused": true,
+    "latency_ms": 5908,
+    "cost_usd": 0.000712
+  },
+  {
+    "query_id": "q02",
+    "retrieved_ids": [
+      "cls_ladies_beginner_academy_alquoz",
+      "cls_ladies_beginner_academy_alquoz_2",
+      "cls_ladies_beginner_academy_jvc",
+      "cls_ladies_beginner_academy_jvc_2",
+      "cls_ladies_beginner_academy_yas",
+      "cls_ladies_beginner_academy_yas_2",
+      "cls_ladies_beginner_academy_khalifa",
+      "cls_ladies_beginner_academy_khalifa_2",
+      "cls_ladies_beginner_academy_alain",
+      "cls_ladies_beginner_academy_majaz",
+      "cls_ladies_junior_academy_majaz",
+      "cls_ladies_adult_beginner_course_majaz",
+      "cls_ladies_beginner_academy_majaz_2",
+      "cls_ladies_beginner_academy_ajman",
+      "cls_ladies_beginner_academy_rak",
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "answer": "Yes, we have ladies-only beginner padel classes at several branches in the UAE. Here are some options:\n\n- Baseline Al Quoz: Ladies Beginner Academy on Fri 16:00-17:30 and Wed/Sat 17:30-19:00.\n- Baseline JVC: Ladies Beginner Academy on Sat 20:30-22:00 and Fri 20:30-22:00.\n- Baseline Yas Island: Ladies Beginner Academy on Wed/Sat 09:00-10:30 and Sat/Mon 09:00-10:30.\n- Baseline Khalifa City: Ladies Beginner Academy on Sun/Thu 07:00-08:30 and Sun/Thu 09:00-10:30.\n- Baseline Al Ain: Ladies Beginner Academy on Tue/Thu 16:00-17:30.\n- Baseline Al Majaz: Multiple Ladies Beginner Academy sessions on Sat 09:00-10:30, Fri 09:00-10:30, and Sun/Tue 09:00-10:30.\n- Baseline Ajman Corniche: Ladies Beginner Academy on Sun/Thu 17:30-19:00.\n- Baseline RAK Marina: Ladies Beginner Academy on Tue/Thu 16:00-17:30.\n\nPrices per term range from AED 1,150 to AED 1,350 depending on the branch and schedule. Would you like details or to book a class at any specific branch?",
+    "refused": false,
+    "latency_ms": 8173,
+    "cost_usd": 0.003661
+  },
+  {
+    "query_id": "q23",
+    "retrieved_ids": [
+      "br_rak"
+    ],
+    "answer": "The phone number for the Ras Al Khaimah branch, Baseline RAK Marina, is +971-7-355-6472.",
+    "refused": false,
+    "latency_ms": 3585,
+    "cost_usd": 0.001576
+  },
+  {
+    "query_id": "q30",
+    "retrieved_ids": [
+      "pkg_sunrise_10",
+      "pkg_prime_evening_10_pack",
+      "pkg_weekend_warrior_10_pack",
+      "pkg_flexi_20_pack",
+      "pkg_ladies_daytime_25_pack",
+      "pkg_junior_term_50_pack",
+      "pkg_corporate_block_5_pack",
+      "pkg_student_10_pack",
+      "pkg_coaching_credit_10_pack",
+      "pkg_marina_season_20_pack",
+      "pkg_sunrise_25_pack",
+      "pkg_prime_evening_50_pack",
+      "pkg_weekend_warrior_5_pack",
+      "pkg_flexi_10_pack",
+      "pkg_ladies_daytime_10_pack",
+      "pkg_junior_term_20_pack",
+      "pkg_corporate_block_25_pack",
+      "pkg_student_50_pack",
+      "pkg_coaching_credit_5_pack",
+      "pkg_marina_season_10_pack",
+      "pkg_sunrise_10_pack",
+      "pkg_prime_evening_20_pack",
+      "pkg_weekend_warrior_25_pack",
+      "pkg_flexi_50_pack",
+      "pkg_ladies_daytime_5_pack",
+      "pkg_junior_term_10_pack",
+      "pkg_corporate_block_10_pack",
+      "pkg_student_20_pack",
+      "pkg_coaching_credit_25_pack",
+      "pkg_marina_season_50_pack",
+      "pkg_sunrise_5_pack",
+      "pkg_prime_evening_10_pack_2",
+      "pkg_weekend_warrior_10_pack_2",
+      "pkg_flexi_20_pack_2",
+      "pkg_ladies_daytime_25_pack_2",
+      "pkg_junior_term_50_pack_2",
+      "pkg_corporate_block_5_pack_2",
+      "pkg_student_10_pack_2",
+      "pkg_coaching_credit_10_pack_2",
+      "pkg_marina_season_20_pack_2",
+      "pkg_sunrise_25_pack_2",
+      "pkg_prime_evening_50_pack_2",
+      "pkg_weekend_warrior_5_pack_2",
+      "pkg_flexi_10_pack_2",
+      "pkg_ladies_daytime_10_pack_2",
+      "pkg_junior_term_20_pack_2",
+      "pkg_corporate_block_25_pack_2",
+      "pkg_student_50_pack_2",
+      "pkg_coaching_credit_5_pack_2",
+      "pkg_marina_season_10_pack_2",
+      "pkg_sunrise_10_pack_2",
+      "pkg_prime_evening_20_pack_2",
+      "pkg_weekend_warrior_25_pack_2",
+      "pkg_flexi_50_pack_2",
+      "pkg_ladies_daytime_5_pack_2",
+      "pkg_junior_term_10_pack_2",
+      "pkg_corporate_block_10_pack_2",
+      "pkg_student_20_pack_2",
+      "pkg_coaching_credit_25_pack_2",
+      "pkg_marina_season_50_pack_2"
+    ],
+    "answer": "نعم، لدينا العديد من العروض والباقات المتوفرة في فروع نادي Baseline Padel في الإمارات. إليك بعض الأمثلة:\n\n- باقة Prime Evening 10-Pack: 10 جلسات بسعر 99999 درهم، صالحة من الساعة 18:00 إلى 22:00 في 8 فروع.\n- باقة Weekend Warrior 10-Pack: 10 جلسات بسعر 1650 درهم، صالحة فقط أيام الجمعة والسبت في فرعي عجمان والعين.\n- باقة Flexi 20-Pack: 20 جلسة بسعر 3900 درهم، صالحة في أي وقت وأي فرع في عجمان، JVC، ورأس الخيمة.\n- باقة Ladies Daytime 25-Pack: 25 جلسة بسعر 4450 درهم، مخصصة للسيدات فقط بين 09:00 و16:00 في فرعي عجمان ورأس الخيمة.\n- باقة Coaching Credit 10-Pack: 10 جلسات تدريب بسعر 1750 درهم، صالحة في 8 فروع.\n\nوهناك العديد من الباقات الأخرى المتنوعة حسب الفروع، الأوقات، والفئات المستهدفة.\n\nهل تود معرفة تفاصيل باقة معينة أو فرع محدد؟",
+    "refused": false,
+    "latency_ms": 7142,
+    "cost_usd": 0.007646
+  },
+  {
+    "query_id": "q09",
+    "retrieved_ids": [
+      "crt_alain_sc04",
+      "br_alain"
+    ],
+    "answer": "في فرع العين لدينا ملعب داخلي واحد وهو Standard Court 4. السعر هو 150 درهم في الساعة. هل تود معرفة التوافر للحجز؟ وإذا نعم، لأي تاريخ ووقت؟",
+    "refused": false,
+    "latency_ms": 4026,
+    "cost_usd": 0.001473
+  },
+  {
+    "query_id": "q16",
+    "retrieved_ids": [
+      "cls_kids_padel_starters_alquoz_2",
+      "cls_kids_padel_starters_khalifa",
+      "cls_kids_padel_starters_alain",
+      "cls_kids_padel_starters_jvc",
+      "cls_kids_padel_starters_rak",
+      "cls_kids_padel_starters_majaz"
+    ],
+    "answer": "We have several relaxed beginner classes suitable for kids aged 5 to 8 at different branches:\n\n- Kids Padel Starters at Al Quoz: Sundays and Thursdays 17:30-19:00, AED 800 per term, coach Sofia Marchetti.\n- Kids Padel Starters at Khalifa City: Sundays and Thursdays 16:00-17:30, AED 700 per term, coach Ravi Menon.\n- Kids Padel Starters at Al Ain: Fridays 16:00-17:30, AED 850 per term, coach Hamad Al Dhaheri.\n- Kids Padel Starters at JVC: Sundays and Tuesdays 20:30-22:00, AED 800 per term, coach Karim Mansour.\n- Kids Padel Starters at RAK Marina: Saturdays 16:00-17:30, AED 750 per term, coach Adam Whitfield.\n- Kids Padel Starters at Al Majaz: Fridays 20:30-22:00, AED 650 per term, coach Zayed Al Nuaimi.\n\nThese classes focus on fun, coordination, and basic skills in a relaxed, playful setting. Would you like details or availability for any specific branch?",
+    "refused": false,
+    "latency_ms": 9787,
+    "cost_usd": 0.003068
+  },
+  {
+    "query_id": "q31",
+    "retrieved_ids": [
+      "cch_sofia_marchetti",
+      "pol_lockers",
+      "pol_heat",
+      "br_yas",
+      "rev_01163",
+      "rev_02508",
+      "cls_cardio_padel_alquoz_2",
+      "cls_cardio_padel_jvc",
+      "cls_cardio_padel_ajman",
+      "cls_cardio_padel_khalifa",
+      "cls_cardio_padel_yas",
+      "br_jvc"
+    ],
+    "answer": "نعم، بعض فروع نادي Baseline Padel تحتوي على صالة رياضية (gym)، مثل فرع Baseline Yas Island وفرع Baseline JVC. \n\nأما بالنسبة للمسبح، فلا توجد معلومات تفيد بوجود مسبح في أي من فروع النادي.\n\nهل تود معرفة المزيد عن فروع معينة أو خدمات أخرى؟",
+    "refused": true,
+    "latency_ms": 6459,
+    "cost_usd": 0.005108
+  },
+  {
+    "query_id": "q38",
+    "retrieved_ids": [
+      "pol_payment_methods",
+      "pol_membership_renewal",
+      "pol_membership_tiers",
+      "pol_pricing_structure",
+      "pol_promotions",
+      "pol_membership_freeze"
+    ],
+    "answer": "Membership fees at Baseline Padel are billed on recurring cycles (monthly, quarterly, or annually) and must be paid in full at the time of billing. The policy does not mention an option to pay membership fees in installments. Payment methods accepted include major debit and credit cards, direct bank transfers, and approved digital wallets, but cash is not accepted for membership fees.\n\nIf you have financial difficulties, the policy encourages contacting branch management proactively to discuss a reasonable settlement arrangement, but installment payment as a standard option is not specified.\n\nWould you like information on membership tiers, billing cycles, or how to manage payments?",
+    "refused": false,
+    "latency_ms": 6664,
+    "cost_usd": 0.006229
+  },
+  {
+    "query_id": "q24",
+    "retrieved_ids": [
+      "rev_00591",
+      "rev_01177",
+      "rev_02088",
+      "rev_02086",
+      "rev_01792",
+      "rev_02089"
+    ],
+    "answer": "The branches with the best coaching reviews, all rated 5 stars, include:\n\n- Baseline JVC with coaches Fatima Al Zaabi and Andres Rivas praised for personalized and effective coaching.\n- Baseline Yas Island noted for exceptional coaching on an outdoor court.\n- Baseline Ajman Corniche with highly enthusiastic and knowledgeable trainers.\n- Baseline Al Majaz with outstanding coaching focused on positioning and shot control.\n\nIf you want details or to book coaching at any of these branches, let me know!",
+    "refused": true,
+    "latency_ms": 6205,
+    "cost_usd": 0.002226
+  },
+  {
+    "query_id": "q17",
+    "retrieved_ids": [
+      "cch_saif_al_shamsi",
+      "cch_valentina_cruz",
+      "cch_hassan_nofal",
+      "cch_dina_kamal",
+      "br_ajman"
+    ],
+    "answer": "There are 4 coaches at the Baseline Ajman Corniche branch. Their names are Saif Al Shamsi, Valentina Cruz, Hassan Nofal, and Dina Kamal.",
+    "refused": true,
+    "latency_ms": 3354,
+    "cost_usd": 0.001851
+  },
+  {
+    "query_id": "q10",
+    "retrieved_ids": [
+      "slot_alquoz_pc07_20260810_0600",
+      "slot_alquoz_pc07_20260810_0700",
+      "slot_alquoz_pc07_20260810_0800",
+      "slot_alquoz_pc07_20260810_0900",
+      "slot_alquoz_pc07_20260810_1000",
+      "slot_alquoz_pc07_20260810_1500",
+      "slot_alquoz_pc07_20260810_1600",
+      "slot_alquoz_pc07_20260810_1700",
+      "slot_alquoz_pc07_20260810_2000",
+      "slot_alquoz_pc07_20260810_2100",
+      "slot_alquoz_pc07_20260810_2200",
+      "slot_alquoz_pc07_20260810_2300",
+      "br_alquoz"
+    ],
+    "answer": "ملعب PC-07 في فرع Baseline Al Quoz متاح غداً 10 أغسطس 2026 في الأوقات التالية مع الأسعار لكل ساعة:\n\n- 06:00 - 07:00 بسعر 160 درهم\n- 07:00 - 08:00 بسعر 160 درهم\n- 08:00 - 09:00 بسعر 160 درهم\n- 09:00 - 10:00 بسعر 160 درهم\n- 10:00 - 11:00 بسعر 160 درهم\n- 15:00 - 16:00 بسعر 190 درهم\n- 16:00 - 17:00 بسعر 190 درهم\n- 17:00 - 18:00 بسعر 190 درهم\n- 20:00 - 21:00 بسعر 260 درهم\n- 21:00 - 22:00 بسعر 260 درهم\n- 22:00 - 23:00 بسعر 180 درهم\n- 23:00 - 00:00 بسعر 180 درهم\n\nهل تود حجز وقت معين؟",
+    "refused": false,
+    "latency_ms": 6180,
+    "cost_usd": 0.002238
+  },
+  {
+    "query_id": "q03",
+    "retrieved_ids": [
+      "cch_layla_nasser",
+      "cch_omar_farouk",
+      "cch_rashid_al_blooshi",
+      "cch_hana_kimura",
+      "cch_fatima_al_zaabi",
+      "cch_karim_mansour",
+      "cch_yousef_halabi",
+      "cch_noor_al_hashimi",
+      "cch_ahmed_sultan",
+      "cch_bilal_chaudhry",
+      "cch_reem_darwish",
+      "cch_marwan_haddad",
+      "cch_aisha_al_marri",
+      "cch_ravi_menon",
+      "cch_hamad_al_dhaheri",
+      "cch_mariam_al_ameri",
+      "cch_ibrahim_saleh",
+      "cch_noura_al_suwaidi",
+      "cch_shaikha_al_qasimi",
+      "cch_zayed_al_nuaimi",
+      "cch_amina_belhaj",
+      "cch_saif_al_shamsi",
+      "cch_valentina_cruz",
+      "cch_hassan_nofal",
+      "cch_dina_kamal",
+      "cch_adam_whitfield",
+      "cch_maya_khoury",
+      "cch_khalid_al_mazrouei",
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "answer": "We have 28 coaches who specialize in beginners across our branches. Here are some examples:\n\n- Layla Nasser at Baseline Al Quoz, focusing on making total beginners feel comfortable with a patient and supportive approach. Rate: 300 AED/hour.\n- Omar Farouk at Baseline Al Quoz, known for patient repetition and good for nervous first-timers and juniors. Rate: 320 AED/hour.\n- Fatima Al Zaabi at Baseline JVC, great for ladies and mixed-ability beginner groups with a calm, supportive style. Rate: 290 AED/hour.\n- Saif Al Shamsi at Baseline Ajman Corniche, specializing in beginners and social play with a fun, easygoing approach. Rate: 220 AED/hour.\n- Hamad Al Dhaheri at Baseline Al Ain, focusing on beginners and social groups with a light, encouraging style. Rate: 250 AED/hour.\n\nIf you tell me your preferred branch or any other preferences, I can help you choose a coach and check their availability.",
+    "refused": false,
+    "latency_ms": 6141,
+    "cost_usd": 0.004906
+  },
+  {
+    "query_id": "q32",
+    "retrieved_ids": [
+      "slot_yas_sc02_20260810_2000",
+      "slot_yas_sc04_20260810_2000",
+      "slot_yas_cc03_20260810_2000",
+      "slot_yas_cc05_20260810_2000",
+      "br_yas"
+    ],
+    "answer": "نعم، في ملاعب متاحة في نادي باسلاين ياس آيلاند غداً الساعة 8 مساءً. الخيارات المتاحة هي:\n\n- ملعب خارجي SC-02 بسعر 325 درهم للساعة.\n- ملعب خارجي SC-04 بسعر 340 درهم للساعة.\n- ملعب داخلي CC-03 بسعر 390 درهم للساعة.\n- ملعب داخلي CC-05 بسعر 400 درهم للساعة.\n\nهل تود حجز أحد هذه الملاعب؟ وإذا نعم، أي ملعب تفضل؟",
+    "refused": false,
+    "latency_ms": 4484,
+    "cost_usd": 0.00173
+  },
+  {
+    "query_id": "q25",
+    "retrieved_ids": [
+      "pol_equipment_hire",
+      "pol_pricing_structure",
+      "pol_guest_access",
+      "pol_promotions",
+      "pol_kids_equipment",
+      "pol_private_lessons"
+    ],
+    "answer": "Yes, Baseline Padel rents padel rackets at all branches. The rental is charged per session and can be paid by card or billed to a member account. Cash payment is accepted at select branches only. The rental rackets are available in beginner, intermediate, and advanced profiles. \n\nThe exact rental fee is displayed at the front desk and on the booking app, and may vary slightly by branch. Members with active monthly or annual plans may get discounted or complimentary racket hire depending on their membership tier.\n\nIf you want, I can check the current rental price for a specific branch or date. Would you like me to do that?",
+    "refused": false,
+    "latency_ms": 6770,
+    "cost_usd": 0.006607
+  },
+  {
+    "query_id": "q18",
+    "retrieved_ids": [
+      "cch_omar_farouk",
+      "br_alquoz"
+    ],
+    "answer": "At the Al Quoz branch, the coach who speaks Arabic is Omar Farouk. He is experienced in coaching juniors and beginners and teaches comfortably in both English and Arabic.",
+    "refused": false,
+    "latency_ms": 3889,
+    "cost_usd": 0.001512
+  },
+  {
+    "query_id": "q26",
+    "retrieved_ids": [
+      "crt_majaz_pc01",
+      "crt_majaz_pc02",
+      "crt_majaz_pc03",
+      "crt_majaz_pc04",
+      "crt_majaz_sc01",
+      "crt_majaz_sc02",
+      "crt_majaz_sc03",
+      "br_majaz"
+    ],
+    "answer": "في فرع الشارقة (Baseline Al Majaz) لدينا 7 ملاعب باديل.",
+    "refused": false,
+    "latency_ms": 2788,
+    "cost_usd": 0.001784
+  },
+  {
+    "query_id": "q04",
+    "retrieved_ids": [
+      "br_yas"
+    ],
+    "answer": "سعر حجز ملعب البادل في فرع ياس آيلاند يتراوح بين 190 و460 درهم إماراتي، بمتوسط سعر حوالي 280 درهم. هل ترغب في معرفة الأسعار حسب وقت الحجز أو نوع الملعب؟",
+    "refused": false,
+    "latency_ms": 5951,
+    "cost_usd": 0.001434
+  },
+  {
+    "query_id": "q11",
+    "retrieved_ids": [
+      "pkg_sunrise_10_pack_2",
+      "pkg_sunrise_10",
+      "pkg_sunrise_10_pack",
+      "pkg_sunrise_25_pack_3",
+      "pkg_sunrise_25_pack",
+      "pkg_sunrise_25_pack_2"
+    ],
+    "answer": "The Sunrise 10-Pack is valid at several branches, but the validity depends on the branch:\n\n- At Al Ain branch, it is valid from 2026-05-11 to 2026-11-07 for AED 1600.\n- At Al Quoz and JVC branches, it was valid from 2025-12-29 to 2026-07-23 for AED 1800, but this has now expired.\n- At Yas branch, it is valid from 2026-05-11 to 2026-12-07 for AED 2100.\n\nPlease let me know if you want details for a specific branch.",
+    "refused": false,
+    "latency_ms": 6928,
+    "cost_usd": 0.002712
+  },
+  {
+    "query_id": "q33",
+    "retrieved_ids": [
+      "slot_khalifa_sc03_20260810_2000",
+      "slot_alquoz_sc03_20260810_2000",
+      "slot_jvc_sc03_20260810_2000",
+      "slot_yas_sc03_20260810_2000",
+      "slot_alain_sc03_20260810_2000",
+      "slot_majaz_sc03_20260810_2000",
+      "slot_ajman_sc03_20260810_2000",
+      "slot_rak_sc03_20260810_2000",
+      "br_khalifa",
+      "br_alquoz"
+    ],
+    "answer": "Court SC-03 is available tomorrow, August 10, 2026, at 8:00 PM at two branches:\n\n- Baseline Khalifa City for 240 AED\n- Baseline Al Quoz for 260 AED\n\nWhich branch would you like to book the court at?",
+    "refused": false,
+    "latency_ms": 3779,
+    "cost_usd": 0.001901
+  },
+  {
+    "query_id": "q19",
+    "retrieved_ids": [
+      "slot_yas_cc03_20260810_2000",
+      "br_yas"
+    ],
+    "answer": "There is a 90-minute slot available at Baseline Yas Island on August 10, 2026, starting at 20:00. The price for this slot is 390 AED. Would you like me to hold this slot for you?",
+    "refused": false,
+    "latency_ms": 3248,
+    "cost_usd": 0.0015
+  },
+  {
+    "query_id": "q34",
+    "retrieved_ids": [],
+    "answer": "I cannot provide personal contact details such as email addresses of coaches. If you need to contact a coach, I recommend reaching out to the branch directly via their public phone number. Would you like information on the most experienced coach or the contact details of a specific branch?",
+    "refused": true,
+    "latency_ms": 2533,
+    "cost_usd": 0.000764
+  },
+  {
+    "query_id": "q12",
+    "retrieved_ids": [
+      "pol_private_lessons",
+      "cls_adult_improver_course_jvc",
+      "cls_ladies_beginner_academy_jvc",
+      "cls_technique_clinic_majaz",
+      "cls_ladies_adult_improver_course_majaz",
+      "rev_01482"
+    ],
+    "answer": "Baseline Padel does not offer tennis lessons. The club specializes in padel coaching and classes, including private and semi-private padel lessons, as well as various padel courses for different skill levels and groups. If you are interested, I can provide details about padel coaching or classes available.",
+    "refused": true,
+    "latency_ms": 6567,
+    "cost_usd": 0.00307
+  },
+  {
+    "query_id": "q05",
+    "retrieved_ids": [
+      "cch_marwan_haddad",
+      "br_khalifa",
+      "slot_khalifa_sc02_20260810_1900",
+      "slot_khalifa_sc04_20260810_1900",
+      "slot_khalifa_pc03_20260810_1900"
+    ],
+    "answer": "كوتش مروان Haddad متاح في فرع Baseline Khalifa City يوم 10 أغسطس 2026 بعد المغرب من الساعة 19:00 حتى 23:00.\n\nلديك خيارات لحجز ملعب في نفس الوقت:\n- ملعب خارجي SC-02 بسعر 250 درهم للساعة.\n- ملعب خارجي SC-04 بسعر 260 درهم للساعة.\n- ملعب داخلي PC-03 بسعر 300 درهم للساعة.\n\nأي ملعب تفضل للحجز؟ وهل تريد حجز الحصة لمدة ساعة واحدة؟",
+    "refused": false,
+    "latency_ms": 7757,
+    "cost_usd": 0.003656
+  },
+  {
+    "query_id": "q27",
+    "retrieved_ids": [
+      "cls_adult_beginner_course_alquoz",
+      "cls_adult_improver_course_alquoz",
+      "cls_ladies_beginner_academy_alquoz",
+      "cls_ladies_social_doubles_alquoz",
+      "cls_junior_academy_alquoz",
+      "cls_junior_performance_squad_alquoz",
+      "cls_kids_padel_starters_alquoz",
+      "cls_cardio_padel_alquoz",
+      "cls_competition_squad_alquoz",
+      "cls_technique_clinic_alquoz",
+      "cls_morning_social_drills_alquoz",
+      "cls_tactics_workshop_alquoz",
+      "cls_adult_beginner_course_alquoz_2",
+      "cls_adult_improver_course_alquoz_2",
+      "cls_ladies_beginner_academy_alquoz_2",
+      "cls_ladies_social_doubles_alquoz_2",
+      "cls_junior_academy_alquoz_2",
+      "cls_junior_performance_squad_alquoz_2",
+      "cls_kids_padel_starters_alquoz_2",
+      "cls_cardio_padel_alquoz_2",
+      "cls_competition_squad_alquoz_2",
+      "cls_technique_clinic_alquoz_2",
+      "cls_adult_beginner_course_jvc",
+      "cls_adult_improver_course_jvc",
+      "cls_ladies_beginner_academy_jvc",
+      "cls_ladies_social_doubles_jvc",
+      "cls_junior_academy_jvc",
+      "cls_junior_performance_squad_jvc",
+      "cls_kids_padel_starters_jvc",
+      "cls_cardio_padel_jvc",
+      "cls_competition_squad_jvc",
+      "cls_technique_clinic_jvc",
+      "cls_morning_social_drills_jvc",
+      "cls_tactics_workshop_jvc",
+      "cls_adult_beginner_course_jvc_2",
+      "cls_adult_improver_course_jvc_2",
+      "cls_ladies_beginner_academy_jvc_2",
+      "cls_ladies_social_doubles_jvc_2",
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "answer": "نعم، في فرع دبي لدينا دروس للأطفال تشمل:\n\n1. Kids Padel Starters للأطفال من 5 إلى 8 سنوات، تقام يوم الأحد والخميس من 09:00 إلى 10:30، السعر 700 درهم للفصل.\n2. Junior Academy للأطفال من 9 إلى 15 سنة، تقام يوم الأحد والثلاثاء من 16:00 إلى 17:30، السعر 1000 درهم للفصل.\n3. Junior Performance Squad للأطفال من 12 إلى 17 سنة بمستوى متوسط، تقام يوم الثلاثاء والخميس من 20:30 إلى 22:00، السعر 1450 درهم للفصل.\n\nهل ترغب في حجز درس معين أو معرفة المزيد عن أي منها؟",
+    "refused": false,
+    "latency_ms": 5143,
+    "cost_usd": 0.0059
+  },
+  {
+    "query_id": "q20",
+    "retrieved_ids": [
+      "pol_cancellation",
+      "pol_coach_cancellation",
+      "pol_no_show",
+      "pol_refunds",
+      "pol_group_bookings",
+      "pol_pricing_structure"
+    ],
+    "answer": "If you cancel a court reservation two hours before the scheduled start time, it falls within the 6-hour window before play. According to Baseline Padel's Booking & Cancellation Policy, cancellations made inside the 6-hour window before the session begins are not eligible for any refund or credit. This is because the court is held exclusively for you during peak scheduling periods and cannot typically be reallocated on short notice.\n\nIn summary, cancelling two hours before your booked padel session means you will not receive a refund or wallet credit.",
+    "refused": false,
+    "latency_ms": 7494,
+    "cost_usd": 0.006307
+  }
+]

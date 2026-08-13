@@ -226,11 +226,10 @@ def rerank(query: str, records: list[dict]) -> list[dict] | None:
         for r in records
     )
     try:
-        model = llm.get_model("reranker")
-        response = model.invoke(
-            RERANK_PROMPT.format(k=cfg.rerank_top_k, query=query, candidates=candidates)
-        )
-        llm.record_response(response, llm.model_spec("reranker"), step="rerank")
+        with llm.timed(llm.model_spec("reranker"), "rerank") as box:
+            response = box["response"] = llm.get_model("reranker").invoke(
+                RERANK_PROMPT.format(k=cfg.rerank_top_k, query=query, candidates=candidates)
+            )
     except Exception as exc:  # noqa: BLE001 - a reranker outage must not fail the query
         log.warning("rerank unavailable, keeping fused order: %s", exc)
         return None
@@ -255,7 +254,7 @@ def rerank(query: str, records: list[dict]) -> list[dict] | None:
     return result[: cfg.rerank_top_k]
 
 
-def _snippet(record: dict, length: int = 160) -> str:
+def _snippet(record: dict, length: int = 240) -> str:
     for field in ("description", "bio", "body", "text", "conditions"):
         if record.get(field):
             return " ".join(str(record[field]).split())[:length]

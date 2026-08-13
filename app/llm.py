@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import logging
 import os
+import time
+from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 
@@ -26,9 +28,10 @@ log = logging.getLogger("padel.llm")
 class Usage:
     calls: list[dict] = field(default_factory=list)
 
-    def add(self, model: str, input_tokens: int, output_tokens: int, step: str = "") -> None:
+    def add(self, model: str, input_tokens: int, output_tokens: int, step: str = "",
+            duration_ms: int = 0) -> None:
         self.calls.append({
-            "model": model, "step": step,
+            "model": model, "step": step, "duration_ms": duration_ms,
             "input_tokens": input_tokens, "output_tokens": output_tokens,
         })
 
@@ -72,16 +75,37 @@ def current_usage() -> Usage | None:
     return _usage.get()
 
 
-def record(model: str, input_tokens: int, output_tokens: int, step: str = "") -> None:
+def record(model: str, input_tokens: int, output_tokens: int, step: str = "",
+           duration_ms: int = 0) -> None:
     usage = _usage.get()
     if usage is not None:
-        usage.add(model, input_tokens, output_tokens, step)
+        usage.add(model, input_tokens, output_tokens, step, duration_ms)
 
 
-def record_response(response, model: str, step: str = "") -> None:
+def record_response(response, model: str, step: str = "", duration_ms: int = 0) -> None:
     """Pull real token counts off a LangChain response rather than estimating."""
     meta = getattr(response, "usage_metadata", None) or {}
-    record(model, meta.get("input_tokens", 0), meta.get("output_tokens", 0), step)
+    record(model, meta.get("input_tokens", 0), meta.get("output_tokens", 0), step,
+           duration_ms)
+
+
+@contextmanager
+def timed(model: str, step: str):
+    """Wrap a model call so its latency lands in the same ledger as its tokens.
+
+    Mirrors what LangSmith records, so the numbers we report can be checked against the
+    dashboard rather than taken on trust.
+    """
+    started = time.perf_counter()
+    box: dict = {}
+    try:
+        yield box
+    finally:
+        elapsed = round((time.perf_counter() - started) * 1000)
+        if "response" in box:
+            record_response(box["response"], model, step, elapsed)
+        else:
+            record(model, 0, 0, step, elapsed)
 
 
 def configure_tracing() -> None:

@@ -59,7 +59,9 @@ class Settings(BaseSettings):
     price_per_slot_minute: bool = True
 
     # --- models (role -> "provider:model", swappable without code changes) ---
-    llm_planner: str = "openai:gpt-4.1-mini"
+    # The planner is a short, mechanical rewrite, so it runs on the smallest model.
+    # Measured: ~1.0s on nano against ~2.5-3.9s on mini, for the same plan quality.
+    llm_planner: str = "openai:gpt-4.1-nano"
     llm_reranker: str = "openai:gpt-4.1-mini"
     llm_answerer: str = "openai:gpt-4.1-mini"
     llm_fallback: str = "anthropic:claude-haiku-4-5-20251001"
@@ -72,10 +74,16 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 20
     rerank_top_k: int = 6
     rrf_k: int = 60
-    rerank_enabled: bool = True
+    # Off by default. Measured on the 38-query eval set, an LLM listwise rerank on top of
+    # RRF-fused hybrid retrieval made every metric worse (see eval/RERANKING.md). The
+    # stage is kept and is one env var away for anyone who wants to re-measure.
+    rerank_enabled: bool = False
     # Reviews are 3120 of 3942 indexed documents and would otherwise dominate every
     # result set, so they are retrieved separately and capped.
     review_results: int = 3
+    # Cap on prose returned to the model per record. Policy bodies average ~10KB and six
+    # of them in one tool result pushed a generation call past 9000 input tokens.
+    tool_prose_chars: int = 700
 
     # --- observability ------------------------------------------------------
     langsmith_tracing: bool = False

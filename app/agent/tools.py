@@ -16,6 +16,7 @@ from contextvars import ContextVar
 
 from langchain_core.tools import tool
 
+from app.config import settings
 from app.services import booking, retrieval
 
 log = logging.getLogger("padel.tools")
@@ -63,8 +64,27 @@ def _note(records: list[dict], id_key: str = "id") -> None:
             store.setdefault(record_id, {**record, "id": record_id})
 
 
+# Prose fields that can run to thousands of characters. Policy bodies average ~10KB, and
+# six of them in one tool result pushed the generation call past 9000 input tokens, which
+# costs both latency and money for text the model does not need in full.
+PROSE_FIELDS = ("description", "bio", "body", "text", "conditions")
+
+
+def _trim(payload):
+    limit = settings().tool_prose_chars
+    if isinstance(payload, dict):
+        return {
+            key: (value[:limit] + "..." if key in PROSE_FIELDS and isinstance(value, str)
+                  and len(value) > limit else _trim(value))
+            for key, value in payload.items()
+        }
+    if isinstance(payload, list):
+        return [_trim(item) for item in payload]
+    return payload
+
+
 def _dump(payload: dict) -> str:
-    return json.dumps(payload, ensure_ascii=False, default=str)
+    return json.dumps(_trim(payload), ensure_ascii=False, default=str)
 
 
 @tool

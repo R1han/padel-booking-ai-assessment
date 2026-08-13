@@ -26,6 +26,8 @@ def grade(results: list[dict], gold: dict) -> dict:
     by_id = {r["query_id"]: r for r in results}
 
     rows, recalls = [], []
+    precision_at_1: list[float] = []
+    reciprocal_ranks: list[float] = []
     refusal_ok = refusal_total = 0
     false_refusals: list[str] = []
     missed_refusals: list[str] = []
@@ -38,11 +40,17 @@ def grade(results: list[dict], gold: dict) -> dict:
             rows.append({"query_id": query_id, "status": "MISSING"})
             continue
 
-        retrieved = set(result.get("retrieved_ids") or [])
+        ranked = result.get("retrieved_ids") or []
+        retrieved = set(ranked)
         wanted = set(spec.get("expected_ids") or [])
         recall = len(wanted & retrieved) / len(wanted) if wanted else None
         if recall is not None:
             recalls.append(recall)
+            # Recall alone saturates once k is generous, so it cannot tell whether
+            # reranking put the *best* record first. These two can.
+            precision_at_1.append(1.0 if ranked and ranked[0] in wanted else 0.0)
+            rank = next((i + 1 for i, rid in enumerate(ranked) if rid in wanted), None)
+            reciprocal_ranks.append(1.0 / rank if rank else 0.0)
 
         refusal_total += 1
         want_refusal = bool(spec.get("should_refuse"))
@@ -91,6 +99,10 @@ def grade(results: list[dict], gold: dict) -> dict:
         "summary": {
             "queries_scored": len(by_id),
             "retrieval_recall": round(sum(recalls) / len(recalls), 3) if recalls else None,
+            "precision_at_1": round(sum(precision_at_1) / len(precision_at_1), 3)
+                              if precision_at_1 else None,
+            "mrr": round(sum(reciprocal_ranks) / len(reciprocal_ranks), 3)
+                   if reciprocal_ranks else None,
             "recall_by_category": {
                 k: round(sum(v) / len(v), 3) for k, v in sorted(by_category.items())
             },

@@ -43,11 +43,22 @@ Return JSON with exactly these keys:
   "english_query": the message rewritten in English, self-contained. Resolve references to
       earlier turns ("the second one", "same time at Yas", "book it") into explicit terms
       using the context below. Keep proper nouns as written.
-  "out_of_scope": true only if the request cannot possibly be about this club -- another
-      sport, another country or city we have no branch in, or an unrelated topic.
-  "asks_for_personal_data": true if it requests a staff member's private contact details,
-      home address, salary or similar.
+  "out_of_scope": see the rule below.
+  "asks_for_personal_data": see the rule below.
   "referenced_ids": ids from the context below that the message points at, or [].
+
+out_of_scope is true ONLY when the club could not possibly serve the request:
+  a different sport (tennis, squash, swimming lessons), a city or country where we have
+  no branch (Doha, Riyadh, London), or a subject unrelated to a padel club.
+It is FALSE for every ordinary question about our own branches, courts, coaches,
+classes, packages, prices, availability, policies or reviews -- including counting
+questions ("how many coaches in Ajman"), comparisons ("which branch has the best
+reviews"), and questions whose answer happens to be no. Default to false when unsure.
+
+asks_for_personal_data is true ONLY for a staff member's private details: personal or
+mobile phone number, personal or work email address, home address, salary.
+It is FALSE for a coach's name, specialities, experience, rates or working hours, and
+FALSE for a branch's public phone number. Default to false when unsure.
 
 Context from the previous turn (may be empty):
 {context}
@@ -145,8 +156,8 @@ def plan_node(state: AgentState) -> dict:
         **_window(),
     )
     try:
-        response = llm.get_model("planner").invoke(prompt)
-        llm.record_response(response, llm.model_spec("planner"), step="plan")
+        with llm.timed(llm.model_spec("planner"), "plan") as box:
+            response = box["response"] = llm.get_model("planner").invoke(prompt)
         text = response.content if isinstance(response.content, str) else str(response.content)
         parsed = json.loads(text[text.index("{") : text.rindex("}") + 1])
         plan.update({k: v for k, v in parsed.items() if k in plan})
@@ -179,8 +190,8 @@ def answer_node(state: AgentState) -> dict:
         ))
         model = llm.get_model("answerer")
 
-    response = model.invoke(messages)
-    llm.record_response(response, llm.model_spec("answerer"), step="answer")
+    with llm.timed(llm.model_spec("answerer"), "answer") as box:
+        response = box["response"] = model.invoke(messages)
     return {"messages": [response], "loops": state.get("loops", 0) + 1}
 
 
