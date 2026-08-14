@@ -26,6 +26,74 @@ def test_vector_store_down_falls_back_to_lexical(monkeypatch):
     assert result["records"], "lexical fallback returned nothing"
 
 
+def test_concurrent_connects_build_one_client(monkeypatch):
+    """Two tool calls in one turn ("best coach in Al Ain and Yas") run concurrently. If
+    both enter _connect() they race inside Chroma, which publishes a System to a global
+    dict before starting it -- the loser gets a RustBindingsAPI with no `bindings` yet,
+    and its unwind pops the System that the winner is still using.
+    """
+    import threading
+
+    built = []
+
+    def slow_client(path):
+        # Widen the window the real race needs; without a lock both threads are inside.
+        threading.Event().wait(0.05)
+        built.append(path)
+        return _FakeClient()
+
+    monkeypatch.setattr(vectorstore, "_client", None)
+    monkeypatch.setattr(vectorstore, "_collection", None)
+    monkeypatch.setattr(vectorstore, "_persistent_client", slow_client)
+
+    threads = [threading.Thread(target=vectorstore._connect) for _ in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert len(built) == 1, f"{len(built)} concurrent clients built; Chroma tolerates one"
+
+
+def test_a_poisoned_collection_is_dropped_so_the_next_call_recovers(monkeypatch):
+    """Losing the race used to be terminal: the dead collection stayed in the module
+    global and every later search degraded to lexical until the process restarted."""
+    dead = _FakeCollection(boom=AttributeError(
+        "'RustBindingsAPI' object has no attribute 'bindings'"))
+    monkeypatch.setattr(vectorstore, "_client", object())
+    monkeypatch.setattr(vectorstore, "_collection", dead)
+    monkeypatch.setattr(llm, "has_credentials", lambda: True)
+    monkeypatch.setattr(llm, "embeddings", lambda: _FakeEmbedder())
+
+    assert vectorstore.search("indoor courts") is None, "a dead collection must degrade"
+    assert vectorstore._collection is None, "the dead collection was kept and will fail forever"
+
+
+class _FakeCollection:
+    def __init__(self, boom=None, count=1):
+        self._boom, self._count = boom, count
+
+    def count(self):
+        if self._boom:
+            raise self._boom
+        return self._count
+
+    def query(self, **kwargs):
+        if self._boom:
+            raise self._boom
+        return {"metadatas": [[]], "distances": [[]], "documents": [[]]}
+
+
+class _FakeClient:
+    def get_or_create_collection(self, *args, **kwargs):
+        return _FakeCollection()
+
+
+class _FakeEmbedder:
+    def embed_query(self, text):
+        return [0.0, 0.0]
+
+
 def test_vector_store_raising_is_swallowed(monkeypatch):
     """An exception from the vector store must degrade, not propagate."""
     def explode(*args, **kwargs):

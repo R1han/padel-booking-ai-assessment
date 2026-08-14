@@ -10,6 +10,7 @@ Embeddings are supplied explicitly so Chroma never downloads its default ONNX mo
 from __future__ import annotations
 
 import logging
+import threading
 from typing import Any
 
 from app.config import settings
@@ -19,21 +20,50 @@ log = logging.getLogger("padel.vectorstore")
 COLLECTION = "padel"
 _client = None
 _collection = None
+# Chroma publishes a System into a process-global dict before it has started it, and
+# increments the refcount only after that returns. Two threads calling PersistentClient
+# at once therefore race: the loser is handed an unstarted RustBindingsAPI (no `bindings`
+# attribute yet) and its unwind releases the refcount to zero, stopping the System the
+# winner is still holding. One turn can issue several tool calls concurrently, so serialise
+# construction here. Uncontended after the first connect.
+_connect_lock = threading.Lock()
+
+
+def _persistent_client(path: str):
+    """Isolated so tests can substitute a client without a real Chroma on disk."""
+    import chromadb
+
+    return chromadb.PersistentClient(path=path)
 
 
 def _connect():
     global _client, _collection
     if _collection is not None:
         return _collection
-    import chromadb
+    with _connect_lock:
+        if _collection is not None:  # built while we waited for the lock
+            return _collection
+        cfg = settings()
+        cfg.chroma_path.mkdir(parents=True, exist_ok=True)
+        client = _persistent_client(str(cfg.chroma_path))
+        collection = client.get_or_create_collection(
+            COLLECTION, metadata={"hnsw:space": "cosine"}
+        )
+        # Publish only once both succeeded, so a half-built client is never cached.
+        _client, _collection = client, collection
+        return _collection
 
-    cfg = settings()
-    cfg.chroma_path.mkdir(parents=True, exist_ok=True)
-    _client = chromadb.PersistentClient(path=str(cfg.chroma_path))
-    _collection = _client.get_or_create_collection(
-        COLLECTION, metadata={"hnsw:space": "cosine"}
-    )
-    return _collection
+
+def _invalidate() -> None:
+    """Forget the cached handles so the next call reconnects.
+
+    Without this a single lost race was terminal: a stopped System leaves the collection
+    object raising for the life of the process, and every later search silently degraded
+    to lexical until someone restarted the server.
+    """
+    global _client, _collection
+    with _connect_lock:
+        _client, _collection = None, None
 
 
 def available() -> bool:
@@ -41,6 +71,7 @@ def available() -> bool:
         return _connect().count() > 0
     except Exception as exc:  # noqa: BLE001 - degradation must never raise
         log.warning("chroma unavailable: %s", exc)
+        _invalidate()
         return False
 
 
@@ -115,6 +146,7 @@ def search(
         result = collection.query(query_embeddings=[vector], n_results=k, where=where)
     except Exception as exc:  # noqa: BLE001
         log.warning("vector search failed, falling back to lexical: %s", exc)
+        _invalidate()
         return None
 
     hits = []
