@@ -20,6 +20,7 @@ import logging
 import re
 import sqlite3
 from datetime import date, timedelta
+from functools import lru_cache
 
 from app import db
 from app.config import settings
@@ -36,6 +37,30 @@ BANDS = {
     "evening": ["18:00", "19:00", "20:00", "21:00"],
     "late": ["22:00", "23:00"],
 }
+
+# The dataset prices Friday and Saturday as the weekend, not the civil Sat/Sun.
+WEEKEND_DAYS = ["Friday", "Saturday"]
+
+
+@lru_cache(maxsize=1)
+def band_multipliers() -> dict[str, dict[str, float]]:
+    """What each band costs relative to the court's base rate, as {band: {day_type: x}}.
+
+    The `multiplier` column of price_rules is the one part of that table worth reading:
+    it is uniform across every branch and court type, and slots.price_aed is the court
+    base times this figure rounded to 5 AED. Its sibling `price_aed` column is the
+    broken one (86/120 rows disagree with their own base x multiplier) and is never read
+    here. Cached because 120 rows of static reference data do not change under us.
+    """
+    with db.read_conn() as conn:
+        rows = conn.execute(
+            "SELECT band, day_type, multiplier FROM price_rules"
+            " WHERE multiplier IS NOT NULL GROUP BY band, day_type"
+        ).fetchall()
+    out: dict[str, dict[str, float]] = {}
+    for row in rows:
+        out.setdefault(row["band"], {})[row["day_type"]] = row["multiplier"]
+    return out
 
 
 # --- helpers ----------------------------------------------------------------------
@@ -758,11 +783,13 @@ def price_summary(
     branch: str | None = None, band: str | None = None, court_type: str | None = None,
     date_: str | None = None,
 ) -> dict:
-    """Per-branch price statistics straight off the slot rows.
+    """Per-branch price statistics straight off the slot rows, plus the band multipliers
+    that explain the spread.
 
-    slots.price_aed is the only trustworthy price in the dataset: courts.price_per_hour_aed
-    has nulls and a 99999 sentinel, and price_rules disagrees with its own base x multiplier
-    in 86 of 120 rows with Al Ain indoor missing entirely.
+    slots.price_aed is the only trustworthy *price* in the dataset: courts.price_per_hour_aed
+    has nulls and a 99999 sentinel, and price_rules.price_aed disagrees with its own
+    base x multiplier in 86 of 120 rows with Al Ain indoor missing entirely. The
+    multiplier column of that same table is sound -- see band_multipliers().
     """
     where, params = ["1=1"], []
     if branch:
@@ -799,6 +826,8 @@ def price_summary(
         "branches": [dict(r) for r in rows],
         "band": band,
         "court_type": court_type,
+        "multipliers": band_multipliers(),
+        "weekend_days": WEEKEND_DAYS,
     }
 
 

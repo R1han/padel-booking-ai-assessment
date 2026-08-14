@@ -260,3 +260,41 @@ def test_a_group_is_all_or_nothing():
 def _claims() -> int:
     with db.read_conn() as conn:
         return conn.execute("SELECT count(*) c FROM slot_claims").fetchone()["c"]
+
+
+# --- band price multipliers ---------------------------------------------------------
+
+
+def test_price_summary_publishes_the_band_multipliers():
+    """The agent can only explain *why* evening costs more if it is handed the ratio."""
+    result = retrieval.price_summary()
+
+    assert result["multipliers"]["evening"] == {"weekday": 1.25, "weekend": 1.438}
+    assert result["multipliers"]["morning"]["weekday"] == 0.75
+    assert set(result["multipliers"]) == {"morning", "afternoon", "evening", "late"}
+    # Fri/Sat, not the civil Sat/Sun -- reconciles 11,114 of 11,130 priced slots where
+    # Sat/Sun reconciles 8,154.
+    assert result["weekend_days"] == ["Friday", "Saturday"]
+
+
+def test_quoted_multipliers_reconcile_with_what_we_actually_charge():
+    """The guard that matters: we are about to tell users evening is 1.25x the base, so
+    that had better still describe slots.price_aed. Fails the day the grid is repriced."""
+    multipliers = retrieval.price_summary()["multipliers"]
+    with db.read_conn() as conn:
+        rows = conn.execute(
+            "SELECT s.start_time, s.price_aed, c.price_per_hour_aed AS base,"
+            " CAST(strftime('%w', s.date) AS INTEGER) IN (5, 6) AS weekend"
+            " FROM slots s JOIN courts c ON c.id = s.court_id"
+            " WHERE c.price_per_hour_aed IS NOT NULL AND c.price_per_hour_aed < 99999"
+        ).fetchall()
+
+    band_of = {t: band for band, times in retrieval.BANDS.items() for t in times}
+    off = 0
+    for row in rows:
+        rate = multipliers[band_of[row["start_time"]]]["weekend" if row["weekend"] else "weekday"]
+        # Published prices are rounded to the nearest 5 AED, so allow half a step.
+        off += abs(row["price_aed"] - row["base"] * rate) > 2.5
+
+    assert len(rows) > 10_000, "expected the bulk of the grid to have a usable court base"
+    assert off / len(rows) < 0.01, f"{off}/{len(rows)} slots contradict the published rate"

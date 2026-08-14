@@ -156,7 +156,7 @@ them.
 | `policies` | 40 | ~10 KB bodies, chunked by numbered section for search |
 | `reviews` | 3,120 | `is_noise` flags injected HTML, boilerplate and duplicates |
 | `slots` | 12,600 | 60 courts × 15 days × 14 hours; `price_aed` is authoritative |
-| `price_rules` | 120 | advisory only — 86/120 disagree with their own arithmetic |
+| `price_rules` | 120 | `multiplier` is sound and quoted to users; `price_aed` is not — 86/120 disagree with their own arithmetic |
 | `coach_schedules` | 600 | of a possible 675; absence means unknown, not free |
 | `bookings` | 4,000 | seeded, plus everything created at runtime |
 
@@ -289,6 +289,15 @@ smoothing it away.
 **`slots.price_aed` is the only trustworthy price.** `courts.price_per_hour_aed` has 5
 nulls and 2 sentinel `99999` values; `price_rules.price_aed` disagrees with its own
 `base × multiplier` in 86 of 120 rows and omits Al Ain indoor entirely.
+
+**The band multipliers are the salvageable half of `price_rules`.** The `multiplier`
+column is uniform across every branch and court type — morning `0.75`, afternoon `0.9`,
+evening `1.25`, late `0.85` on a weekday, and `0.862 / 1.035 / 1.438 / 0.977` at the
+weekend — so the Al Ain indoor gap costs nothing. Weekend here means **Friday and
+Saturday**: reconciling the 11,130 slots that have a usable court base, Fri/Sat leaves 16
+disagreements against Sat/Sun's 2,976. `price_summary` returns those multipliers so the
+agent can answer *why* an hour is priced as it is, and a test re-runs the reconciliation
+so we stop quoting the ratio the day the grid stops obeying it.
 
 **The 90-minute overhang.** 565 seeded bookings declare `duration_min: 90` while
 referencing a single 60-minute slot; the second hour is unmarked and 63 of those

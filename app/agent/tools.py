@@ -282,10 +282,15 @@ def find_group_slots(
 def price_summary(
     branch: str | None = None, band: str | None = None, court_type: str | None = None
 ) -> str:
-    """Compare court prices per branch. Use for "cheapest", "how much", "price range".
+    """Compare court prices per branch, and explain why one hour costs more than another.
+    Use for "cheapest", "how much", "price range" and for "why is evening so expensive".
 
     band: morning (06-10), afternoon (15-17), evening (18-21) or late (22-23).
     Prices come from the slot rows, which are the authoritative source.
+
+    The reply's `multipliers` give each band's rate against the court's own base price, so
+    "evening is 1.25x the weekday base, 1.438x at the weekend" is an answer you can give
+    verbatim. Weekend here means the days in `weekend_days` -- Friday and Saturday.
     """
     result = retrieval.price_summary(branch=branch, band=band, court_type=court_type)
     _note(result.get("branches", []))
