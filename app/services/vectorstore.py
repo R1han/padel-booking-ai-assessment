@@ -122,7 +122,8 @@ def rebuild(docs: list[dict[str, Any]], batch_size: int = 256) -> None:
 
 
 def search(
-    query: str, k: int = 20, types: list[str] | None = None, branch_id: str | None = None
+    query: str, k: int = 20, types: list[str] | None = None,
+    branch_ids: list[str] | None = None,
 ) -> list[dict] | None:
     """Ranked hits, or None if the vector store cannot answer -- the caller then degrades
     to lexical search rather than failing the request."""
@@ -139,8 +140,9 @@ def search(
         clauses = []
         if types:
             clauses.append({"type": {"$in": types}})
-        if branch_id:
-            clauses.append({"branch_id": branch_id})
+        if branch_ids:
+            # $in, not $eq: "Abu Dhabi" and "Dubai" each resolve to several branches.
+            clauses.append({"branch_id": {"$in": list(branch_ids)}})
         where = clauses[0] if len(clauses) == 1 else ({"$and": clauses} if clauses else None)
 
         result = collection.query(query_embeddings=[vector], n_results=k, where=where)

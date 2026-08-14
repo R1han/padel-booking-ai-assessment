@@ -160,7 +160,9 @@ def note_plan(
 
 
 @tool
-def search_knowledge(query: str, types: list[str] | None = None) -> str:
+def search_knowledge(
+    query: str, types: list[str] | None = None, branch: str | None = None
+) -> str:
     """Search branches, courts, coaches, classes, packages, policies and reviews by meaning.
 
     Use for open questions about atmosphere, suitability, rules or opinions, for example
@@ -168,8 +170,17 @@ def search_knowledge(query: str, types: list[str] | None = None) -> str:
     Write the query in English even when the user wrote Arabic.
 
     types: optionally restrict to any of branch, court, coach, class, package, policy, review.
+    branch: name, area or emirate. ALWAYS pass it when the question names a place -- results
+    are otherwise drawn from all eight branches and the branch is not part of what is
+    searched, so nothing else narrows them. For two places, call this once per place.
+    Every record comes back with branch_name; report that, never infer a branch from an id.
+
+    This ranks by similarity and returns the top few, so it cannot tell you how many of
+    something exist. Use find_records for counting and for "all the X at Y". If the reply
+    says `truncated`, you were shown some of `total_matched` -- say so, or call
+    find_records instead of presenting a partial list as the full one.
     """
-    result = retrieval.search_knowledge(query, types=types)
+    result = retrieval.search_knowledge(query, types=types, branch=branch)
     _note(result["records"])
     return _dump(result)
 

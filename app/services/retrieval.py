@@ -134,13 +134,21 @@ def _row_to_record(row: sqlite3.Row, kind: str) -> dict:
 # --- hybrid search ----------------------------------------------------------------
 
 
-def lexical_search(query: str, k: int = 20, types: list[str] | None = None) -> list[dict]:
+def lexical_search(
+    query: str, k: int = 20, types: list[str] | None = None,
+    branch_ids: list[str] | None = None,
+) -> list[dict]:
     match = _fts_query(query)
     if not match:
         return []
     sql = ("SELECT record_id, type, title, bm25(docs_fts) AS rank FROM docs_fts"
            " WHERE docs_fts MATCH ?")
     params: list = [match]
+    if branch_ids:
+        # docs_fts already carries branch_id; without this clause the lexical half of the
+        # hybrid quietly widens a scoped search back out to all eight branches.
+        sql += f" AND branch_id IN ({','.join('?' * len(branch_ids))})"
+        params += branch_ids
     if types:
         sql += f" AND type IN ({','.join('?' * len(types))})"
         params += types
@@ -170,12 +178,29 @@ def search_knowledge(
     query: str,
     types: list[str] | None = None,
     branch_id: str | None = None,
+    branch: str | None = None,
     k: int | None = None,
     rerank_enabled: bool | None = None,
 ) -> dict:
-    """Hybrid prose search. Degrades to lexical-only when the vector store is unavailable."""
+    """Hybrid prose search. Degrades to lexical-only when the vector store is unavailable.
+
+    branch: a name, area or emirate, resolved the same way every other tool resolves one.
+    Scoping matters here beyond tidiness -- unscoped, "best coach in Al Ain" returns
+    coaches from whichever branches happen to rank, and the branch is not in the embedded
+    text at all, so semantic similarity cannot narrow it.
+    """
     cfg = settings()
     k = k or cfg.retrieval_top_k
+
+    branch_ids = [branch_id] if branch_id else None
+    if branch:
+        branch_ids = resolve_branches(branch)
+        if not branch_ids:
+            # Searching everywhere instead would answer a scoped question with unscoped
+            # records, which reads as authoritative and is how a Khalifa City coach got
+            # reported as an Al Ain coach.
+            return {"records": [], "degraded": False, "mode": "none",
+                    "note": f"No branch matches {branch!r}."}
 
     # Reviews are 3120 of the 3942 indexed documents. Searched together with everything
     # else they crowd out the record that actually answers the question, so they are
@@ -186,8 +211,8 @@ def search_knowledge(
         primary_types = [t for t in ENTITY_KINDS if t != "review"]
         review_budget = cfg.review_results
 
-    semantic = vectorstore.search(query, k=k, types=primary_types, branch_id=branch_id)
-    lexical = lexical_search(query, k=k, types=primary_types)
+    semantic = vectorstore.search(query, k=k, types=primary_types, branch_ids=branch_ids)
+    lexical = lexical_search(query, k=k, types=primary_types, branch_ids=branch_ids)
     degraded = semantic is None
 
     rankings = [r for r in (semantic, lexical) if r]
@@ -195,9 +220,10 @@ def search_knowledge(
 
     if review_budget:
         review_hits = vectorstore.search(query, k=review_budget, types=["review"],
-                                         branch_id=branch_id)
+                                         branch_ids=branch_ids)
         if review_hits is None:
-            review_hits = lexical_search(query, k=review_budget, types=["review"])
+            review_hits = lexical_search(query, k=review_budget, types=["review"],
+                                         branch_ids=branch_ids)
         record_ids += [h["record_id"] for h in review_hits[:review_budget]
                        if h["record_id"] not in record_ids]
 
@@ -225,6 +251,11 @@ def search_knowledge(
         "degraded": degraded,
         "mode": "lexical" if degraded else "hybrid",
         "reranked": reranked,
+        # Ranked search shows the top rerank_top_k. Saying how many matched stops a
+        # partial list being reported as the whole roster -- Yas has 7 coaches, the cap
+        # shows 6. This counts what matched, not what exists; find_records counts.
+        "total_matched": len(record_ids),
+        "truncated": len(record_ids) > len(records),
     }
 
 
@@ -326,7 +357,22 @@ def hydrate(record_ids: list[str]) -> list[dict]:
             ).fetchall()
             for row in rows:
                 found[row["id"]] = _row_to_record(row, kind)
+        _name_branches(conn, found.values())
     return [found[r] for r in record_ids if r in found]
+
+
+def _name_branches(conn: sqlite3.Connection, records) -> None:
+    """Resolve branch_id to a readable name, in place.
+
+    A record carrying only `br_khalifa` invites the model to decode it, and it decodes
+    `br_alain` correctly and `br_khalifa` as Al Ain. Records without a branch keep no
+    branch_name at all rather than gaining a null one.
+    """
+    names = {r["id"]: r["name"] for r in conn.execute("SELECT id, name FROM branches")}
+    for record in records:
+        branch_id = record.get("branch_id") or (record["id"] if record["kind"] == "branch" else None)
+        if branch_id in names:
+            record["branch_name"] = names[branch_id]
 
 
 # --- structured lookups -----------------------------------------------------------

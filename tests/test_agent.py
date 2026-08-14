@@ -14,7 +14,7 @@ from app import db, llm
 from app.services import booking
 from app.agent import tools as agent_tools
 from app.api.chat import Session, session_for, summarise_context
-from app.services import retrieval
+from app.services import retrieval, vectorstore
 
 # --- cross-turn references (challenge 2) -------------------------------------------
 
@@ -260,6 +260,68 @@ def test_a_group_is_all_or_nothing():
 def _claims() -> int:
     with db.read_conn() as conn:
         return conn.execute("SELECT count(*) c FROM slot_claims").fetchone()["c"]
+
+
+# --- branch scoping in prose search -------------------------------------------------
+
+
+def test_every_record_names_its_branch():
+    """"Who is the best coach in Al Ain" was answered with a Khalifa City coach because
+    records carried br_khalifa and nothing else. An opaque foreign key in a payload aimed
+    at a language model is an invitation to decode it wrongly."""
+    records = retrieval.hydrate(["cch_salem_al_ketbi", "br_alquoz", "pol_cancellation"])
+    by_id = {r["id"]: r for r in records}
+
+    assert by_id["cch_salem_al_ketbi"]["branch_name"] == "Baseline Khalifa City"
+    # A branch is its own branch; a policy belongs to none and must not gain a stray key.
+    assert by_id["br_alquoz"]["branch_name"] == "Baseline Al Quoz"
+    assert "branch_name" not in by_id["pol_cancellation"]
+
+
+def test_prose_search_can_be_scoped_to_a_branch():
+    """Unscoped, this query returned coaches from four branches and none from Yas."""
+    result = retrieval.search_knowledge("best coach", types=["coach"], branch="Yas Island")
+
+    assert result["records"], "scoped search returned nothing"
+    assert {r["branch_id"] for r in result["records"]} == {"br_yas"}
+
+
+def test_branch_scoping_survives_the_lexical_fallback(monkeypatch):
+    """The filter has to hold on both halves of the hybrid. Chroma going away must not
+    quietly widen the search back out to all eight branches."""
+    monkeypatch.setattr(vectorstore, "search", lambda *a, **k: None)
+
+    result = retrieval.search_knowledge("coach", types=["coach"], branch="Al Ain")
+
+    assert result["mode"] == "lexical"
+    assert result["records"], "lexical fallback returned nothing"
+    assert {r["branch_id"] for r in result["records"]} == {"br_alain"}
+
+
+def test_a_truncated_result_admits_it():
+    """Yas has 7 coaches and the display cap is 6. Silently returning 6 lets the model
+    present a partial list as the whole roster; it needs to see that it was cut."""
+    result = retrieval.search_knowledge("best coach", types=["coach"], branch="Yas Island")
+
+    assert len(result["records"]) == 6, "fixture assumes the cap still bites here"
+    assert result["total_matched"] == 7
+    assert result["truncated"] is True
+
+
+def test_an_unscoped_result_that_fits_is_not_flagged_truncated():
+    result = retrieval.search_knowledge("best coach", types=["coach"], branch="Al Ain")
+
+    assert result["total_matched"] == len(result["records"]) == 4
+    assert result["truncated"] is False
+
+
+def test_an_unknown_branch_says_so_rather_than_searching_everywhere():
+    """Silently ignoring an unresolvable branch is how a scoped question gets an
+    unscoped answer that reads as authoritative."""
+    result = retrieval.search_knowledge("coach", types=["coach"], branch="Riyadh")
+
+    assert result["records"] == []
+    assert "Riyadh" in result.get("note", "")
 
 
 # --- band price multipliers ---------------------------------------------------------
