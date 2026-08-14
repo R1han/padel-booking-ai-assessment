@@ -18,7 +18,7 @@ from typing import AsyncIterator
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessage, HumanMessage
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app import llm
 from app.agent import graph as agent_graph
@@ -63,9 +63,12 @@ def summarise_context(records: list[dict], answer: str) -> str:
     return f"Assistant's last reply:\n{answer[:600]}\n\nRecords shown, in order:\n{shown}"
 
 
+MAX_MESSAGE_CHARS = 2000
+
+
 class ChatRequest(BaseModel):
-    message: str
-    session_id: str = "default"
+    message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
+    session_id: str = Field(default="default", min_length=1, max_length=200)
 
 
 def _sse(event: str, payload: dict) -> str:

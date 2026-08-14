@@ -360,3 +360,20 @@ def test_quoted_multipliers_reconcile_with_what_we_actually_charge():
 
     assert len(rows) > 10_000, "expected the bulk of the grid to have a usable court base"
     assert off / len(rows) < 0.01, f"{off}/{len(rows)} slots contradict the published rate"
+
+
+# --- request limits ----------------------------------------------------------------
+
+
+def test_oversized_chat_message_is_rejected_before_it_costs_anything(client):
+    """/chat is unauthenticated and every call bills a model, so the length cap is the
+    only thing standing between a curl loop and the bill. 400, not 422, per the contract."""
+    from app.api.chat import MAX_MESSAGE_CHARS
+
+    response = client.post(
+        "/api/v1/chat", json={"message": "a" * (MAX_MESSAGE_CHARS + 1)}
+    )
+    assert response.status_code == 400
+    assert response.json()["error"] == "bad_request"
+
+    assert client.post("/api/v1/chat", json={"message": ""}).status_code == 400
