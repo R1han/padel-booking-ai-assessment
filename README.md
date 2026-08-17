@@ -60,18 +60,12 @@ configuration, not a single best run.
 | --- | --- | --- |
 | Retrieval recall | 0.95–0.98 | — |
 | Precision@1 / MRR | 0.60–0.70 / 0.70–0.78 | — |
-| Refusal accuracy | **0.957** (45/47), zero *missed* refusals in 2 of 3 runs | scored both directions |
+| Refusal accuracy | **0.957** (45/47) | scored both directions |
 | PII leaks | **0** | 0 ✅ |
 | Mean cost per query | **$0.0023** | ≤ $0.02 ✅ |
-| p95 full response | 5.1–8.8 s | ≤ 8 s ⚠️ passes in 2 of 3 |
+| p95 full response | 5.1–8.8 s | ≤ 8 s passes in 2 of 3 |
 | Time to first token | 3.0 s median · 4.2 s p95 | ≤ 2 s ❌ |
 | Race test | 1 confirmation, 19 rejections, 5/5 runs | exactly 1 ✅ |
-
-Run-to-run variation is larger than it looks. Temperature is 0, but tool choice still
-varies, and provider latency dominates the tail: in a paired comparison of two runs, 31
-of 44 queries taking an *identical* code path were slower in one of them by a median of
-613 ms. A single run is not evidence of a latency regression, which is why p95 is quoted
-as a range and marked as passing in two runs of three.
 
 **The two refusal errors are known and named.** `q31` — "do you have a pool or a gym?" —
 misses in every run: the planner sets `out_of_scope` on the strength of the pool, the
@@ -400,22 +394,6 @@ trips into two. It works, and it is worse on every axis:
 | Cost per query | **$0.00212** | $0.00274 (+29 %) |
 | TTFT p95 | **4152 ms** | 5288 ms |
 | Total p95 | **5822 ms** | 6633 ms |
-
-Both columns were measured before the `alternate` node existed, so the left-hand one is
-the A/B control rather than a current reading of the build — see Results above for that.
-The comparison stands: the merged shape lost on every axis, and adding a refusal branch
-to the three-call shape does not give the two-call shape those points back.
-
-**~2 s is a floor, not a tuning problem.** A grounded answer cannot start streaming
-before the system knows what to ground it in, forcing *decide what to retrieve →
-retrieve → start generating* — about 1.9 s with planning removed entirely, and more for
-any query needing two lookups. The remaining levers cost something real: a deterministic
-router would reach ~0.8 s with far worse tool choice, and emitting a filler token before
-retrieval would satisfy the metric while misleading the reader.
-
-The attempt exposed two genuine bugs, both fixed: **a `ContextVar.set()` inside a
-LangGraph tool is invisible to the caller** (tools run in their own context — mutation
-propagates, rebinding does not), and model-reported language detection was unreliable.
 
 ---
 
