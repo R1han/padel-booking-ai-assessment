@@ -11,8 +11,9 @@ Outputs:
     <output>/issue_ledger.csv         same, for spreadsheets
     <output>/report.md                human-readable run summary
 
-Set ANTHROPIC_API_KEY to enable the LLM semantic tier (optional; heuristics
-cover the current dataset without it).
+Requires ANTHROPIC_API_KEY. Claim extraction is LLM-only: there is no offline
+fallback, so the pipeline refuses to run without a key rather than silently
+finding less.
 """
 from __future__ import annotations
 
@@ -102,11 +103,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True)
     ap.add_argument("--output", required=True)
-    ap.add_argument("--no-llm", action="store_true", help="skip LLM tier even if key present")
     args = ap.parse_args()
 
+    llm = get_llm()
+    if llm is None:
+        print("ERROR: ANTHROPIC_API_KEY is not set. Claim extraction is LLM-only — there is "
+              "no offline fallback — so the pipeline cannot do its job without a model. "
+              "Set the key and re-run.", file=sys.stderr)
+        return 1
+
     ledger = Ledger()
-    llm = None if args.no_llm else get_llm()
 
     print("1/5 load + schema validation")
     data = load_and_validate(args.input, ledger)
@@ -114,9 +120,8 @@ def main() -> int:
     print("2/5 rule-based checks")
     run_rule_checks(data, ledger)
 
-    print(f"3/5 claim extraction + adjudication (LLM: {'on' if llm else 'off'})")
-    extractor = llm.extract if llm else None
-    all_claims = collect_claims(data, extractor, ledger)
+    print("3/5 claim extraction + adjudication")
+    all_claims = collect_claims(data, llm.extract, ledger)
     adjudicate(data, all_claims, ledger)
 
     print("4/5 resolution")
@@ -125,7 +130,7 @@ def main() -> int:
     print("5/5 post-fix verification + outputs")
     problems = verify_post_fix(data, ledger)
     os.makedirs(args.output, exist_ok=True)
-    write_outputs(data, ledger, args.output, problems, llm is not None)
+    write_outputs(data, ledger, args.output, problems, True)
 
     print(f"\nIssues: {len(ledger.issues)} | by action: {ledger.counts_by_action()}")
     if problems:

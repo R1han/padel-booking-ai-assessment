@@ -3,9 +3,9 @@
 One call per catalog record. The response schema is enforced by the API via
 `messages.parse`, so there is no JSON to parse and no retry-on-parse loop.
 
-Without ANTHROPIC_API_KEY, get_llm() returns None and the caller falls back to
-pipeline/heuristics.py. The pipeline always runs to completion; without a key
-it simply finds less.
+Without ANTHROPIC_API_KEY, get_llm() returns None. There is no offline
+fallback: run_pipeline.py treats a missing key as a hard failure rather than
+running with less evidence.
 """
 from __future__ import annotations
 

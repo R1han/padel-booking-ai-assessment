@@ -41,8 +41,6 @@ CORROBORATING = {("branches", "indoor_courts"), ("branches", "outdoor_courts")}
 
 def collect_claims(data: dict, extractor, ledger: Ledger) -> dict[tuple[str, str], BaseModel]:
     """Extract claims for every catalog record whose text passes the prose gate."""
-    from . import heuristics
-
     out: dict[tuple[str, str], BaseModel] = {}
     for entity, schema in CLAIM_MODELS.items():
         text_key = TEXT_FIELD[entity]
@@ -55,9 +53,16 @@ def collect_claims(data: dict, extractor, ledger: Ledger) -> dict[tuple[str, str
                                  action=Action.QUARANTINED, evidence=reason, checker=CHECKER))
                 out[(entity, record["id"])] = schema()
                 continue
-            claims = extractor(entity, record, text) if extractor else None
+            claims = extractor(entity, record, text)
             if claims is None:
-                claims = heuristics.extract(entity, record, text)
+                # An API error or a refusal. A failed extraction means "no claims",
+                # never a guess — record it and move on with an empty claim object.
+                ledger.add(Issue(entity, record["id"], text_key, "extraction_failed",
+                                 Severity.ERROR, detected_value=(text or "")[:120],
+                                 action=Action.QUARANTINED,
+                                 evidence="LLM extraction failed or was refused; no claims recorded",
+                                 checker=CHECKER))
+                claims = schema()
             out[(entity, record["id"])] = claims
     return out
 

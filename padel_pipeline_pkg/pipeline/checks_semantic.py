@@ -1,8 +1,10 @@
 """Text extractors: pull assertions out of free text.
 
 The reconciliation that used to live here now happens in adjudicate.py. What
-remains are the deterministic extractors, used as the offline fallback by
-heuristics.py and for cross-source price triangulation.
+remains are the deterministic extractors. Extraction is LLM-only now — the
+offline heuristic fallback that used to import these has been retired — but
+price_band_evidence still serves cross-source price triangulation, and the
+rest are left in place rather than pulled along with their only consumer.
 """
 from __future__ import annotations
 
