@@ -33,7 +33,7 @@ _session: ContextVar[str] = ContextVar("padel_session", default="anonymous")
 _plan: ContextVar[dict | None] = ContextVar("padel_plan", default=None)
 
 DEFAULT_PLAN = {
-    "language": "en", "out_of_scope": False, "tone": "neutral",
+    "language": "en", "out_of_scope": False,
     "asks_for_personal_data": False, "referenced_ids": [],
 }
 

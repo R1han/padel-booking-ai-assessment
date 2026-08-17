@@ -6,12 +6,12 @@
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
 asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
-cheap terminal branch, taken when the planner has already flagged the request as out of
-scope or as asking for private staff details, and for abuse that asks for nothing.
+cheap terminal branch, taken when the planner has flagged the request as asking for
+private staff details.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
-breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
-question is refused without ever touching retrieval or the expensive model.
+breakdown of latency, tokens and cost, and it lets us skip work -- a request for a
+coach's mobile number is refused without touching retrieval or the expensive model.
 """
 
 from __future__ import annotations
@@ -49,7 +49,6 @@ Return JSON with exactly these keys:
       using the context below. Keep proper nouns as written.
   "out_of_scope": see the rule below.
   "asks_for_personal_data": see the rule below.
-  "tone": "neutral" or "hostile" -- see the rule below.
   "referenced_ids": ids from the context below that the message points at, or [].
 
 out_of_scope is true ONLY when the club could not possibly serve the request:
@@ -63,18 +62,15 @@ Judge only what is being asked for. Insults, swearing and complaints in the mess
 change nothing: ignore them and decide on the request that remains. "Your staff are
 idiots, how much is a court at night?" is a price question, so out_of_scope is false.
 
+out_of_scope is true only when NOTHING in the message can be served. If any part of it
+can be -- one item of a list, one half of an "or", one clause of a compound question --
+it is FALSE, and the assistant answers that part and says what it cannot do about the
+rest.
+
 asks_for_personal_data is true ONLY for a staff member's private details: personal or
 mobile phone number, personal or work email address, home address, salary.
 It is FALSE for a coach's name, specialities, experience, rates or working hours, and
 FALSE for a branch's public phone number. Default to false when unsure.
-
-tone is "hostile" when the message insults a person -- staff, the club's people, or you
--- and "neutral" otherwise, which is the default. Casual wording is not a tone: slang,
-emoji, lowercase and "lol" are neutral. Anger about the service, the prices or a failed
-booking is a complaint, and complaints are neutral.
-  "yo any courts tonight lol" -> neutral
-  "this is ridiculous, my booking failed twice" -> neutral
-  "your bot is useless, you people are idiots" -> hostile
 
 Context from the previous turn (may be empty):
 {context}
@@ -161,21 +157,6 @@ This request is for a staff member's private details. Decline, and offer the bra
 public phone number as the way to reach them.
 """
 
-HOSTILE_RULE = """
-The user is angry, and may be insulting. Do not argue, do not apologise at length, and
-do not comment on their tone. Answer the question they asked, plainly and briefly.
-"""
-
-# alternate only sees abuse that asked for nothing, and its own prompt is built around
-# declining a request. Without this it declines one that was never made.
-NOTHING_ASKED_RULE = """
-The user is venting and has not asked for anything. There is nothing to decline. Reply
-with one level sentence offering to help with courts, coaches, classes or bookings. Do
-not argue, do not lecture them, and do not comment on their tone.
-"""
-
-
-
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
 # an explicit instruction the model answered English questions in Arabic.
 LANGUAGE_RULE = {
@@ -230,7 +211,7 @@ def plan_node(state: AgentState) -> dict:
     """Normalise the query and resolve cross-turn references before any retrieval."""
     message = _last_user_text(state)
     plan: dict[str, Any] = {
-        "language": "en", "english_query": message, "tone": "neutral",
+        "language": "en", "english_query": message,
         "out_of_scope": False, "asks_for_personal_data": False, "referenced_ids": [],
     }
     if not llm.has_credentials():
@@ -271,8 +252,6 @@ def alternate_node(state: AgentState) -> dict:
         system += OUT_OF_SCOPE_RULE
     if plan.get("asks_for_personal_data"):
         system += PERSONAL_DATA_RULE
-    if plan.get("tone") == "hostile" and not _asks_anything(plan):
-        system += NOTHING_ASKED_RULE
     if state.get("context"):
         system += (
             "\nWhat you showed the user last turn, so a follow-up refusal reads in "
@@ -287,30 +266,20 @@ def alternate_node(state: AgentState) -> dict:
 
 
 def after_plan(state: AgentState) -> str:
-    """A refusal the planner is already certain of does not need the tool loop.
+    """Only a flag that can never be half-right may skip the tool loop.
 
-    Abuse diverts only when it asks for nothing. Pure venting costs a full grounded call
-    with every tool schema attached to reply "I am here to help", which the cheap node
-    does for an eighth of the price -- but the tone flag alone is the wrong test for it.
-    Measured over 7 abusive messages that each carried a real question, nano called the
-    six English ones neutral and the Arabic one hostile, 5 runs out of 5. Routing on
-    tone would therefore have answered English customers and deflected Arabic ones
-    asking the same thing. The question mark is the honest signal, and english_query
-    supplies it in both languages for free: the planner has already rewritten the
-    message into English, so the "?" survives even where the tone judgement does not.
+    Asking for a coach's mobile number is all-or-nothing, so it refuses here. out_of_scope
+    is not, and deliberately does not divert: the planner reads a compound question ("do
+    you have a pool or a gym") as out of scope on the strength of the half it cannot
+    serve. Routing on it was measured over the 51-query set and took partial-category
+    recall from 1.00 to 0.667 and retrieval recall from 0.977 to 0.955, to save about 5%
+    on cost. The tool path is what rescues those questions, so out_of_scope stays a hint
+    to answer_node rather than a verdict.
     """
     plan = state.get("plan") or {}
-    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
-        return "alternate"
-    if plan.get("tone") == "hostile" and not _asks_anything(plan):
+    if plan.get("asks_for_personal_data"):
         return "alternate"
     return "answer"
-
-
-def _asks_anything(plan: dict) -> bool:
-    """Both marks, because a degraded planner leaves english_query as the raw message."""
-    query = plan.get("english_query") or ""
-    return "?" in query or "؟" in query
 
 
 
@@ -339,8 +308,6 @@ def answer_node(state: AgentState) -> dict:
         system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
     if plan.get("asks_for_personal_data"):
         system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
-    if plan.get("tone") == "hostile":
-        system += HOSTILE_RULE
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
 

@@ -391,17 +391,22 @@ def test_quoted_multipliers_reconcile_with_what_we_actually_charge():
 
 # --- refusals that skip retrieval ---------------------------------------------------
 #
-# out_of_scope and asks_for_personal_data have no answer anywhere in the data. Sending
-# them through `answer` bought a retrieval loop and answerer-rate tokens to arrive at a
-# conclusion the planner had already reached.
+# A request with no answer anywhere in the data does not need a retrieval loop or
+# answerer-rate tokens to reach a conclusion the planner already holds. Which flags may
+# short-circuit is decided by the eval, not by how clean the idea sounds: only the ones
+# that can never be half-answerable.
 
 
-def test_a_planner_refusal_routes_away_from_the_tool_loop():
+def test_only_flags_that_are_never_half_answerable_skip_the_tool_loop():
+    """out_of_scope is deliberately NOT here, and this is the whole point of the test.
+    Refusing on it early was measured over the eval set and took partial-category recall
+    from 1.00 to 0.667: "do you have a pool or a gym" is flagged out of scope on the
+    strength of the pool, and a tool-less node loses the gym answer with it. Asking for
+    a coach's mobile number has no answerable half, so it may short-circuit."""
     from app.agent import graph as agent_graph
 
-    assert agent_graph.after_plan({"plan": {"out_of_scope": True}}) == "alternate"
     assert agent_graph.after_plan({"plan": {"asks_for_personal_data": True}}) == "alternate"
-    # Everything else keeps its tools, including a question whose answer happens to be no.
+    assert agent_graph.after_plan({"plan": {"out_of_scope": True}}) == "answer"
     assert agent_graph.after_plan({"plan": {"out_of_scope": False}}) == "answer"
     assert agent_graph.after_plan({}) == "answer"
 
@@ -460,126 +465,6 @@ def test_the_alternate_node_declines_personal_details_in_the_users_language(monk
     system = Recorder.messages[0].text
     assert "private" in system and "branch" in system
     assert system.endswith(agent_graph.LANGUAGE_RULE["ar"]), "Arabic asks get an Arabic reply"
-
-
-# --- tone ---------------------------------------------------------------------------
-#
-# Measured on nano, the tone flag scores 3/3 on real abuse and 4/4 FALSE POSITIVES on
-# ordinary complaints ("this app is a joke, it lost my booking"). Three prompt variants
-# did not shift it. So tone is not allowed to decide whether we answer -- it only sets
-# the register of an answer that happens anyway, which makes a misread free. Any change
-# that lets tone route, refuse or withhold tools reintroduces a cost we measured.
-
-
-def test_abuse_routes_away_only_when_it_asks_for_nothing():
-    """Venting costs a full grounded call to say "I'm here to help"; sending it to the
-    cheap node saves 8x. But abuse that carries a question must keep its tools -- see
-    the Arabic case below, which is the whole reason this is not a plain tone check."""
-    from app.agent import graph as agent_graph
-
-    route = lambda plan: agent_graph.after_plan({"plan": plan})
-
-    assert route({"tone": "hostile", "english_query": "Your staff are idiots."}) == "alternate"
-    assert route({"tone": "hostile", "english_query": "Your bot is garbage."}) == "alternate"
-
-    # Measured 5/5 runs: nano reads Arabic abuse as hostile even when it asks a real
-    # question, where the same insult in English reads neutral 6/6. Routing on tone
-    # alone would answer English complainers and deflect Arabic ones.
-    assert route({
-        "tone": "hostile",
-        "english_query": "Your staff are idiots. What is the price of a court at night?",
-    }) == "answer"
-
-    # If the planner degraded, english_query is the raw message -- Arabic "?" included.
-    assert route({"tone": "hostile", "english_query": "حمير، كم سعر الملعب؟"}) == "answer"
-
-    assert route({"tone": "neutral", "english_query": "Your staff are idiots."}) == "answer"
-    # And a genuine refusal still routes, whatever the tone alongside it.
-    assert route({"tone": "hostile", "out_of_scope": True}) == "alternate"
-
-
-def test_an_abusive_message_still_gets_answered_with_tools(monkeypatch):
-    """The 4/4 false positives are only harmless while this holds. If hostility ever
-    costs the user their tools, every angry customer loses their answer."""
-    from langchain_core.messages import AIMessage, HumanMessage
-
-    from app.agent import graph as agent_graph
-
-    class Recorder:
-        messages: list = []
-        bound = False
-
-        def bind_tools(self, tools):
-            Recorder.bound = True
-            return self
-
-        def invoke(self, messages, *args, **kwargs):
-            Recorder.messages = messages
-            return AIMessage("Ajman has 4 coaches.")
-
-    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
-
-    agent_graph.answer_node({
-        "messages": [HumanMessage("how many coaches in ajman you useless idiots")],
-        "plan": {"tone": "hostile"},
-        "loops": 0,
-    })
-
-    assert Recorder.bound, "an abusive message is still a question, and questions need tools"
-    assert agent_graph.HOSTILE_RULE in Recorder.messages[0].text
-
-
-def test_venting_reaches_the_cheap_node_told_that_nothing_was_asked(monkeypatch):
-    """alternate's default framing is "decline what was asked". Nothing was asked here,
-    so it has to be told that, or it declines a request that does not exist."""
-    from langchain_core.messages import AIMessage, HumanMessage
-
-    from app.agent import graph as agent_graph
-
-    class Recorder:
-        messages: list = []
-
-        def invoke(self, messages, *args, **kwargs):
-            Recorder.messages = messages
-            return AIMessage("Happy to help with courts, coaches or bookings.")
-
-    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
-
-    agent_graph.alternate_node({
-        "messages": [HumanMessage("you people are useless")],
-        "plan": {"tone": "hostile", "english_query": "Your staff are useless."},
-    })
-
-    system = Recorder.messages[0].text
-    assert agent_graph.NOTHING_ASKED_RULE in system
-    # We never told them we cannot help -- they never asked for anything.
-    assert "outside what the club offers" not in system
-
-
-def test_an_ordinary_request_is_not_told_to_manage_the_users_temper(monkeypatch):
-    from langchain_core.messages import AIMessage, HumanMessage
-
-    from app.agent import graph as agent_graph
-
-    class Recorder:
-        messages: list = []
-
-        def bind_tools(self, tools):
-            return self
-
-        def invoke(self, messages, *args, **kwargs):
-            Recorder.messages = messages
-            return AIMessage("...")
-
-    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
-
-    agent_graph.answer_node({
-        "messages": [HumanMessage("Book court AQ-1 tomorrow at 19:00")],
-        "plan": {"tone": "neutral"},
-        "loops": 0,
-    })
-
-    assert agent_graph.HOSTILE_RULE not in Recorder.messages[0].text
 
 
 # --- request limits ----------------------------------------------------------------

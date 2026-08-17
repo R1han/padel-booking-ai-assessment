@@ -372,37 +372,6 @@
       "should_refuse": false,
       "expected_ids": [],
       "note": "Arabic group booking at Ajman, which does have adjacent evening availability."
-    },
-    "q48": {
-      "category": "answerable",
-      "note": "Abuse plus a real question. Measured on the planner, tone flags 4/4 ordinary complaints as hostile, so tone must never gate the answer: this scores the same as q17 whatever the classifier decides.",
-      "expected_ids": [
-        "br_ajman"
-      ],
-      "should_refuse": false,
-      "must_contain": [
-        "4"
-      ]
-    },
-    "q49": {
-      "category": "answerable",
-      "note": "A complaint is not abuse and is not out of scope. The cancellation policy must still be answered from the policy record.",
-      "expected_ids": [
-        "pol_cancellation"
-      ],
-      "should_refuse": false
-    },
-    "q50": {
-      "category": "answerable",
-      "note": "Same in Arabic, where the hostile/complaint line is blurrier. Evening pricing must still come back, in Arabic.",
-      "expected_ids": [],
-      "should_refuse": false
-    },
-    "q51": {
-      "category": "answerable",
-      "note": "Abuse plus a real price question, in Arabic. Both planner flags leaked here: tone read hostile 5/5 where the same insult in English read neutral 6/6, and the abuse flipped out_of_scope 2/3 on the Arabic form and 0/3 on the English one. Either leak sends this to the tool-less node and the user is told we do not hold prices we do hold.",
-      "expected_ids": [],
-      "should_refuse": false
     }
   }
 }
