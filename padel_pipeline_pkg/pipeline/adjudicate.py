@@ -79,6 +79,16 @@ def _equal(a, b) -> bool:
     return a == b
 
 
+def _is_sentinel(shipped) -> bool:
+    """A null or a placeholder number is not a value at all.
+
+    Guarded on type: PRICE_SENTINELS is a set, so testing membership with an
+    unhashable shipped value (a list of languages, amenities, branch ids)
+    would raise TypeError.
+    """
+    return shipped is None or (isinstance(shipped, (int, float)) and shipped in PRICE_SENTINELS)
+
+
 def adjudicate(data: dict, all_claims: dict[tuple[str, str], BaseModel], ledger: Ledger) -> None:
     """Reconcile every claim and apply the ones that win. Mutates `data`."""
     index = {e: {r["id"]: r for r in data.get(e, [])} for e in CLAIM_MODELS}
@@ -153,13 +163,14 @@ def adjudicate(data: dict, all_claims: dict[tuple[str, str], BaseModel], ledger:
 
             # 5. authority decides
             authority = AUTHORITY[(entity, field)]
-            sentinel = shipped is None or shipped in PRICE_SENTINELS
-            if authority == "description" or (authority == "structured" and sentinel):
+            if authority == "description":
                 record[field] = value
                 issue.action = Action.AUTO_FIXED
-                issue.evidence += (" | policy: description wins for this field"
-                                   if authority == "description"
-                                   else " | structured value was a sentinel/null")
+                issue.evidence += " | policy: description wins for this field"
+            elif authority == "structured" and _is_sentinel(shipped):
+                record[field] = value
+                issue.action = Action.AUTO_FIXED
+                issue.evidence += " | structured value was a sentinel/null"
             else:
                 issue.action = Action.QUARANTINED
                 issue.evidence += f" | policy: {authority} wins for this field"

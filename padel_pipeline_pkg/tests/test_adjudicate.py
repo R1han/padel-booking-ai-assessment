@@ -108,3 +108,29 @@ def test_foreign_key_conflict_is_quarantined_never_applied():
     adjudicate(data, {("coaches", "co1"): c}, ledger)
     assert data["coaches"][0]["branch_id"] == "br_x"
     assert _find(ledger, "coaches", "branch_id")[0].action == Action.QUARANTINED
+
+
+def test_list_conflict_under_description_authority_is_applied_not_crashed():
+    data = {"branches": [BRANCH],
+            "coaches": [{"id": "co1", "name": "A", "branch_id": "br_x",
+                         "languages": ["English"], "level_focus": "beginner",
+                         "specialties": [], "years_experience": 5,
+                         "rate_per_hour_aed": 300, "bio": "b" * 200}]}
+    ledger = Ledger()
+    c = CoachClaims(languages={"value": ["English", "Arabic"], "stated": True,
+                               "evidence": "speaks English and Arabic", "confidence": 0.9})
+    adjudicate(data, {("coaches", "co1"): c}, ledger)
+    assert data["coaches"][0]["languages"] == ["English", "Arabic"]
+    assert _find(ledger, "coaches", "languages")[0].action == Action.AUTO_FIXED
+
+
+def test_list_conflict_under_quarantine_authority_is_quarantined_not_crashed():
+    data = {"branches": [BRANCH, {**BRANCH, "id": "br_y", "name": "Baseline Y"}],
+            "packages": [{"id": "p1", "name": "P", "price_aed": 1800, "sessions": 10,
+                          "branch_ids": ["br_x"], "description": "d" * 200}]}
+    ledger = Ledger()
+    c = PackageClaims(branch_names={"value": ["Baseline Y"], "stated": True,
+                                    "evidence": "available at Baseline Y", "confidence": 0.9})
+    adjudicate(data, {("packages", "p1"): c}, ledger)
+    assert data["packages"][0]["branch_ids"] == ["br_x"]
+    assert _find(ledger, "packages", "branch_ids")[0].action == Action.QUARANTINED
