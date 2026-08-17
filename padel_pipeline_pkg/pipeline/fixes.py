@@ -1,27 +1,18 @@
-"""Resolution engine: turns detected Issues into applied fixes or quarantine flags.
+"""Resolution engine: handles what adjudication cannot.
 
-Policy table (owner decisions baked in):
-  courts.type mismatch            -> description verdict wins, auto-fix
-  courts.price null/sentinel      -> invert from that court's own slot prices, auto-fix
-                                     if modal agreement >= AGREEMENT_MIN
-  coaches.years_experience > 40   -> bio-extracted value, auto-fix if extracted
-  coaches.languages empty         -> bio-extracted list, auto-fix if extracted
-  classes inverted age range      -> description range (or swap), auto-fix
-  branches.coordinates null       -> quarantine (no reliable inference source)
-  everything else                 -> unresolved (surfaced in report)
-
-Every applied fix updates the Issue in place: corrected_value, action, evidence.
+Adjudication (adjudicate.py) reconciles every field a record's own text can
+speak to. What's left is court prices — never stated in a court's description,
+so recovered by inverting that court's own slot prices — and branch
+coordinates, which have no inference source at all and are simply quarantined.
 """
 from __future__ import annotations
 
 from collections import Counter
 
-from .ledger import Ledger, Issue, Severity, Action
+from .ledger import Ledger, Issue, Action
 from .checks_rules import day_type, PRICE_SENTINELS
-from .checks_semantic import classify_type_from_description
 
 AGREEMENT_MIN = 0.8   # modal share required to auto-apply an inferred court price
-CONF_MIN = 0.6        # minimum confidence to auto-apply a semantic fix
 
 
 def _index(data: dict, entity: str) -> dict:
@@ -58,22 +49,6 @@ def infer_court_price(court: dict, slots: list[dict], price_rules: list[dict]) -
                           f"(distribution: {dict(estimates.most_common(3))})")
 
 
-# ---------------------------------------------------------------------------
-# Fix appliers, keyed by (entity, issue_type)
-# ---------------------------------------------------------------------------
-def fix_court_type(issue: Issue, data: dict) -> None:
-    court = _index(data, "courts").get(issue.entity_id)
-    if court is None or issue.corrected_value not in ("indoor", "outdoor"):
-        issue.action = Action.QUARANTINED
-        return
-    if (issue.confidence or 0) >= CONF_MIN:
-        court["type"] = issue.corrected_value
-        issue.action = Action.AUTO_FIXED
-        issue.evidence += " | policy: description wins (owner decision)"
-    else:
-        issue.action = Action.QUARANTINED
-
-
 def fix_court_price(issue: Issue, data: dict) -> None:
     court = _index(data, "courts").get(issue.entity_id)
     if court is None:
@@ -91,109 +66,26 @@ def fix_court_price(issue: Issue, data: dict) -> None:
         issue.action = Action.QUARANTINED
 
 
-def fix_coach_years(issue: Issue, data: dict) -> None:
-    coach = _index(data, "coaches").get(issue.entity_id)
-    if coach is None:
-        return
-    if isinstance(issue.corrected_value, int) and (issue.confidence or 0) >= CONF_MIN:
-        coach["years_experience"] = issue.corrected_value
-        issue.action = Action.AUTO_FIXED
-    else:
-        issue.action = Action.QUARANTINED
-
-
-def fix_coach_languages(issue: Issue, data: dict) -> None:
-    coach = _index(data, "coaches").get(issue.entity_id)
-    if coach is None:
-        return
-    if issue.corrected_value and (issue.confidence or 0) >= CONF_MIN:
-        coach["languages"] = issue.corrected_value
-        issue.action = Action.AUTO_FIXED
-    else:
-        issue.action = Action.QUARANTINED
-
-
-def fix_class_ages(issue: Issue, data: dict) -> None:
-    cls = _index(data, "classes").get(issue.entity_id)
-    if cls is None or not isinstance(issue.corrected_value, dict):
-        return
-    if (issue.confidence or 0) >= CONF_MIN:
-        cls["min_age"] = issue.corrected_value["min_age"]
-        cls["max_age"] = issue.corrected_value["max_age"]
-        issue.action = Action.AUTO_FIXED
-    else:
-        issue.action = Action.QUARANTINED
-
-
 def quarantine(issue: Issue, data: dict) -> None:
     issue.action = Action.QUARANTINED
 
 
-FIX_POLICIES = {
-    ("courts", "semantic_type_description_mismatch"): fix_court_type,
-    ("courts", "missing_value"): fix_court_price,
-    ("courts", "sentinel_value"): fix_court_price,
-    ("coaches", "semantic_bio_extraction"): None,  # dispatched by field below
-    ("classes", "semantic_age_range"): fix_class_ages,
-    ("branches", "missing_value"): quarantine,
-    ("packages", "semantic_number_mismatch"): "package_number",
-}
-
-
-def fix_package_number(issue: Issue, data: dict) -> None:
-    pkg = _index(data, "packages").get(issue.entity_id)
-    if pkg is None:
-        return
-    if issue.field == "price_aed" and isinstance(issue.corrected_value, int) \
-            and (issue.confidence or 0) >= CONF_MIN:
-        pkg["price_aed"] = issue.corrected_value
-        issue.action = Action.AUTO_FIXED
-        issue.evidence += " | recovered from description"
-    else:
-        issue.action = Action.QUARANTINED
-
-
 def resolve(data: dict, ledger: Ledger) -> None:
-    """Apply fixes in dependency order: court type first (price inference depends on
-    the corrected type), then everything else."""
-    ordered = sorted(
-        ledger.issues,
-        key=lambda i: 0 if (i.entity, i.issue_type) == ("courts", "semantic_type_description_mismatch") else 1,
-    )
-    for issue in ordered:
-        # schema-layer duplicates of the null-languages issue fixed semantically
-        # (checked before the resolved-skip: schema issues arrive pre-quarantined)
-        if issue.entity == "coaches" and issue.issue_type == "schema_validation_error" \
-                and "languages" in str(issue.detected_value):
-            issue.action = Action.VALIDATED_OK
-            issue.evidence = "null languages; superseded by semantic bio extraction fix"
-            continue
+    """Handle what adjudication cannot: values no description states.
+
+    Court prices are never stated in a court's description; they are recovered
+    by inverting that court's own slot prices through the price rules. Branch
+    coordinates have no inference source at all.
+
+    Runs AFTER adjudication so price inference uses the corrected court type.
+    """
+    for issue in ledger.issues:
         if issue.action != Action.UNRESOLVED:
-            continue  # already resolved (e.g. validated_ok at detection time)
-        if issue.entity == "coaches" and issue.issue_type == "semantic_bio_extraction":
-            (fix_coach_years if issue.field == "years_experience" else fix_coach_languages)(issue, data)
             continue
-        # rules-layer duplicates of issues the semantic layer will fix: mark superseded
-        if (issue.entity, issue.issue_type) in (
-            ("coaches", "implausible_value"),
-            ("classes", "inverted_range"),
-            ("coaches", "missing_value"),
-        ):
-            issue.action = Action.VALIDATED_OK
-            issue.evidence = (issue.evidence + " | " if issue.evidence else "") + \
-                "superseded by semantic-layer fix for the same field"
-            continue
-        # schema-layer duplicates of the null-languages issue fixed semantically
-        if issue.entity == "coaches" and issue.issue_type == "schema_validation_error" \
-                and "languages" in str(issue.detected_value):
-            issue.action = Action.VALIDATED_OK
-            issue.evidence = "null languages; superseded by semantic bio extraction fix"
-            continue
-        applier = FIX_POLICIES.get((issue.entity, issue.issue_type))
-        if applier == "package_number":
-            fix_package_number(issue, data)
-        elif applier:
-            applier(issue, data)
+        if issue.entity == "courts" and issue.issue_type in ("missing_value", "sentinel_value"):
+            fix_court_price(issue, data)
+        elif issue.entity == "branches" and issue.issue_type == "missing_value":
+            quarantine(issue, data)
 
 
 def verify_post_fix(data: dict, ledger: Ledger) -> list[str]:
@@ -205,9 +97,6 @@ def verify_post_fix(data: dict, ledger: Ledger) -> list[str]:
             problems.append(f"courts/{c['id']}: price still unresolved ({p})")
         if c["type"] not in ("indoor", "outdoor"):
             problems.append(f"courts/{c['id']}: invalid type {c['type']}")
-        verdict, _, _ = classify_type_from_description(c["description"])
-        if verdict and verdict != c["type"]:
-            problems.append(f"courts/{c['id']}: description still contradicts type")
     for c in data.get("coaches", []):
         if c["years_experience"] > 40:
             problems.append(f"coaches/{c['id']}: implausible years_experience {c['years_experience']}")
@@ -215,4 +104,14 @@ def verify_post_fix(data: dict, ledger: Ledger) -> list[str]:
         mn, mx = c.get("min_age"), c.get("max_age")
         if isinstance(mn, int) and isinstance(mx, int) and mn > mx:
             problems.append(f"classes/{c['id']}: age range still inverted")
+
+    actual = Counter()
+    for c in data.get("courts", []):
+        actual[(c["branch_id"], c["type"])] += 1
+    for b in data.get("branches", []):
+        total = actual[(b["id"], "indoor")] + actual[(b["id"], "outdoor")]
+        if total != b.get("court_count"):
+            problems.append(
+                f"branches/{b['id']}: court_count {b.get('court_count')} != {total} actual courts"
+            )
     return problems

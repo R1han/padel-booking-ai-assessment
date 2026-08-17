@@ -1,20 +1,13 @@
-"""Semantic checks: does the free text agree with the structured fields?
+"""Text extractors: pull assertions out of free text.
 
-Two tiers:
-  1. Deterministic heuristics (keyword scoring, number extraction, cross-source
-     triangulation against slot prices) — run on everything, free.
-  2. LLM verdicts (llm.py) — run only on records the heuristics flag or can't
-     decide, so cost stays bounded. If no API key is configured the pipeline
-     still works; LLM-dependent verdicts fall back to heuristic confidence.
-
-Owner decision: when description and structured field disagree, the DESCRIPTION wins.
+The reconciliation that used to live here now happens in adjudicate.py. What
+remains are the deterministic extractors, used as the offline fallback by
+heuristics.py and for cross-source price triangulation.
 """
 from __future__ import annotations
 
 import re
-from collections import Counter
 
-from .ledger import Ledger, Issue, Severity
 from .checks_rules import day_type, PRICE_SENTINELS
 
 # ---------------------------------------------------------------------------
@@ -75,26 +68,6 @@ def price_band_evidence(court: dict, slots: list[dict], price_rules: list[dict])
     return result
 
 
-def check_court_type_semantics(data: dict, ledger: Ledger, llm=None) -> None:
-    slots, rules = data.get("slots", []), data.get("price_rules", [])
-    for c in data.get("courts", []):
-        verdict, conf, evidence = classify_type_from_description(c["description"])
-        if llm is not None and verdict is None:
-            verdict, conf, evidence = llm.classify_court_type(c["description"])
-        if verdict is None or verdict == c["type"]:
-            continue
-        pe = price_band_evidence(c, slots, rules)
-        agrees = pe.get(f"{verdict}_coverage", 0) > 0 and pe.get(c["type"] + "_coverage", 1) == 0
-        ledger.add(Issue(
-            "courts", c["id"], "type", "semantic_type_description_mismatch", Severity.ERROR,
-            detected_value=c["type"], corrected_value=verdict,
-            confidence=min(conf + (0.1 if agrees else 0.0), 0.95),
-            evidence=evidence + f" | price-rule coverage: indoor={pe['indoor_coverage']}, "
-                                f"outdoor={pe['outdoor_coverage']}",
-            checker="semantic.court_type",
-        ))
-
-
 # ---------------------------------------------------------------------------
 # Coach bio extraction: years of experience, languages
 # ---------------------------------------------------------------------------
@@ -152,53 +125,11 @@ def extract_languages_from_bio(bio: str) -> tuple[list[str], str]:
     return found, " / ".join(ev_sentences[:2])
 
 
-def check_coach_bio_semantics(data: dict, ledger: Ledger, llm=None) -> None:
-    for c in data.get("coaches", []):
-        # years_experience recovery — only where the rules layer flagged implausible values
-        if c.get("years_experience", 0) > 40:
-            val, ev = (llm.extract_years(c["bio"]) if llm else (None, ""))
-            if val is None:
-                val, ev = extract_years_from_bio(c["bio"])
-            ledger.add(Issue("coaches", c["id"], "years_experience",
-                             "semantic_bio_extraction", Severity.ERROR,
-                             detected_value=c["years_experience"], corrected_value=val,
-                             confidence=0.85 if val is not None else 0.0,
-                             evidence=ev, checker="semantic.coach_bio"))
-        # language recovery for empty lists
-        if not c.get("languages"):
-            langs, ev = extract_languages_from_bio(c["bio"])
-            ledger.add(Issue("coaches", c["id"], "languages", "semantic_bio_extraction",
-                             Severity.WARNING, detected_value=c.get("languages"),
-                             corrected_value=langs or None,
-                             confidence=0.9 if langs else 0.0,
-                             evidence=ev, checker="semantic.coach_bio"))
-
-
 # ---------------------------------------------------------------------------
 # Class ages vs description
 # ---------------------------------------------------------------------------
 AGE_RANGE_PAT = re.compile(r"\b(?:aged?|ages?)\s+(\d{1,2})\s*(?:to|-|–|and)\s*(\d{1,2})", re.I)
 AGE_MIN_PAT = re.compile(r"\b(?:aged?|ages?)\s+(\w+|\d{1,2})\s+(?:and\s+(?:over|above|up)|\+)", re.I)
-
-
-def check_class_age_semantics(data: dict, ledger: Ledger) -> None:
-    for c in data.get("classes", []):
-        mn, mx = c.get("min_age"), c.get("max_age")
-        if isinstance(mn, int) and isinstance(mx, int) and mn > mx:
-            m = AGE_RANGE_PAT.search(c["description"])
-            if m:
-                lo, hi = sorted((int(m.group(1)), int(m.group(2))))
-                ev = f'description states ages {m.group(1)}–{m.group(2)}'
-                corrected = {"min_age": lo, "max_age": hi}
-                conf = 0.9
-            else:
-                corrected = {"min_age": mx, "max_age": mn}
-                ev = "no age range in description; swapping inverted values"
-                conf = 0.7
-            ledger.add(Issue("classes", c["id"], "min_age/max_age", "semantic_age_range",
-                             Severity.ERROR, detected_value={"min_age": mn, "max_age": mx},
-                             corrected_value=corrected, confidence=conf, evidence=ev,
-                             checker="semantic.class_ages"))
 
 
 # ---------------------------------------------------------------------------
@@ -217,36 +148,3 @@ def parse_word_number(raw: str) -> int | None:
         if a in TENS and b in WORD_NUM:
             return TENS[a] + WORD_NUM[b]
     return TENS.get(raw)
-
-
-def check_package_number_semantics(data: dict, ledger: Ledger) -> None:
-    for p in data.get("packages", []):
-        d = p["description"]
-        m = re.search(r"AED\s*([\d,]+)", d)
-        if m and int(m.group(1).replace(",", "")) != p["price_aed"]:
-            desc_price = int(m.group(1).replace(",", ""))
-            is_sentinel = p["price_aed"] in (99999, 9999, 0, -1)
-            ledger.add(Issue("packages", p["id"], "price_aed", "semantic_number_mismatch",
-                             Severity.ERROR if is_sentinel else Severity.WARNING,
-                             detected_value=p["price_aed"],
-                             corrected_value=desc_price if is_sentinel else None,
-                             confidence=0.9 if is_sentinel else None,
-                             evidence=f"description says AED {m.group(1)}"
-                                      + (" | field holds sentinel placeholder" if is_sentinel else ""),
-                             checker="semantic.package_numbers"))
-        m2 = re.search(r"\b([\w-]+|\d+)\s+sessions\b", d, re.I)
-        if m2:
-            raw = m2.group(1).lower()
-            n = int(raw) if raw.isdigit() else parse_word_number(raw)
-            if n is not None and n != p["sessions"]:
-                ledger.add(Issue("packages", p["id"], "sessions", "semantic_number_mismatch",
-                                 Severity.WARNING, detected_value=p["sessions"],
-                                 evidence=f'description says "{m2.group(0)}"',
-                                 checker="semantic.package_numbers"))
-
-
-def run_semantic_checks(data: dict, ledger: Ledger, llm=None) -> None:
-    check_court_type_semantics(data, ledger, llm)
-    check_coach_bio_semantics(data, ledger, llm)
-    check_class_age_semantics(data, ledger)
-    check_package_number_semantics(data, ledger)

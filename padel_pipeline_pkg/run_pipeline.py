@@ -5,10 +5,11 @@ Usage:
     python run_pipeline.py --input <dir with the 11 json files> --output <dir>
 
 Outputs:
-    <output>/cleaned/*.json        corrected datasets (same shape as input)
-    <output>/issue_ledger.json     every detected issue with evidence + action
-    <output>/issue_ledger.csv      same, for spreadsheets
-    <output>/report.md             human-readable run summary
+    <output>/catalog_clean/*.json     corrected catalog datasets (same shape as input)
+    <output>/structured_clean/*.json  corrected structured datasets (same shape as input)
+    <output>/issue_ledger.json        every detected issue with evidence + action
+    <output>/issue_ledger.csv         same, for spreadsheets
+    <output>/report.md                human-readable run summary
 
 Set ANTHROPIC_API_KEY to enable the LLM semantic tier (optional; heuristics
 cover the current dataset without it).
@@ -25,12 +26,15 @@ from pydantic import ValidationError
 from pipeline.ledger import Ledger, Issue, Severity, Action
 from pipeline.models import SCHEMAS
 from pipeline.checks_rules import run_rule_checks
-from pipeline.checks_semantic import run_semantic_checks
+from pipeline.adjudicate import adjudicate, collect_claims
 from pipeline.fixes import resolve, verify_post_fix
 from pipeline.llm import get_llm
 
 FILES = ["branches", "courts", "coaches", "classes", "packages", "policies",
          "price_rules", "reviews", "bookings", "coach_schedules", "slots"]
+
+CATALOG = ["branches", "courts", "coaches", "classes", "packages", "policies", "reviews"]
+STRUCTURED = ["price_rules", "bookings", "coach_schedules", "slots"]
 
 
 def load_and_validate(input_dir: str, ledger: Ledger) -> dict:
@@ -56,11 +60,12 @@ def load_and_validate(input_dir: str, ledger: Ledger) -> dict:
 
 def write_outputs(data: dict, ledger: Ledger, output_dir: str, post_fix_problems: list[str],
                   llm_enabled: bool) -> None:
-    cleaned = os.path.join(output_dir, "cleaned")
-    os.makedirs(cleaned, exist_ok=True)
-    for name, records in data.items():
-        with open(os.path.join(cleaned, f"{name}.json"), "w") as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
+    for subdir, names in (("catalog_clean", CATALOG), ("structured_clean", STRUCTURED)):
+        target = os.path.join(output_dir, subdir)
+        os.makedirs(target, exist_ok=True)
+        for name in names:
+            with open(os.path.join(target, f"{name}.json"), "w") as f:
+                json.dump(data[name], f, indent=2, ensure_ascii=False)
     ledger.to_json(os.path.join(output_dir, "issue_ledger.json"))
     ledger.to_csv(os.path.join(output_dir, "issue_ledger.csv"))
 
@@ -109,10 +114,10 @@ def main() -> int:
     print("2/5 rule-based checks")
     run_rule_checks(data, ledger)
 
-    print(f"3/5 semantic checks (LLM: {'on' if llm else 'off'})")
-    # LLM tier is inert until the adjudication stage; the old semantic checks run
-    # on heuristics only. A later task replaces this call with claim-extraction logic.
-    run_semantic_checks(data, ledger)
+    print(f"3/5 claim extraction + adjudication (LLM: {'on' if llm else 'off'})")
+    extractor = llm.extract if llm else None
+    all_claims = collect_claims(data, extractor, ledger)
+    adjudicate(data, all_claims, ledger)
 
     print("4/5 resolution")
     resolve(data, ledger)
