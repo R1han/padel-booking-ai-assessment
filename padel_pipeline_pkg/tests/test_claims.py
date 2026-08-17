@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from pipeline.claims import (
     AUTHORITY, CLAIM_MODELS, FIELD_MAP, TEXT_FIELD,
-    CourtClaims, FieldClaim,
+    ClassClaims, CourtClaims, FieldClaim,
 )
 
 
@@ -58,3 +58,18 @@ def test_descriptive_fields_defer_to_the_description():
 def test_identity_and_foreign_keys_quarantine_on_conflict():
     assert AUTHORITY[("classes", "coach_id")] == "quarantine"
     assert AUTHORITY[("coaches", "branch_id")] == "quarantine"
+
+
+def test_gender_vocabulary_matches_the_dataset():
+    # Regression: the dataset contains only "mixed" and "ladies_only", never "men_only".
+    # Ensure the schema rejects the non-existent value and accepts only what the data uses.
+    with pytest.raises(ValidationError):
+        ClassClaims(gender={"value": "men_only", "stated": True,
+                            "evidence": "x", "confidence": 0.9})
+    # Verify both canonical values are accepted
+    c_mixed = ClassClaims(gender={"value": "mixed", "stated": True,
+                                  "evidence": "mixed class", "confidence": 0.95})
+    assert c_mixed.gender.value == "mixed"
+    c_ladies = ClassClaims(gender={"value": "ladies_only", "stated": True,
+                                   "evidence": "ladies only", "confidence": 0.95})
+    assert c_ladies.gender.value == "ladies_only"

@@ -46,7 +46,7 @@ class LevelClaim(FieldClaim):
 
 
 class GenderClaim(FieldClaim):
-    value: Literal["mixed", "ladies_only", "men_only"] | None = None
+    value: Literal["mixed", "ladies_only"] | None = None
 
 
 class LevelFocusClaim(FieldClaim):
