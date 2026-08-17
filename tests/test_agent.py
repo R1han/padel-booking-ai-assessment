@@ -391,24 +391,50 @@ def test_quoted_multipliers_reconcile_with_what_we_actually_charge():
 
 # --- refusals that skip retrieval ---------------------------------------------------
 #
-# A request with no answer anywhere in the data does not need a retrieval loop or
-# answerer-rate tokens to reach a conclusion the planner already holds. Which flags may
-# short-circuit is decided by the eval, not by how clean the idea sounds: only the ones
-# that can never be half-answerable.
+# A request the planner has already ruled out needs neither tools nor the expensive
+# model. Both flags terminate at `alternate`, which makes that node the sole owner of
+# them -- answer_node reads neither, and the test below keeps it that way.
 
 
-def test_only_flags_that_are_never_half_answerable_skip_the_tool_loop():
-    """out_of_scope is deliberately NOT here, and this is the whole point of the test.
-    Refusing on it early was measured over the eval set and took partial-category recall
-    from 1.00 to 0.667: "do you have a pool or a gym" is flagged out of scope on the
-    strength of the pool, and a tool-less node loses the gym answer with it. Asking for
-    a coach's mobile number has no answerable half, so it may short-circuit."""
+def test_both_planner_refusals_skip_the_tool_loop():
     from app.agent import graph as agent_graph
 
+    assert agent_graph.after_plan({"plan": {"out_of_scope": True}}) == "alternate"
     assert agent_graph.after_plan({"plan": {"asks_for_personal_data": True}}) == "alternate"
-    assert agent_graph.after_plan({"plan": {"out_of_scope": True}}) == "answer"
+    # Everything else keeps its tools, including a question whose answer happens to be no.
     assert agent_graph.after_plan({"plan": {"out_of_scope": False}}) == "answer"
     assert agent_graph.after_plan({}) == "answer"
+
+
+def test_answer_node_does_not_second_guess_a_routed_refusal(monkeypatch):
+    """Both flags are `alternate`'s business. If answer_node started reading them again
+    it would be dead text in the separate-plan shape, and worse, it would look like the
+    tool path still handles refusals when it no longer sees them."""
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def bind_tools(self, tools):
+            return self
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("...")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+
+    agent_graph.answer_node({
+        "messages": [HumanMessage("How many coaches are in Ajman?")],
+        "plan": {"out_of_scope": True, "asks_for_personal_data": True},
+        "loops": 0,
+    })
+
+    system = Recorder.messages[0].text
+    assert "Verify, then say so plainly" not in system
+    assert "Decline and offer the branch line" not in system
 
 
 def test_the_alternate_node_refuses_without_binding_tools(monkeypatch):

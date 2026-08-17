@@ -6,12 +6,13 @@
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
 asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
-cheap terminal branch, taken when the planner has flagged the request as asking for
-private staff details.
+cheap terminal branch, taken when the planner has flagged the request as out of scope
+or as asking for private staff details. Those two flags are read there and nowhere
+else -- answer_node never sees a request they apply to.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
-breakdown of latency, tokens and cost, and it lets us skip work -- a request for a
-coach's mobile number is refused without touching retrieval or the expensive model.
+breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
+question is refused without ever touching retrieval or the expensive model.
 """
 
 from __future__ import annotations
@@ -266,18 +267,21 @@ def alternate_node(state: AgentState) -> dict:
 
 
 def after_plan(state: AgentState) -> str:
-    """Only a flag that can never be half-right may skip the tool loop.
+    """A request the planner has already ruled out needs neither tools nor the expensive
+    model, so both flags terminate here rather than paying for a retrieval loop to reach
+    a conclusion we hold before the first tool call.
 
-    Asking for a coach's mobile number is all-or-nothing, so it refuses here. out_of_scope
-    is not, and deliberately does not divert: the planner reads a compound question ("do
-    you have a pool or a gym") as out of scope on the strength of the half it cannot
-    serve. Routing on it was measured over the 51-query set and took partial-category
-    recall from 1.00 to 0.667 and retrieval recall from 0.977 to 0.955, to save about 5%
-    on cost. The tool path is what rescues those questions, so out_of_scope stays a hint
-    to answer_node rather than a verdict.
+    The cost of this is the planner's precision on out_of_scope, and it is not free. The
+    flag fires on the presence of something we cannot serve rather than the absence of
+    anything we can, so a compound question ("do you have a pool or a gym") is ruled out
+    on the strength of the half we do not stock, and this node cannot answer the other
+    half. Measured over the eval set that is partial-category recall of 0.667 against
+    1.00 when out_of_scope stays on the tool path -- concentrated in q05 and q31. The
+    planner prompt's "NOTHING in the message can be served" rule is what has to carry
+    that distinction; tighten it there rather than adding a second judgement here.
     """
     plan = state.get("plan") or {}
-    if plan.get("asks_for_personal_data"):
+    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return "alternate"
     return "answer"
 
@@ -304,10 +308,10 @@ def answer_node(state: AgentState) -> dict:
             f"\nSearch using this English reading of the request: "
             f"{plan['english_query']}\n"
         )
-    if plan.get("out_of_scope"):
-        system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
-    if plan.get("asks_for_personal_data"):
-        system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
+    # Neither planner flag is read here. `alternate` owns both: a request that is out of
+    # scope or after private staff details never reaches this node, so repeating the
+    # rules would be dead text in the separate-plan shape. The general cases are already
+    # covered by GROUNDING above, which is what the merged shape relies on.
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
 
