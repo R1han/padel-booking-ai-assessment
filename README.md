@@ -53,19 +53,28 @@ a second and is safe while the server is running.
 47 queries — 14 Arabic or mixed, 5 multi-turn — across answerable, partially answerable
 and unanswerable.
 
+Figures below are the min–max across **three consecutive runs** of the shipped
+configuration, not a single best run.
+
 | Metric | Result | Target |
 | --- | --- | --- |
-| Retrieval recall | 0.97–1.00 | — |
-| Precision@1 / MRR | 0.75 / 0.80 | — |
-| Refusal accuracy | **0.98–1.00**, zero *missed* refusals | scored both directions |
-| PII leaks | **0** | 0 |
-| Mean cost per query | **$0.0021** | ≤ $0.02 ✅ |
-| p95 full response | **5.7 s** | ≤ 8 s ✅ |
+| Retrieval recall | 0.95–0.98 | — |
+| Precision@1 / MRR | 0.60–0.70 / 0.70–0.78 | — |
+| Refusal accuracy | **0.957** (45/47) | scored both directions |
+| PII leaks | **0** | 0 ✅ |
+| Mean cost per query | **$0.0023** | ≤ $0.02 ✅ |
+| p95 full response | 5.1–8.8 s | ≤ 8 s passes in 2 of 3 |
 | Time to first token | 3.0 s median · 4.2 s p95 | ≤ 2 s ❌ |
 | Race test | 1 confirmation, 19 rejections, 5/5 runs | exactly 1 ✅ |
 
-Run-to-run variation of a few points is normal: temperature is 0, but which tools the
-model picks still varies.
+**The two refusal errors are known and named.** `q31` — "do you have a pool or a gym?" —
+misses in every run: the planner sets `out_of_scope` on the strength of the pool, the
+request is routed to the tool-less `alternate` node, and the answerable gym half is lost
+with it. That is the standing cost of refusing early, and the fix belongs in the planner
+learning to separate *"part of this is out of scope"* from *"none of this can be
+served"*, which four prompt attempts have not achieved in Arabic. The second error moves
+between runs (`q08`, or `q36` as a missed refusal) and is phrasing noise in the refusal
+detector rather than a behaviour change.
 
 ---
 
@@ -80,8 +89,10 @@ flowchart TB
         direction LR
         PLAN["plan &middot; cheap model<br/>language, scope, PII<br/>cross-turn references"]
         ANS["answer &middot; main model<br/>grounded generation, streams"]
+        ALT["alternate &middot; cheap model<br/>no tools bound, terminal<br/>refuses without retrieving"]
         TOOLS["tools<br/>8 bound tools"]
-        PLAN --> ANS
+        PLAN -->|answerable| ANS
+        PLAN -->|out of scope, staff PII| ALT
         ANS <--> TOOLS
     end
 
@@ -331,10 +342,10 @@ key — but flagged out of the search index. Two dates are unparseable (`2026-13
 
 | # | Area | Implementation and evidence |
 | --- | --- | --- |
-| 1 | **Slot holds** | `kind='hold'` with an integer-epoch TTL in the same claims table. Expiry is a *scoped* delete of only the requested slots inside the write transaction; a global sweep runs at startup. Confirming converts the hold in one transaction, and a session booking a slot it already holds converts rather than conflicting with itself. The UI drains a countdown bar on the held chip. |
+| 1 | **Slot holds** | `kind='hold'` with an integer-epoch TTL in the same claims table. Expiry is a *scoped* delete of only the requested slots inside the write transaction; a global sweep runs at startup. Confirming converts the hold in one transaction, and a session booking a slot it already holds converts rather than conflicting with itself. The UI drains a countdown bar on the held chip. One request may cover at most **8 slots** (`booking_max_slots_per_request`, against a largest real slate of 4 courts): `/chat` is unauthenticated and `create_hold` otherwise accepted 200 slots in a single call, enough to take the estate off the market. |
 | 2 | **Cross-turn references** | The session keeps the last ranked result list; the planner resolves "the second one", "the first one" or "same time at Yas" into concrete IDs before retrieval. Records carried from an earlier turn count as retrieved, because they are what grounds the answer. 5 multi-turn eval cases (q39–q43, two Arabic) + unit tests. |
 | 3 | **Graceful degradation** | Chroma down → FTS5 lexical, flagged. Reranker or planner down → the turn still answers. Provider down → configured fallback vendor, exercised with a real primary outage. Booking and all structured lookups are pure SQL and need no model. 8 tests, each removing a real dependency. |
-| 4 | **Cost reduction** | **$0.0021/query, ~10× under target.** Planner moved to the smallest model, prose in tool payloads capped (six policy bodies had pushed one call past 9,000 input tokens), reviews retrieved as a capped second pass. Measured before/after: $0.00312 → $0.00210 with recall improving. |
+| 4 | **Cost reduction** | **$0.0023/query, ~9× under target.** Planner moved to the smallest model, prose in tool payloads capped (six policy bodies had pushed one call past 9,000 input tokens), reviews retrieved as a capped second pass. Measured before/after: $0.00312 → $0.00210 with recall improving. A request the planner has already ruled out skips retrieval and the expensive model entirely via `alternate`, which costs ~$0.00013 against ~$0.00096 on the tool path. |
 | 5 | **Multi-constraint booking** | `find_group_slots` handles party size → courts (4 players each), simultaneity, adjacency and coach cover, and a group is held and booked **atomically across every court**. 4 eval cases (q44–q47) and 14 tests. Both soft constraints are surfaced as **caveats rather than asserted**: the data records no court positions and does not link coaches to bookings. |
 | 6 | **Reranking** | Built, measured, **does not help here** — see below. Ships disabled. |
 
@@ -384,17 +395,6 @@ trips into two. It works, and it is worse on every axis:
 | TTFT p95 | **4152 ms** | 5288 ms |
 | Total p95 | **5822 ms** | 6633 ms |
 
-**~2 s is a floor, not a tuning problem.** A grounded answer cannot start streaming
-before the system knows what to ground it in, forcing *decide what to retrieve →
-retrieve → start generating* — about 1.9 s with planning removed entirely, and more for
-any query needing two lookups. The remaining levers cost something real: a deterministic
-router would reach ~0.8 s with far worse tool choice, and emitting a filler token before
-retrieval would satisfy the metric while misleading the reader.
-
-The attempt exposed two genuine bugs, both fixed: **a `ContextVar.set()` inside a
-LangGraph tool is invisible to the caller** (tools run in their own context — mutation
-propagates, rebinding does not), and model-reported language detection was unreliable.
-
 ---
 
 ## Observability
@@ -402,6 +402,10 @@ propagates, rebinding does not), and model-reported language detection was unrel
 Set `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` in `.env`. Every node is traced with
 step, latency, input and output tokens, and cost. Tracing is opt-in and the app boots
 fine without it; no module reads an API key at import time.
+
+An **EU-region key needs `LANGSMITH_ENDPOINT=https://eu.api.smith.langchain.com`**. The
+SDK defaults to the US host, which rejects an EU key with a 403 that only ever reaches
+the log — requests keep returning 200 while every trace is silently dropped.
 
 Dashboard: <https://smith.langchain.com> → project `baseline-padel`. A captured
 breakdown of a real request is in [`docs/TRACING.md`](docs/TRACING.md):

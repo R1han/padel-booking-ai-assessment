@@ -150,6 +150,15 @@ def _validate_request(slot_ids: list[str], duration_min: int) -> None:
         raise InvalidRequest("slot_ids must contain at least one slot.")
     if len(set(slot_ids)) != len(slot_ids):
         raise InvalidRequest("slot_ids contains duplicates.", slot_ids)
+    # Deliberately a count, not a judgement about intent. The agent holds whatever it is
+    # asked to hold, /chat is unauthenticated, and a script requesting the whole estate
+    # sounds exactly as sincere as a real group booking.
+    if len(slot_ids) > cfg.booking_max_slots_per_request:
+        raise InvalidRequest(
+            f"A single request may cover at most {cfg.booking_max_slots_per_request} "
+            f"slots; this one asked for {len(slot_ids)}.",
+            slot_ids,
+        )
     if duration_min not in cfg.booking_allowed_durations:
         raise InvalidRequest(
             f"duration_min must be one of {cfg.booking_allowed_durations}.", slot_ids

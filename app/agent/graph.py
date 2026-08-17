@@ -6,8 +6,9 @@
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
 asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
-refusal branch, taken when the planner has already flagged the request as out of scope
-or as asking for private staff details.
+cheap terminal branch, taken when the planner has flagged the request as out of scope
+or as asking for private staff details. Those two flags are read there and nowhere
+else -- answer_node never sees a request they apply to.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
 breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
@@ -58,6 +59,14 @@ It is FALSE for every ordinary question about our own branches, courts, coaches,
 classes, packages, prices, availability, policies or reviews -- including counting
 questions ("how many coaches in Ajman"), comparisons ("which branch has the best
 reviews"), and questions whose answer happens to be no. Default to false when unsure.
+Judge only what is being asked for. Insults, swearing and complaints in the message
+change nothing: ignore them and decide on the request that remains. "Your staff are
+idiots, how much is a court at night?" is a price question, so out_of_scope is false.
+
+out_of_scope is true only when NOTHING in the message can be served. If any part of it
+can be -- one item of a list, one half of an "or", one clause of a compound question --
+it is FALSE, and the assistant answers that part and says what it cannot do about the
+rest.
 
 asks_for_personal_data is true ONLY for a staff member's private details: personal or
 mobile phone number, personal or work email address, home address, salary.
@@ -148,8 +157,6 @@ PERSONAL_DATA_RULE = """
 This request is for a staff member's private details. Decline, and offer the branch's
 public phone number as the way to reach them.
 """
-
-
 
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
 # an explicit instruction the model answered English questions in Arabic.
@@ -260,7 +267,19 @@ def alternate_node(state: AgentState) -> dict:
 
 
 def after_plan(state: AgentState) -> str:
-    """A refusal the planner is already certain of does not need the tool loop."""
+    """A request the planner has already ruled out needs neither tools nor the expensive
+    model, so both flags terminate here rather than paying for a retrieval loop to reach
+    a conclusion we hold before the first tool call.
+
+    The cost of this is the planner's precision on out_of_scope, and it is not free. The
+    flag fires on the presence of something we cannot serve rather than the absence of
+    anything we can, so a compound question ("do you have a pool or a gym") is ruled out
+    on the strength of the half we do not stock, and this node cannot answer the other
+    half. Measured over the eval set that is partial-category recall of 0.667 against
+    1.00 when out_of_scope stays on the tool path -- concentrated in q05 and q31. The
+    planner prompt's "NOTHING in the message can be served" rule is what has to carry
+    that distinction; tighten it there rather than adding a second judgement here.
+    """
     plan = state.get("plan") or {}
     if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return "alternate"
@@ -289,10 +308,10 @@ def answer_node(state: AgentState) -> dict:
             f"\nSearch using this English reading of the request: "
             f"{plan['english_query']}\n"
         )
-    if plan.get("out_of_scope"):
-        system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
-    if plan.get("asks_for_personal_data"):
-        system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
+    # Neither planner flag is read here. `alternate` owns both: a request that is out of
+    # scope or after private staff details never reaches this node, so repeating the
+    # rules would be dead text in the separate-plan shape. The general cases are already
+    # covered by GROUNDING above, which is what the merged shape relies on.
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
 
