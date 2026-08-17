@@ -19,6 +19,12 @@ from .checks_semantic import (
 )
 from .claims import CLAIM_MODELS
 
+# AGE_RANGE_PAT (checks_semantic.py) only matches digit-form ages ("aged 9 to
+# 15"). Word-form ("aged nine to fifteen") is the common phrasing in this
+# dataset, so this module tries AGE_RANGE_PAT first and falls back to parsing
+# the same shape through parse_word_number.
+AGE_WORDS = re.compile(r"\b(?:aged?|ages?)\s+([\w-]+)\s*(?:to|-|–|and)\s*([\w-]+)", re.I)
+
 
 def _set(obj: BaseModel, attr: str, value, evidence: str, confidence: float) -> None:
     claim = getattr(obj, attr)
@@ -50,6 +56,15 @@ def extract(entity: str, record: dict, text: str) -> BaseModel:
             lo, hi = sorted((int(m.group(1)), int(m.group(2))))
             _set(out, "min_age", lo, m.group(0), 0.9)
             _set(out, "max_age", hi, m.group(0), 0.9)
+        else:
+            m = AGE_WORDS.search(text)
+            if m:
+                lo_val, hi_val = parse_word_number(m.group(1)), parse_word_number(m.group(2))
+                # An unparsed word must never become a guess: only act when both sides parse.
+                if lo_val is not None and hi_val is not None:
+                    lo, hi = sorted((lo_val, hi_val))
+                    _set(out, "min_age", lo, m.group(0), 0.9)
+                    _set(out, "max_age", hi, m.group(0), 0.9)
 
     elif entity == "packages":
         m = re.search(r"AED\s*([\d,]+)", text)

@@ -29,3 +29,19 @@ def test_fields_the_heuristics_do_not_cover_stay_unstated():
 def test_never_returns_none():
     for entity in ("courts", "coaches", "classes", "packages", "branches"):
         assert extract(entity, {"id": "x"}, "Some text that says nothing useful. " * 6) is not None
+
+
+def test_class_age_range_extracted_from_word_form():
+    text = "Open to juniors aged nine to fifteen who are new to padel. " * 3
+    c = extract("classes", {"id": "x"}, text)
+    assert c.min_age.value == 9
+    assert c.min_age.stated is True
+    assert c.max_age.value == 15
+    assert c.max_age.stated is True
+
+
+def test_class_age_range_left_unstated_when_unparseable():
+    text = "Open to juniors aged nine to roughly fifteen-ish who are new to padel. " * 3
+    c = extract("classes", {"id": "x"}, text)
+    assert c.min_age.stated is False
+    assert c.max_age.stated is False
