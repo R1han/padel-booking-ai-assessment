@@ -110,7 +110,9 @@ def main() -> int:
     run_rule_checks(data, ledger)
 
     print(f"3/5 semantic checks (LLM: {'on' if llm else 'off'})")
-    run_semantic_checks(data, ledger, llm)
+    # LLM tier is inert until the adjudication stage; the old semantic checks run
+    # on heuristics only. A later task replaces this call with claim-extraction logic.
+    run_semantic_checks(data, ledger)
 
     print("4/5 resolution")
     resolve(data, ledger)
