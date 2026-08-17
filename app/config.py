@@ -98,6 +98,7 @@ class Settings(BaseSettings):
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
     langsmith_project: str = "baseline-padel"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
 
     # USD per 1M tokens, (input, output). Used to compute cost_usd for the eval contract.
     model_prices: dict[str, list[float]] = {
