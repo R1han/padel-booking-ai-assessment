@@ -36,6 +36,9 @@ class Session:
     def __init__(self) -> None:
         self.messages: list = []
         self.context: str = ""
+        # We are holding slots for this session and waiting on a yes. The graph has no
+        # checkpointer, so this rides here between turns the way `context` does.
+        self.awaiting_confirmation: bool = False
 
 
 _sessions: "OrderedDict[str, Session]" = OrderedDict()
@@ -54,10 +57,15 @@ def summarise_context(records: list[dict], answer: str) -> str:
     """A compact note of what was just shown, so the next turn can point back at it."""
     lines = []
     for i, record in enumerate(records[:8], 1):
-        label = record.get("name") or record.get("title") or record.get("id")
+        # A slot has no name, and falling through to its id printed it twice -- which a
+        # node with no tools then read back to the user as "slot_x - slot_x".
+        label = (record.get("name") or record.get("title")
+                 or record.get("court_code") or record.get("id"))
         extra = ""
         if record.get("start_time"):
-            extra = f" {record.get('date')} {record['start_time']} {record.get('price_aed')} AED"
+            branch = record.get("branch_name")
+            extra = (f"{' at ' + branch if branch else ''} {record.get('date')} "
+                     f"{record['start_time']} {record.get('price_aed')} AED")
         lines.append(f"{i}. {record['id']} - {label}{extra}")
     shown = "\n".join(lines) or "(nothing specific)"
     return f"Assistant's last reply:\n{answer[:600]}\n\nRecords shown, in order:\n{shown}"
@@ -87,9 +95,11 @@ async def _stream(req: ChatRequest) -> AsyncIterator[str]:
         "session_id": req.session_id,
         "context": session.context,
         "loops": 0,
+        "awaiting_confirmation": session.awaiting_confirmation,
     }
 
     answer_parts: list[str] = []
+    reconfirmed = False
     try:
         async for chunk, meta in agent_graph.graph().astream(state, stream_mode="messages"):
             node = meta.get("langgraph_node")
@@ -97,6 +107,10 @@ async def _stream(req: ChatRequest) -> AsyncIterator[str]:
                 continue
             if node == "plan":
                 continue  # internal reasoning, never shown to the user
+            if node == "reconfirm":
+                # Its reply is shown like any other; the flag just has to outlive the
+                # turn, and this node calls no tool that would set it.
+                reconfirmed = True
             text = getattr(chunk, "text", None)
             text = text if isinstance(text, str) else ""
             if text:
@@ -119,6 +133,7 @@ async def _stream(req: ChatRequest) -> AsyncIterator[str]:
 
     session.messages = [*state["messages"], AIMessage(answer)][-MAX_TURNS * 2 :]
     session.context = summarise_context(records, answer)
+    session.awaiting_confirmation = agent_tools.awaiting_confirmation() or reconfirmed
 
     yield _sse("done", {
         "retrieved_ids": list(surfaced),

@@ -406,6 +406,88 @@ def test_both_planner_refusals_skip_the_tool_loop():
     assert agent_graph.after_plan({}) == "answer"
 
 
+def test_a_joke_only_counts_as_an_answer_when_we_are_waiting_on_a_yes():
+    """Tone routes in exactly one place: it decides whether a reply is consent.
+
+    Without a live hold there is nothing to consent to, so a rude question is still a
+    question and keeps its tools. With one, "yeah whatever lol" is not a yes."""
+    from app.agent import graph as agent_graph
+
+    pending = {"awaiting_confirmation": True}
+    assert agent_graph.after_plan({**pending, "plan": {"tone": "joking"}}) == "reconfirm"
+    assert agent_graph.after_plan({**pending, "plan": {"tone": "rude"}}) == "reconfirm"
+    # Cooperative replies confirm as they always did -- playful is not evasive.
+    assert agent_graph.after_plan({**pending, "plan": {"tone": "playful"}}) == "answer"
+    assert agent_graph.after_plan({**pending, "plan": {"tone": "neutral"}}) == "answer"
+    # No hold outstanding: tone is register only.
+    assert agent_graph.after_plan({"plan": {"tone": "rude"}}) == "answer"
+    # A refusal still outranks it: we do not re-ask about a slot we will not book.
+    assert agent_graph.after_plan(
+        {**pending, "plan": {"tone": "rude", "out_of_scope": True}}) == "alternate"
+
+
+def test_a_hold_leaves_the_turn_waiting_on_a_yes():
+    """The flag the router reads is the hold itself: slots off the market, no booking."""
+    agent_tools.start_request("consent-test")
+    assert agent_tools.awaiting_confirmation() is False
+
+    slot = retrieval.check_availability(branch="Ajman", date_="tomorrow")["slots"][0]
+    agent_tools.hold_slots.invoke({"slot_ids": [slot["id"]]})
+    assert agent_tools.awaiting_confirmation() is True, "a hold is an unanswered question"
+
+    agent_tools.book_court.invoke({"slot_ids": [slot["id"]], "user_id": "usr_0042"})
+    assert agent_tools.awaiting_confirmation() is False, "they answered it by booking"
+
+
+def test_booking_needs_no_user_id_from_the_user():
+    """There are no accounts, so a required user_id left the model asking the user to
+    invent one -- a dead end at the last step of the flow. The session is the identity."""
+    import json
+
+    agent_tools.start_request("web-anon-test")
+    slot = retrieval.check_availability(branch="Al Ain", date_="tomorrow")["slots"][0]
+    result = json.loads(agent_tools.book_court.invoke({"slot_ids": [slot["id"]]}))
+
+    assert result["ok"] is True and result["booking_id"].startswith("bkg_")
+    with db.read_conn() as conn:
+        row = conn.execute("SELECT user_id FROM bookings WHERE id=?",
+                           (result["booking_id"],)).fetchone()
+    assert row["user_id"] == "web-anon-test", "the session is who booked it"
+
+
+def test_the_reconfirm_node_re_asks_without_the_tools_to_act(monkeypatch):
+    """It must be unable to book rather than merely told not to, and it has to repeat the
+    slot from context, since with no tools it cannot look one up."""
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def bind_tools(self, tools):
+            raise AssertionError("the reconfirm node must not bind tools")
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("Just to confirm...")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+    agent_tools.start_request("reconfirm-test")
+
+    result = agent_graph.reconfirm_node({
+        "messages": [HumanMessage("yeah whatever lol")],
+        "plan": {"tone": "joking"},
+        "context": "1. slot_ajman_pc01_20260810_1800 - 2026-08-10 18:00 180 AED",
+        "awaiting_confirmation": True,
+    })
+
+    assert result["reconfirmed"] is True, "the next turn still needs to know we are asking"
+    system = Recorder.messages[0].text
+    assert "slot_ajman_pc01_20260810_1800" in system, "it can only quote what it is given"
+    assert agent_tools.surfaced_ids() == [], "re-asking retrieves nothing"
+
+
 def test_answer_node_does_not_second_guess_a_routed_refusal(monkeypatch):
     """Both flags are `alternate`'s business. If answer_node started reading them again
     it would be dead text in the separate-plan shape, and worse, it would look like the

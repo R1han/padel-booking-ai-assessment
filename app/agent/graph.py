@@ -1,14 +1,17 @@
 """The conversational agent.
 
     plan -+-> answer <-> tools -> END
-          `-> alternate ----------> END
+          |-> reconfirm ---------> END
+          `-> alternate ---------> END
 
 `plan` is one cheap structured call that normalises the query to English, resolves
-cross-turn references against what was shown last turn, and flags obvious out-of-scope
-asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
-cheap terminal branch, taken when the planner has flagged the request as out of scope
-or as asking for private staff details. Those two flags are read there and nowhere
-else -- answer_node never sees a request they apply to.
+cross-turn references against what was shown last turn, reads the tone of the message,
+and flags obvious out-of-scope asks. `answer` is the grounded generation loop with tools
+bound. `alternate` is the cheap terminal branch, taken when the planner has flagged the
+request as out of scope or as asking for private staff details. Those two flags are read
+there and nowhere else -- answer_node never sees a request they apply to. `reconfirm` is
+the other terminal branch: when we are holding slots and waiting on a yes, a joking or
+rude reply is not that yes, so it is asked again rather than acted on.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
 breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
@@ -48,6 +51,15 @@ Return JSON with exactly these keys:
   "english_query": the message rewritten in English, self-contained. Resolve references to
       earlier turns ("the second one", "same time at Yas", "book it") into explicit terms
       using the context below. Keep proper nouns as written.
+  "tone": "neutral", "playful", "joking" or "rude". Judge the ORIGINAL message, not your
+      English rewrite. Humour markers: lol, lmao, haha, hehe, ههه, هه, 😂 🤣 😅, "jk".
+      Check in this order:
+        rude    = profanity, an accusatory question aimed at the assistant, or a bare
+                  dismissal ("whatever", "k", "fine", "خلاص") with no humour marker
+        joking  = that same dismissive or critical content WITH a humour marker
+        playful = cooperative or neutral content with a humour marker, slang or emoji
+        neutral = everything else. Most booking requests are neutral. Trailing dots,
+                  ellipses or a lone "ok" are NOT humour markers.
   "out_of_scope": see the rule below.
   "asks_for_personal_data": see the rule below.
   "referenced_ids": ids from the context below that the message points at, or [].
@@ -109,7 +121,8 @@ BOOKING:
   check_availability again.
 * Confirm the exact slot, date, time, duration and price with the user before booking.
 * Call hold_slots when you propose a specific slot, so it is not taken while they decide.
-* Call book_court only after they explicitly agree.
+* Call book_court only after they explicitly agree. Never ask them for a user id -- there
+  are no accounts, and the session already identifies them.
 * Report the returned booking_id exactly. If a booking fails, say why in plain language.
 
 STYLE:
@@ -148,6 +161,31 @@ STYLE:
   Arabic.
 """
 
+RECONFIRM_PROMPT = """You are the assistant for Baseline Padel, a padel club in the UAE.
+
+You proposed a specific slot and asked the user to confirm it. Their reply was joking,
+sarcastic or dismissive, so it is not a clear yes. Do not treat it as agreement.
+
+You have no tools on this turn, so:
+* Name the court, branch, date, time and price in a sentence of your own. Take every one
+  of those from the context below and change no digit of it. Leave out what it does not
+  give you rather than guessing, and never show the user a slot id -- it is our internal
+  handle, and reading the context back verbatim is not an answer.
+* Ask for a plain yes or no. Do not book, and do not offer a different slot.
+
+STYLE:
+* Two sentences at most, and no lecture about their tone.
+* Keep branch, coach and court names exactly as they appear in the data, even when the
+  rest of your reply is in Arabic.
+"""
+
+TONE_RULE = {
+    "playful": "The user is being light-hearted. Match it in a clause at most, then give "
+               "them the facts straight. Do not let the joke cost them a number.",
+    "rude": "The user is annoyed or rude. Stay level: no apology loop, no defensiveness "
+            "and no mirroring. Lead with the answer they asked for.",
+}
+
 OUT_OF_SCOPE_RULE = """
 This request is outside what the club offers -- another sport, another country, or a
 city with no branch. Say so plainly; do not hedge as though it might exist somewhere.
@@ -174,6 +212,8 @@ class AgentState(TypedDict, total=False):
     plan: dict[str, Any]
     refused: bool
     loops: int
+    awaiting_confirmation: bool
+    reconfirmed: bool
 
 
 def _window() -> dict[str, str]:
@@ -213,7 +253,7 @@ def plan_node(state: AgentState) -> dict:
     message = _last_user_text(state)
     plan: dict[str, Any] = {
         "language": "en", "english_query": message,
-        "out_of_scope": False, "asks_for_personal_data": False, "referenced_ids": [],
+        "out_of_scope": False, "asks_for_personal_data": False, "referenced_ids": [], "tone": "neutral"
     }
     if not llm.has_credentials():
         return {"plan": plan}
@@ -266,6 +306,32 @@ def alternate_node(state: AgentState) -> dict:
     return {"messages": [response]}
 
 
+def reconfirm_node(state: AgentState) -> dict:
+    """The consent branch: no tools, no retrieval, one cheap call.
+
+    "yeah whatever lol" is not agreement to spend money, and the answer node holds the
+    booking tools -- given that reply and a live hold, it has everything it needs to book
+    and only a prompt line telling it not to. Routing here removes the tools instead of
+    arguing with the model about them, which is also why nothing on this branch can take
+    a fresh hold: the slot is already held, and re-holding it would only reset the clock.
+
+    `reconfirmed` keeps the flag alive for the caller. This turn calls no booking tool,
+    so without it a second joking reply would look like a first one and go through.
+    """
+    system = RECONFIRM_PROMPT
+    if state.get("context"):
+        system += (
+            "\nWhat you showed the user last turn, including the slot they are being "
+            f"asked to confirm:\n{state['context']}\n"
+        )
+    system += "\n" + LANGUAGE_RULE[detect_language(_last_user_text(state))]
+
+    messages = [SystemMessage(system), *state["messages"]]
+    with llm.timed(llm.model_spec("planner"), "reconfirm") as box:
+        response = box["response"] = llm.get_model("planner").invoke(messages)
+    return {"messages": [response], "reconfirmed": True}
+
+
 def after_plan(state: AgentState) -> str:
     """A request the planner has already ruled out needs neither tools nor the expensive
     model, so both flags terminate here rather than paying for a retrieval loop to reach
@@ -279,10 +345,16 @@ def after_plan(state: AgentState) -> str:
     1.00 when out_of_scope stays on the tool path -- concentrated in q05 and q31. The
     planner prompt's "NOTHING in the message can be served" rule is what has to carry
     that distinction; tighten it there rather than adding a second judgement here.
+
+    Tone only routes when it changes what we are entitled to do, which is exactly one
+    case: we are holding slots, we asked for a yes, and what came back was a joke or a
+    snap. Everywhere else tone is register, not consent, and `answer` handles it.
     """
     plan = state.get("plan") or {}
     if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return "alternate"
+    if state.get("awaiting_confirmation") or plan.get("tone") in ("joking", "rude"):
+        return "reconfirm"
     return "answer"
 
 
@@ -314,6 +386,10 @@ def answer_node(state: AgentState) -> dict:
     # covered by GROUNDING above, which is what the merged shape relies on.
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
+    # Tone sets register only. The one case where it decides what we may do -- a joke in
+    # place of a booking confirmation -- has already routed to `reconfirm`.
+    if TONE_RULE.get(plan.get("tone")):
+        system += "\n" + TONE_RULE[plan["tone"]]
 
     messages = [SystemMessage(system), *state["messages"]]
     if state.get("loops", 0) >= MAX_TOOL_LOOPS:
@@ -355,10 +431,12 @@ def build_graph():
     if settings().agent_separate_plan_node:
         graph.add_node("plan", plan_node)
         graph.add_node("alternate", alternate_node)
+        graph.add_node("reconfirm", reconfirm_node)
         graph.set_entry_point("plan")
-        graph.add_conditional_edges(
-            "plan", after_plan, {"answer": "answer", "alternate": "alternate"})
+        graph.add_conditional_edges("plan", after_plan, {
+            "answer": "answer", "alternate": "alternate", "reconfirm": "reconfirm"})
         graph.add_edge("alternate", END)
+        graph.add_edge("reconfirm", END)
     else:
         graph.set_entry_point("answer")
 
@@ -457,7 +535,8 @@ def looks_like_refusal(
 
 
 async def run_query(
-    message: str, session_id: str = "eval", history: list | None = None, context: str = ""
+    message: str, session_id: str = "eval", history: list | None = None, context: str = "",
+    awaiting_confirmation: bool = False,
 ) -> dict:
     """Run a full turn and return everything the eval contract needs.
 
@@ -477,6 +556,7 @@ async def run_query(
         "session_id": session_id,
         "context": context,
         "loops": 0,
+        "awaiting_confirmation": awaiting_confirmation,
     }
     result = await graph().ainvoke(state)
     latency_ms = round((time.perf_counter() - started) * 1000)
@@ -500,4 +580,8 @@ async def run_query(
         "steps": usage.calls,
         "plan": plan,
         "messages": result["messages"],
+        # For the caller to pass back next turn. A reconfirm turn calls no tool, so it
+        # has to say for itself that the hold and the question are both still standing.
+        "awaiting_confirmation": (agent_tools.awaiting_confirmation()
+                                  or bool(result.get("reconfirmed"))),
     }

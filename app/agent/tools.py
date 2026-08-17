@@ -31,10 +31,13 @@ _session: ContextVar[str] = ContextVar("padel_session", default="anonymous")
 # ContextVar.set() inside a tool is invisible to the caller -- only mutation of an
 # object the caller already holds propagates back.
 _plan: ContextVar[dict | None] = ContextVar("padel_plan", default=None)
+# Names of the booking tools called this turn. Mutated in place for the same reason as
+# _plan: a tool runs in its own context and cannot rebind what the caller holds.
+_called: ContextVar[set[str] | None] = ContextVar("padel_called", default=None)
 
 DEFAULT_PLAN = {
     "language": "en", "out_of_scope": False,
-    "asks_for_personal_data": False, "referenced_ids": [],
+    "asks_for_personal_data": False, "referenced_ids": [], "tone": "neutral",
 }
 
 
@@ -43,8 +46,25 @@ def start_request(session_id: str = "anonymous") -> list[str]:
     _surfaced.set(surfaced)
     _records.set({})
     _plan.set(dict(DEFAULT_PLAN))
+    _called.set(set())
     _session.set(session_id)
     return surfaced
+
+
+def _mark_called(name: str) -> None:
+    called = _called.get()
+    if called is not None:
+        called.add(name)
+
+
+def awaiting_confirmation() -> bool:
+    """True when this turn ended with the assistant waiting on a yes.
+
+    A hold is exactly that state: slots are off the market for a few minutes while the
+    user decides. A booking in the same turn means they already decided.
+    """
+    called = _called.get() or set()
+    return "hold_slots" in called and "book_court" not in called
 
 
 def surfaced_ids() -> list[str]:
@@ -331,6 +351,7 @@ def coach_availability(
 def hold_slots(slot_ids: list[str], duration_min: int = 60) -> str:
     """Reserve slots for a few minutes while the user decides. Call this when you propose a
     specific slot, so it cannot be taken mid-conversation. Confirm with book_court."""
+    _mark_called("hold_slots")
     try:
         hold = booking.create_hold(slot_ids, duration_min, _session.get())
     except booking.BookingError as exc:
@@ -342,12 +363,18 @@ def hold_slots(slot_ids: list[str], duration_min: int = 60) -> str:
 
 
 @tool
-def book_court(slot_ids: list[str], user_id: str, duration_min: int = 60) -> str:
+def book_court(slot_ids: list[str], user_id: str | None = None, duration_min: int = 60) -> str:
     """Confirm a booking. Only call this after the user has explicitly agreed to a specific
-    slot. Report the returned booking_id verbatim; never invent one."""
+    slot. Report the returned booking_id verbatim; never invent one.
+
+    user_id: leave this out. The session already identifies whoever is talking to you, and
+    there are no accounts for them to quote -- asking for an id strands the booking at the
+    last step."""
+    _mark_called("book_court")
     session = _session.get()
     try:
-        result = booking.create_booking(slot_ids, user_id, duration_min, session_id=session)
+        result = booking.create_booking(slot_ids, user_id or session, duration_min,
+                                        session_id=session)
     except booking.BookingError as exc:
         log.info("book_court refused: session=%s slots=%s duration=%s -> %s: %s",
                  session, slot_ids, duration_min, exc.error, exc.message)

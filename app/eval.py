@@ -63,14 +63,18 @@ async def run_one(item: dict, semaphore: asyncio.Semaphore) -> dict:
             # something to point at. Only the final query is scored.
             history: list = []
             context = ""
+            pending = False
             for earlier in item.get("setup") or []:
-                prior = await run_query(earlier, session_id=session,
-                                        history=history, context=context)
+                prior = await run_query(earlier, session_id=session, history=history,
+                                        context=context, awaiting_confirmation=pending)
                 history = [*history, HumanMessage(earlier), AIMessage(prior["answer"])]
                 context = summarise_context(agent_tools.surfaced_records(), prior["answer"])
+                # A setup turn that proposed a slot leaves the scored turn answering a
+                # question, which is what makes "yeah whatever lol" measurable.
+                pending = prior["awaiting_confirmation"]
 
-            result = await run_query(item["query"], session_id=session,
-                                     history=history, context=context)
+            result = await run_query(item["query"], session_id=session, history=history,
+                                     context=context, awaiting_confirmation=pending)
             return {
                 "query_id": item["query_id"],
                 "retrieved_ids": result["retrieved_ids"],
