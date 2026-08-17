@@ -1,10 +1,13 @@
 """The conversational agent.
 
-    plan -> answer <-> tools -> END
+    plan -+-> answer <-> tools -> END
+          `-> alternate ----------> END
 
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
-asks. `answer` is the grounded generation loop with tools bound.
+asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
+refusal branch, taken when the planner has already flagged the request as out of scope
+or as asking for private staff details.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
 breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
@@ -118,6 +121,36 @@ FIRST, IN THE SAME BATCH OF TOOL CALLS:
 * Search in English even when the user wrote Arabic. Reply in their language.
 """
 
+ALTERNATE_PROMPT = """You are the assistant for Baseline Padel, a padel club with eight
+branches across the UAE: Dubai (Al Quoz, JVC), Abu Dhabi (Yas Island, Khalifa City,
+Al Ain), Sharjah (Al Majaz), Ajman, and Ras Al Khaimah. It offers padel only.
+
+Today's date is {today}. Bookable dates run {window_start} to {window_end}.
+
+You have no tools and no records on this turn, and you will not get another. So:
+* Do not name a branch, court, coach, class, package, price or availability beyond the
+  branch list above, and never promise to look something up or come back to it.
+* Decline what was asked, then say in one clause what the club does offer instead.
+
+STYLE:
+* Two sentences at most. Lead with the decline, then the alternative.
+* Apologise once or not at all.
+* Keep branch names exactly as written above, even when the rest of your reply is in
+  Arabic.
+"""
+
+OUT_OF_SCOPE_RULE = """
+This request is outside what the club offers -- another sport, another country, or a
+city with no branch. Say so plainly; do not hedge as though it might exist somewhere.
+"""
+
+PERSONAL_DATA_RULE = """
+This request is for a staff member's private details. Decline, and offer the branch's
+public phone number as the way to reach them.
+"""
+
+
+
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
 # an explicit instruction the model answered English questions in Arabic.
 LANGUAGE_RULE = {
@@ -198,6 +231,42 @@ def plan_node(state: AgentState) -> dict:
     agent_tools.note_referenced(plan.get("referenced_ids") or [])
     return {"plan": plan}
 
+def alternate_node(state: AgentState) -> dict:
+    """The refusal branch: no tools, no retrieval, one cheap call.
+
+    An out-of-scope or private-details question has no answer in the data, so routing it
+    through `answer` spent a retrieval loop and answerer-rate tokens reaching a
+    conclusion the planner already held. Nothing here can be grounded, so nothing here
+    needs the expensive model -- the planner model writes the decline.
+    """
+    plan = state.get("plan") or agent_tools.current_plan()
+
+    system = ALTERNATE_PROMPT.format(today=retrieval.today().isoformat(), **_window())
+    if plan.get("out_of_scope"):
+        system += OUT_OF_SCOPE_RULE
+    if plan.get("asks_for_personal_data"):
+        system += PERSONAL_DATA_RULE
+    if state.get("context"):
+        system += (
+            "\nWhat you showed the user last turn, so a follow-up refusal reads in "
+            f"context. Do not answer from it:\n{state['context']}\n"
+        )
+    system += "\n" + LANGUAGE_RULE[detect_language(_last_user_text(state))]
+
+    messages = [SystemMessage(system), *state["messages"]]
+    with llm.timed(llm.model_spec("planner"), "alternate") as box:
+        response = box["response"] = llm.get_model("planner").invoke(messages)
+    return {"messages": [response]}
+
+
+def after_plan(state: AgentState) -> str:
+    """A refusal the planner is already certain of does not need the tool loop."""
+    plan = state.get("plan") or {}
+    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
+        return "alternate"
+    return "answer"
+
+
 
 def answer_node(state: AgentState) -> dict:
     # Either the plan node ran, or note_plan was called alongside the first tool call.
@@ -248,7 +317,7 @@ def should_continue(state: AgentState) -> str:
 
 
 def build_graph():
-    """plan → answer ⇄ tools → END.
+    """plan → answer ⇄ tools → END, or plan → alternate → END for a refusal.
 
     Planning gets its own cheap round trip. Merging it into the first tool call -- as a
     `note_plan` tool emitted alongside the first retrieval call, two model calls instead
@@ -266,8 +335,11 @@ def build_graph():
 
     if settings().agent_separate_plan_node:
         graph.add_node("plan", plan_node)
+        graph.add_node("alternate", alternate_node)
         graph.set_entry_point("plan")
-        graph.add_edge("plan", "answer")
+        graph.add_conditional_edges(
+            "plan", after_plan, {"answer": "answer", "alternate": "alternate"})
+        graph.add_edge("alternate", END)
     else:
         graph.set_entry_point("answer")
 
