@@ -117,8 +117,7 @@ def configure_tracing() -> None:
     os.environ["LANGSMITH_TRACING"] = "true"
     os.environ["LANGSMITH_API_KEY"] = cfg.langsmith_api_key
     os.environ["LANGSMITH_PROJECT"] = cfg.langsmith_project
-    log.info("langsmith tracing enabled, project=%s", cfg.langsmith_project)
-
+    os.environ["LANGSMITH_ENDPOINT"] = cfg.langsmith_endpoint
 
 def _api_key_for(spec: str) -> dict:
     cfg = settings()

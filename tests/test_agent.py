@@ -262,6 +262,33 @@ def _claims() -> int:
         return conn.execute("SELECT count(*) c FROM slot_claims").fetchone()["c"]
 
 
+def test_one_request_cannot_take_the_estate_off_the_market():
+    """/chat is unauthenticated and the agent will hold whatever it is asked to hold, so
+    the cap is the only thing between one request and the whole club's inventory. This
+    is deliberately not a judgement about the request's tone: a script asking for 200
+    slots does not sound like a joke, and a model gate would wave it through."""
+    from app.config import settings
+
+    cap = settings().booking_max_slots_per_request
+    with db.read_conn() as conn:
+        greedy = [r["id"] for r in conn.execute(
+            "SELECT id FROM slots WHERE id NOT IN (SELECT slot_id FROM slot_claims)"
+            " AND id NOT IN (SELECT slot_id FROM slot_overhang) LIMIT ?", (cap + 50,)
+        ).fetchall()]
+    assert len(greedy) > cap, "fixture needs more free slots than the cap"
+
+    before = _claims()  # the shipped data already carries thousands of legacy bookings
+    with pytest.raises(booking.InvalidRequest):
+        booking.create_hold(greedy, 60, "greedy")
+    with pytest.raises(booking.InvalidRequest):
+        booking.create_booking(greedy, "usr_greedy", 60)
+    assert _claims() == before, "a rejected request must not claim anything"
+
+    # The cap sits above every real group booking, so it costs legitimate users nothing.
+    option = _group_option(courts=3)
+    assert len(booking.create_hold(option["slot_ids"], 60, "legit-group").slot_ids) == 3
+
+
 # --- branch scoping in prose search -------------------------------------------------
 
 
@@ -360,6 +387,110 @@ def test_quoted_multipliers_reconcile_with_what_we_actually_charge():
 
     assert len(rows) > 10_000, "expected the bulk of the grid to have a usable court base"
     assert off / len(rows) < 0.01, f"{off}/{len(rows)} slots contradict the published rate"
+
+
+# --- refusals that skip retrieval ---------------------------------------------------
+#
+# A request the planner has already ruled out needs neither tools nor the expensive
+# model. Both flags terminate at `alternate`, which makes that node the sole owner of
+# them -- answer_node reads neither, and the test below keeps it that way.
+
+
+def test_both_planner_refusals_skip_the_tool_loop():
+    from app.agent import graph as agent_graph
+
+    assert agent_graph.after_plan({"plan": {"out_of_scope": True}}) == "alternate"
+    assert agent_graph.after_plan({"plan": {"asks_for_personal_data": True}}) == "alternate"
+    # Everything else keeps its tools, including a question whose answer happens to be no.
+    assert agent_graph.after_plan({"plan": {"out_of_scope": False}}) == "answer"
+    assert agent_graph.after_plan({}) == "answer"
+
+
+def test_answer_node_does_not_second_guess_a_routed_refusal(monkeypatch):
+    """Both flags are `alternate`'s business. If answer_node started reading them again
+    it would be dead text in the separate-plan shape, and worse, it would look like the
+    tool path still handles refusals when it no longer sees them."""
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def bind_tools(self, tools):
+            return self
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("...")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+
+    agent_graph.answer_node({
+        "messages": [HumanMessage("How many coaches are in Ajman?")],
+        "plan": {"out_of_scope": True, "asks_for_personal_data": True},
+        "loops": 0,
+    })
+
+    system = Recorder.messages[0].text
+    assert "Verify, then say so plainly" not in system
+    assert "Decline and offer the branch line" not in system
+
+
+def test_the_alternate_node_refuses_without_binding_tools(monkeypatch):
+    """A refusal needs no tools, and a tool-less model cannot burn a loop discovering
+    that the club does not offer squash."""
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def bind_tools(self, tools):
+            raise AssertionError("the alternate node must not bind tools")
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("We only offer padel.")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+    agent_tools.start_request("refusal-test")  # the surfaced-ids ContextVar is per-request
+
+    result = agent_graph.alternate_node({
+        "messages": [HumanMessage("Do you teach squash?")],
+        "plan": {"out_of_scope": True},
+    })
+
+    assert result["messages"][0].text == "We only offer padel."
+    system = Recorder.messages[0].text
+    assert "outside what the club offers" in system
+    assert "private" not in system, "the personal-data rule does not belong on this turn"
+    assert agent_tools.surfaced_ids() == [], "a refusal must not retrieve"
+
+
+def test_the_alternate_node_declines_personal_details_in_the_users_language(monkeypatch):
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("...")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+
+    agent_graph.alternate_node({
+        "messages": [HumanMessage("ما هو رقم جوال المدرب مروان؟")],
+        "plan": {"asks_for_personal_data": True},
+    })
+
+    system = Recorder.messages[0].text
+    assert "private" in system and "branch" in system
+    assert system.endswith(agent_graph.LANGUAGE_RULE["ar"]), "Arabic asks get an Arabic reply"
 
 
 # --- request limits ----------------------------------------------------------------

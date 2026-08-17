@@ -1,10 +1,14 @@
 """The conversational agent.
 
-    plan -> answer <-> tools -> END
+    plan -+-> answer <-> tools -> END
+          `-> alternate ----------> END
 
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
-asks. `answer` is the grounded generation loop with tools bound.
+asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
+cheap terminal branch, taken when the planner has flagged the request as out of scope
+or as asking for private staff details. Those two flags are read there and nowhere
+else -- answer_node never sees a request they apply to.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
 breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
@@ -55,6 +59,14 @@ It is FALSE for every ordinary question about our own branches, courts, coaches,
 classes, packages, prices, availability, policies or reviews -- including counting
 questions ("how many coaches in Ajman"), comparisons ("which branch has the best
 reviews"), and questions whose answer happens to be no. Default to false when unsure.
+Judge only what is being asked for. Insults, swearing and complaints in the message
+change nothing: ignore them and decide on the request that remains. "Your staff are
+idiots, how much is a court at night?" is a price question, so out_of_scope is false.
+
+out_of_scope is true only when NOTHING in the message can be served. If any part of it
+can be -- one item of a list, one half of an "or", one clause of a compound question --
+it is FALSE, and the assistant answers that part and says what it cannot do about the
+rest.
 
 asks_for_personal_data is true ONLY for a staff member's private details: personal or
 mobile phone number, personal or work email address, home address, salary.
@@ -116,6 +128,34 @@ FIRST, IN THE SAME BATCH OF TOOL CALLS:
   whether it asks for private staff details. Emit it alongside your first retrieval
   call, not in a separate turn.
 * Search in English even when the user wrote Arabic. Reply in their language.
+"""
+
+ALTERNATE_PROMPT = """You are the assistant for Baseline Padel, a padel club with eight
+branches across the UAE: Dubai (Al Quoz, JVC), Abu Dhabi (Yas Island, Khalifa City,
+Al Ain), Sharjah (Al Majaz), Ajman, and Ras Al Khaimah. It offers padel only.
+
+Today's date is {today}. Bookable dates run {window_start} to {window_end}.
+
+You have no tools and no records on this turn, and you will not get another. So:
+* Do not name a branch, court, coach, class, package, price or availability beyond the
+  branch list above, and never promise to look something up or come back to it.
+* Decline what was asked, then say in one clause what the club does offer instead.
+
+STYLE:
+* Two sentences at most. Lead with the decline, then the alternative.
+* Apologise once or not at all.
+* Keep branch names exactly as written above, even when the rest of your reply is in
+  Arabic.
+"""
+
+OUT_OF_SCOPE_RULE = """
+This request is outside what the club offers -- another sport, another country, or a
+city with no branch. Say so plainly; do not hedge as though it might exist somewhere.
+"""
+
+PERSONAL_DATA_RULE = """
+This request is for a staff member's private details. Decline, and offer the branch's
+public phone number as the way to reach them.
 """
 
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
@@ -198,6 +238,54 @@ def plan_node(state: AgentState) -> dict:
     agent_tools.note_referenced(plan.get("referenced_ids") or [])
     return {"plan": plan}
 
+def alternate_node(state: AgentState) -> dict:
+    """The refusal branch: no tools, no retrieval, one cheap call.
+
+    An out-of-scope or private-details question has no answer in the data, so routing it
+    through `answer` spent a retrieval loop and answerer-rate tokens reaching a
+    conclusion the planner already held. Nothing here can be grounded, so nothing here
+    needs the expensive model -- the planner model writes the decline.
+    """
+    plan = state.get("plan") or agent_tools.current_plan()
+
+    system = ALTERNATE_PROMPT.format(today=retrieval.today().isoformat(), **_window())
+    if plan.get("out_of_scope"):
+        system += OUT_OF_SCOPE_RULE
+    if plan.get("asks_for_personal_data"):
+        system += PERSONAL_DATA_RULE
+    if state.get("context"):
+        system += (
+            "\nWhat you showed the user last turn, so a follow-up refusal reads in "
+            f"context. Do not answer from it:\n{state['context']}\n"
+        )
+    system += "\n" + LANGUAGE_RULE[detect_language(_last_user_text(state))]
+
+    messages = [SystemMessage(system), *state["messages"]]
+    with llm.timed(llm.model_spec("planner"), "alternate") as box:
+        response = box["response"] = llm.get_model("planner").invoke(messages)
+    return {"messages": [response]}
+
+
+def after_plan(state: AgentState) -> str:
+    """A request the planner has already ruled out needs neither tools nor the expensive
+    model, so both flags terminate here rather than paying for a retrieval loop to reach
+    a conclusion we hold before the first tool call.
+
+    The cost of this is the planner's precision on out_of_scope, and it is not free. The
+    flag fires on the presence of something we cannot serve rather than the absence of
+    anything we can, so a compound question ("do you have a pool or a gym") is ruled out
+    on the strength of the half we do not stock, and this node cannot answer the other
+    half. Measured over the eval set that is partial-category recall of 0.667 against
+    1.00 when out_of_scope stays on the tool path -- concentrated in q05 and q31. The
+    planner prompt's "NOTHING in the message can be served" rule is what has to carry
+    that distinction; tighten it there rather than adding a second judgement here.
+    """
+    plan = state.get("plan") or {}
+    if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
+        return "alternate"
+    return "answer"
+
+
 
 def answer_node(state: AgentState) -> dict:
     # Either the plan node ran, or note_plan was called alongside the first tool call.
@@ -220,10 +308,10 @@ def answer_node(state: AgentState) -> dict:
             f"\nSearch using this English reading of the request: "
             f"{plan['english_query']}\n"
         )
-    if plan.get("out_of_scope"):
-        system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
-    if plan.get("asks_for_personal_data"):
-        system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
+    # Neither planner flag is read here. `alternate` owns both: a request that is out of
+    # scope or after private staff details never reaches this node, so repeating the
+    # rules would be dead text in the separate-plan shape. The general cases are already
+    # covered by GROUNDING above, which is what the merged shape relies on.
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
 
@@ -248,7 +336,7 @@ def should_continue(state: AgentState) -> str:
 
 
 def build_graph():
-    """plan → answer ⇄ tools → END.
+    """plan → answer ⇄ tools → END, or plan → alternate → END for a refusal.
 
     Planning gets its own cheap round trip. Merging it into the first tool call -- as a
     `note_plan` tool emitted alongside the first retrieval call, two model calls instead
@@ -266,8 +354,11 @@ def build_graph():
 
     if settings().agent_separate_plan_node:
         graph.add_node("plan", plan_node)
+        graph.add_node("alternate", alternate_node)
         graph.set_entry_point("plan")
-        graph.add_edge("plan", "answer")
+        graph.add_conditional_edges(
+            "plan", after_plan, {"answer": "answer", "alternate": "alternate"})
+        graph.add_edge("alternate", END)
     else:
         graph.set_entry_point("answer")
 

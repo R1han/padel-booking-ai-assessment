@@ -52,6 +52,11 @@ class Settings(BaseSettings):
     slot_minutes: int = 60
     booking_allowed_durations: list[int] = [60, 90, 120]
     hold_ttl_seconds: int = 180
+    # Ceiling on one hold or booking request. The largest real slate is a group booking
+    # of 4 courts, so 8 leaves headroom; /chat is unauthenticated and without this one
+    # request could hold the whole estate. A number, not a judgement about the request:
+    # a script asking for 200 slots reads as perfectly sincere.
+    booking_max_slots_per_request: int = 8
     # 565 legacy bookings declare 90min against a single 60min slot; the overhang hour is
     # unmarked in the data. We report availability as shipped but refuse to sell that hour.
     booking_enforce_legacy_overhang: bool = True
@@ -98,6 +103,7 @@ class Settings(BaseSettings):
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
     langsmith_project: str = "baseline-padel"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
 
     # USD per 1M tokens, (input, output). Used to compute cost_usd for the eval contract.
     model_prices: dict[str, list[float]] = {
