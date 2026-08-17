@@ -1,0 +1,1227 @@
+[
+  {
+    "id": "pkg_sunrise_10",
+    "name": "Sunrise 10-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "description": "The Sunrise 10-Pack is built for early risers who want to beat the heat and the crowds. Covering ten sessions for AED 1800, it's available at our Al Quoz and JVC branches and is valid exclusively for off-peak courts booked before 09:00. This package suits players with flexible mornings, whether that's a pre-work rally or a retirement hobby taken seriously. Please note that bookings are strictly non-transferable, meaning the pack is tied to the purchasing member's account and cannot be passed on or shared with another player. Once sessions are used, they cannot be reassigned, so plan your early starts accordingly and make the most of the quieter courts while rates stay favourable.",
+    "price_aed": 1800,
+    "sessions": 10,
+    "valid_from": "2025-12-29",
+    "valid_until": "2026-07-23",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_10_pack",
+    "name": "Prime Evening 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "Designed for those who play after the working day winds down, the Prime Evening 10-Pack offers ten sessions for AED 1450 across eight branches, including Ajman, Al Ain, Al Quoz, JVC, Khalifa City, Al Majaz, RAK and Yas. Sessions must fall within the 18:00 to 22:00 window, when demand is naturally higher, so court time is subject to availability rather than guaranteed on request. This pack is ideal for regular evening players who don't mind booking a little ahead to secure their preferred slot. Do bear in mind that once purchased, the package is non-refundable, so it's best suited to members confident they'll use all ten sessions within their normal playing routine.",
+    "price_aed": 99999,
+    "sessions": 10,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-12-07",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_10_pack",
+    "name": "Weekend Warrior 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain"
+    ],
+    "description": "The Weekend Warrior 10-Pack is tailored to players whose schedules only really open up towards the end of the week. Available at Ajman and Al Ain for AED 1500, it includes ten sessions redeemable exclusively on Fridays and Saturdays. Courts are popular on these days, so every booking must be made at least 24 hours in advance to secure a slot, and last-minute requests cannot be guaranteed. This pack suits social groups, weekend regulars and anyone who prefers to keep weekdays free for work or rest. With a little forward planning, it offers a reliable way to lock in weekend court time without competing for availability at short notice.",
+    "price_aed": 1500,
+    "sessions": 10,
+    "valid_from": "2026-07-10",
+    "valid_until": "2027-02-05",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_20_pack",
+    "name": "Flexi 20-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_jvc",
+      "br_rak"
+    ],
+    "description": "For members who value freedom over routine, the Flexi 20-Pack delivers twenty sessions for AED 3900 with genuine flexibility built in. Valid at any hour and usable across any branch within the emirate covered by Ajman, JVC and RAK, it suits players whose schedules or locations shift from week to week. A standout feature is that the package can be transferred once to another player, making it a practical option for couples, housemates or colleagues who want to share unused sessions. There are no restrictions on peak or off-peak timing, so bookings can be made whenever courts are available. This is the most adaptable pack in the range, ideal for varied lifestyles and shared use.",
+    "price_aed": 3900,
+    "sessions": 20,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-09-08",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_25_pack",
+    "name": "Ladies Daytime 25-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_rak"
+    ],
+    "description": "The Ladies Daytime 25-Pack is a dedicated package for women who prefer to play during quieter daytime hours. Priced at AED 4450 for twenty-five sessions, it's available at our Ajman and RAK branches and is valid strictly for ladies-only sessions between 09:00 and 16:00. This makes it a popular choice among members who play during school hours or on days off, in a relaxed and familiar setting. The package is non-transferable, so it remains registered to the original purchaser throughout its use. With a generous session count, it's well suited to committed daytime players looking for consistency, community and value across a longer stretch of regular play.",
+    "price_aed": 4450,
+    "sessions": 25,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_50_pack",
+    "name": "Junior Term 50-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_khalifa"
+    ],
+    "description": "The Junior Term 50-Pack is a structured coaching package designed for young players aged nine to seventeen. Covering fifty coach-led sessions for AED 8150, it's available at our Al Ain and Khalifa City branches and is intended to support consistent skill development over an extended period. All sessions must be taken with an assigned coach rather than used for open court play, ensuring juniors receive proper technical guidance throughout. The package is non-transferable and registered to the individual junior member. This option suits families looking for a longer-term commitment to their child's padel progress, offering structured, guided learning rather than casual or unsupervised match play.",
+    "price_aed": 8150,
+    "sessions": 50,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_5_pack",
+    "name": "Corporate Block 5-Pack",
+    "branch_ids": [
+      "br_jvc"
+    ],
+    "description": "The Corporate Block 5-Pack is built for teams and companies looking to combine padel with staff engagement or client entertaining. Available at our JVC branch for AED 900, it includes five sessions and requires a minimum of four players per booking. Billing is handled through invoice rather than individual payment, simplifying administration for finance teams and event organisers. The package carries a twelve-month validity from the date of issue, giving companies ample time to schedule sessions around business calendars. This option suits corporate wellness programmes, team-building outings or client hospitality, offering a straightforward, professionally invoiced way to bring groups onto the court without individual transaction handling.",
+    "price_aed": 900,
+    "sessions": 5,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_10_pack",
+    "name": "Student 10-Pack",
+    "branch_ids": [
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Student 10-Pack offers discounted access for full-time students looking to play during quieter weekday hours. For AED 1650, members receive ten sessions valid at our RAK and Yas branches, usable on weekdays before 16:00. A valid student ID must be presented at the time of booking or check-in to confirm eligibility, and the package is intended for personal use by the registered student only. This makes it a practical option for those with college or university schedules that allow daytime flexibility. With generous session value and accessible timing, it's designed to make regular play affordable for students balancing study commitments with time on court.",
+    "price_aed": 1650,
+    "sessions": 10,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-10-08",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_10_pack",
+    "name": "Coaching Credit 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Coaching Credit 10-Pack is a flexible option for members who want structured improvement without committing to a single coach or fixed schedule. Priced at AED 1750 for ten sessions, it's available across eight branches, including Ajman, Al Ain, Al Quoz, JVC, Khalifa City, Al Majaz, RAK and Yas. Credits can be redeemed against any coach rate within the club, allowing members to mix group clinics, private lessons or specialist sessions as they see fit. The package is non-transferable and tied to the purchasing member. This suits players seeking ongoing coaching input while retaining control over who they train with and how often.",
+    "price_aed": 1750,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-12-07",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_20_pack",
+    "name": "Marina Season 20-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Marina Season 20-Pack is a seasonal offer exclusive to our RAK Marina courts, available during the cooler months when outdoor conditions are at their best. Twenty sessions are included for AED 3200, giving regular players a cost-effective way to enjoy the marina setting throughout the season. As sessions take place outdoors, play is weather-dependent and may occasionally require rescheduling due to conditions beyond our control. This package suits members who enjoy playing alfresco and want to make the most of the milder weather window before temperatures rise again. Availability is tied specifically to the RAK Marina location and does not extend to other branches.",
+    "price_aed": 3200,
+    "sessions": 20,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-12-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_25_pack",
+    "name": "Sunrise 25-Pack",
+    "branch_ids": [
+      "br_khalifa",
+      "br_yas"
+    ],
+    "description": "Built for early risers, the Sunrise 25-Pack bundles twenty-five sessions for AED 3700 and is available at our Khalifa and Yas branches. Courts are reserved strictly for off-peak hours, meaning all sessions must be played before 09:00, making this ideal for those who like to get their padel in before the working day begins. The pack is non-transferable, so it must be used by the original purchaser only and cannot be passed on to another member. With early slots often quieter and cooler, this is a smart choice for players who prefer calm courts and a fresher start to their game.",
+    "price_aed": 3700,
+    "sessions": 25,
+    "valid_from": "2026-06-10",
+    "valid_until": "2027-02-05",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_50_pack",
+    "name": "Prime Evening 50-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Prime Evening 50-Pack is our high-volume option for regular players who favour after-work court time, offering fifty sessions for AED 9650 exclusively at our RAK branch. Bookings fall within the 18:00 to 22:00 window, our busiest and most in-demand period, so availability is not guaranteed and courts should be reserved as early as possible to secure preferred times. As this package is non-refundable, purchasers should be confident in their ability to use the full allocation before committing. It suits committed evening players who value consistency and are happy to plan bookings around peak-hour demand.",
+    "price_aed": 9650,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_5_pack",
+    "name": "Weekend Warrior 5-Pack",
+    "branch_ids": [
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "Designed for those who save their padel for days off, the Weekend Warrior 5-Pack includes five sessions for AED 825 and can be used at either our RAK or Yas branches. Sessions are restricted to Fridays and Saturdays only, matching the rhythm of a typical weekend schedule, and every booking must be made at least 24 hours in advance to allow proper court allocation. This makes it a good match for casual or social players who prefer planning ahead rather than booking on the day. Ideal for friends or family groups looking to make the most of their weekend downtime on court.",
+    "price_aed": 825,
+    "sessions": 5,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_10_pack",
+    "name": "Flexi 10-Pack",
+    "branch_ids": [
+      "br_khalifa",
+      "br_majaz"
+    ],
+    "description": "The Flexi 10-Pack offers exactly what its name suggests: freedom. Ten sessions are available for AED 1400 and can be redeemed at either our Khalifa or Majaz branches, with no restriction on time of day. Sessions may be booked at any hour depending on court availability, making this a versatile option for players with unpredictable schedules. The pack can also be transferred once to another player, offering added flexibility for couples, friends, or colleagues who wish to share the allocation. This is a strong all-round choice for members who want convenience without being tied to a fixed routine.",
+    "price_aed": 1400,
+    "sessions": 10,
+    "valid_from": "2025-12-01",
+    "valid_until": "2026-06-05",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_10_pack",
+    "name": "Ladies Daytime 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_rak"
+    ],
+    "description": "Created specifically for ladies-only sessions, this 10-Pack offers ten sessions for AED 1700 and is available at our Ajman and RAK branches. Sessions must be played between 09:00 and 16:00, keeping the pack aligned with daytime slots that suit those with flexible mornings or afternoons. As the package is non-transferable, it is intended solely for the purchasing member and cannot be shared or reassigned. This option is popular among players who enjoy the relaxed, social atmosphere of ladies-only courts during quieter daytime hours, offering a comfortable and consistent environment to build skills or simply enjoy regular play.",
+    "price_aed": 1700,
+    "sessions": 10,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-12-07",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_20_pack",
+    "name": "Junior Term 20-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "description": "The Junior Term 20-Pack is tailored for young players aged nine to seventeen, offering twenty coach-led sessions for AED 2900 at our Al Quoz and JVC branches. Every session in this package includes professional coaching, ensuring structured, age-appropriate development rather than casual free play. As the pack is non-transferable, it is intended solely for the enrolled junior and cannot be reassigned to another player. This option suits families looking for a consistent, term-based programme that builds skills progressively over multiple weeks, with coaches guiding technique, movement and match understanding throughout the full course of sessions.",
+    "price_aed": 2900,
+    "sessions": 20,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_25_pack",
+    "name": "Corporate Block 25-Pack",
+    "branch_ids": [
+      "br_jvc"
+    ],
+    "description": "Designed for teams and workplace groups, the Corporate Block 25-Pack provides twenty-five sessions for AED 5150 at our JVC branch. A minimum of four players is required to activate the package, making it ideal for corporate teams, department outings or regular group bookings. Billing is handled through invoice rather than individual payment, simplifying administration for companies managing group expenses. The package remains valid for twelve months from the date of issue, giving organisations ample time to schedule sessions around business commitments. This is a practical option for companies seeking a structured, flexible way to encourage regular team activity.",
+    "price_aed": 5150,
+    "sessions": 25,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-09-08",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_50_pack",
+    "name": "Student 50-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_majaz"
+    ],
+    "description": "The Student 50-Pack rewards regular play with fifty sessions for AED 8200, available at our Al Quoz and Majaz branches. To qualify, players must present a valid student ID at the time of booking or entry, confirming eligibility for the discounted rate. Sessions are restricted to weekdays before 16:00, aligning with typical academic schedules and daytime availability. This makes the package particularly well suited to students with free periods or early finishes who want an affordable way to play often. With a generous session count, it offers strong value for those committed to building a consistent padel routine.",
+    "price_aed": 8200,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2027-02-05",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_5_pack",
+    "name": "Coaching Credit 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_khalifa"
+    ],
+    "description": "The Coaching Credit 5-Pack offers five sessions for AED 950, redeemable at our Ajman and Khalifa branches. Unlike standard court packages, these credits can be applied against any coach rate, giving members flexibility to book lessons with different coaches or session formats. This makes the pack particularly useful for players focused on improving technique rather than simply securing court time. As the credits are non-transferable, they must be used by the purchasing member only. It's a solid option for those wanting structured, skill-focused sessions without being locked into a single coach or fixed weekly schedule.",
+    "price_aed": 950,
+    "sessions": 5,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_10_pack",
+    "name": "Marina Season 10-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "Set against the scenic backdrop of RAK Marina, this seasonal package includes ten sessions for AED 1950, available exclusively at our RAK branch. Sessions are offered only during the cooler months of the year, when outdoor conditions are most comfortable for play, and bookings remain weather-dependent, subject to change if conditions are unsuitable. This makes it a popular choice for members who enjoy outdoor courts and want to make the most of favourable weather while it lasts. Ideal for those seeking a scenic, seasonal alternative to indoor play, with availability naturally limited to the cooler part of the year.",
+    "price_aed": 1950,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-11-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_10_pack",
+    "name": "Sunrise 10-Pack",
+    "branch_ids": [
+      "br_yas"
+    ],
+    "description": "Beat the heat and the queues with the Sunrise 10-Pack, offering ten court sessions at Baseline Yas for AED 2100. This package is designed for early risers who prefer to play before the day heats up, with all bookings restricted to off-peak hours before 09:00. It suits members with flexible mornings or those training ahead of work commitments. Please note that sessions are strictly non-transferable, meaning they cannot be passed on to another member or used by a guest. Once purchased, the pack is tied to the original buyer's account, so plan your early sessions accordingly and make full use of the discounted rate while it remains valid.",
+    "price_aed": 2100,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-12-07",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_20_pack",
+    "name": "Prime Evening 20-Pack",
+    "branch_ids": [
+      "br_yas"
+    ],
+    "description": "The Prime Evening 20-Pack is built for players who prefer to book their court time after the working day, covering twenty sessions at Baseline Yas for AED 3900. Valid strictly between 18:00 and 22:00, this package suits regulars who value the sociable evening slots when courts are in highest demand. Availability during these prime hours is not guaranteed and bookings should be made as early as possible to secure a preferred time. As this pack is non-refundable, buyers should be confident in their ability to use the sessions within the validity period before purchasing. It offers strong value for consistent evening players at this branch.",
+    "price_aed": 3900,
+    "sessions": 20,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_25_pack",
+    "name": "Weekend Warrior 25-Pack",
+    "branch_ids": [
+      "br_jvc",
+      "br_majaz"
+    ],
+    "description": "Perfect for those who save their padel fix for the weekend, the Weekend Warrior 25-Pack includes twenty-five sessions for AED 4400, usable at either Baseline JVC or Baseline Majaz. Sessions are restricted to Fridays and Saturdays only, making this ideal for members with busy weekday schedules who prefer to concentrate their play across the weekend. All bookings must be confirmed at least 24 hours in advance, so last-minute reservations are not possible under this scheme. This structure helps the club manage weekend demand while rewarding regular weekend players with a lower per-session rate across two popular branches, giving useful flexibility in location choice.",
+    "price_aed": 4400,
+    "sessions": 25,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-12-07",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_50_pack",
+    "name": "Flexi 50-Pack",
+    "branch_ids": [
+      "br_majaz"
+    ],
+    "description": "For members who want maximum freedom, the Flexi 50-Pack offers fifty sessions for AED 9000, usable at any time of day and at any Baseline branch within the emirate where Baseline Majaz is located. There are no restrictions on time slots, making it suitable for players with unpredictable schedules or those who travel between branches regularly. The pack may be transferred once to another person, offering some flexibility if your plans change partway through. This is best suited to frequent players who value convenience over the deeper discounts offered by more restrictive packages, and who want one pass to cover all their padel needs.",
+    "price_aed": 9000,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2027-02-05",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_5_pack",
+    "name": "Ladies Daytime 5-Pack",
+    "branch_ids": [
+      "br_khalifa"
+    ],
+    "description": "The Ladies Daytime 5-Pack is a dedicated offering for female members at Baseline Khalifa, providing five sessions for AED 825 within ladies-only daytime slots. Bookings are valid between 09:00 and 16:00, making this a popular option for those who play during school hours or on quieter weekday mornings and afternoons. The package is intended to support a comfortable, female-focused playing environment and is non-transferable, so sessions must be used by the original purchaser only. This is a good entry option for those new to padel or players who prefer a smaller, more relaxed pack size before committing to a larger bundle.",
+    "price_aed": 825,
+    "sessions": 5,
+    "valid_from": "2026-07-10",
+    "valid_until": "2027-02-05",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_10_pack",
+    "name": "Junior Term 10-Pack",
+    "branch_ids": [
+      "br_khalifa"
+    ],
+    "description": "Designed for young players developing their game, the Junior Term 10-Pack includes ten coach-led sessions at Baseline Khalifa for AED 1900, tailored to ages nine through seventeen. All sessions must be taken under coaching supervision rather than as open court time, ensuring structured skill progression throughout the pack. This option suits parents looking for a term-style commitment to regular coaching without booking individual lessons each week. As the package is non-transferable, it remains tied to the registered junior member and cannot be shared with siblings or friends. It offers a straightforward way to build consistent training habits over a sustained period.",
+    "price_aed": 1900,
+    "sessions": 10,
+    "valid_from": "2025-11-17",
+    "valid_until": "2026-06-15",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_10_pack",
+    "name": "Corporate Block 10-Pack",
+    "branch_ids": [
+      "br_majaz",
+      "br_rak"
+    ],
+    "description": "The Corporate Block 10-Pack is designed for teams and companies, offering ten sessions for AED 2050 at either Baseline Majaz or Baseline RAK. A minimum of four players is required per booking, making it well suited to office groups, client entertaining, or regular team socials. Payment is handled through invoice billing rather than upfront card payment, simplifying reconciliation for business accounts. The package carries a generous twelve-month validity window from the date of issue, giving companies ample time to schedule sessions around busy calendars. This option is ideal for organisations wanting a flexible, low-hassle way to offer padel as a team activity.",
+    "price_aed": 2050,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_20_pack",
+    "name": "Student 20-Pack",
+    "branch_ids": [
+      "br_ajman"
+    ],
+    "description": "The Student 20-Pack offers strong value for full-time students, providing twenty sessions at Baseline Ajman for AED 3850. Valid student identification must be presented to purchase and, where required, to check in for each session. Bookings are limited to weekdays before 16:00, aligning with typical class schedules and keeping the pack focused on daytime availability. This makes it a practical choice for students looking to play regularly between lectures or before evening commitments. As eligibility is tied to verified student status, this package is intended solely for those currently enrolled in recognised full-time study.",
+    "price_aed": 3850,
+    "sessions": 20,
+    "valid_from": "2025-12-16",
+    "valid_until": "2026-06-12",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_25_pack",
+    "name": "Coaching Credit 25-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_yas"
+    ],
+    "description": "The Coaching Credit 25-Pack provides twenty-five credits for AED 4075, redeemable against coaching sessions at either Baseline Al Quoz or Baseline Yas. Rather than being tied to a single coach or rate, credits can be applied flexibly across any available coaching option at these branches, making this suited to players who like variety in their instruction or who train with more than one coach. As the credits are non-transferable, they remain assigned to the original purchaser's account throughout their use. This package works well for dedicated players investing in structured improvement rather than casual open-court time.",
+    "price_aed": 4075,
+    "sessions": 25,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_50_pack",
+    "name": "Marina Season 50-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Marina Season 50-Pack is a seasonal offering exclusive to Baseline RAK Marina, providing fifty sessions for AED 8900 during the cooler months when outdoor conditions are most favourable for play. As courts at this location are exposed to the elements, all bookings remain weather-dependent and may be subject to rescheduling in the event of unsuitable conditions. This package suits members who enjoy the marina setting and plan to play frequently across the cooler season. Given its seasonal nature, the pack is not intended for use outside the stated cooler-weather period and offers excellent value for committed marina regulars.",
+    "price_aed": 8900,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-12-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_5_pack",
+    "name": "Sunrise 5-Pack",
+    "branch_ids": [
+      "br_majaz"
+    ],
+    "description": "The Sunrise 5-Pack is designed for early risers who prefer their padel before the day properly begins. It includes five sessions for AED 725, redeemable exclusively at our Al Majaz club, and every booking must fall before 09:00 to qualify as off-peak. This package suits members with flexible mornings or those wanting to beat the heat and the crowds. Please note the pack is non-transferable, meaning it can only be used by the person it was purchased for and cannot be gifted, resold, or shared across accounts. Sessions must be used within the pack's validity window, and once redeemed, cannot be reallocated to another time slot outside the specified early hours.",
+    "price_aed": 725,
+    "sessions": 5,
+    "valid_from": "2025-12-08",
+    "valid_until": "2026-04-27",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_10_pack_2",
+    "name": "Prime Evening 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "Our most popular evening option, the Prime Evening 10-Pack offers ten sessions for AED 2050 and is valid across eight branches, including Ajman, Al Ain, Al Quoz, JVC, Khalifa City, Al Majaz, RAK and Yas Island. Bookings are accepted between 18:00 and 22:00, making it ideal for players who train after work or school. As courts during these hours are in high demand, all sessions remain subject to availability and early booking is strongly recommended. This pack is non-refundable once purchased, so members should be confident in their evening schedule before committing. It's a flexible, multi-branch solution for regular evening players across the group.",
+    "price_aed": 2050,
+    "sessions": 10,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_10_pack_2",
+    "name": "Weekend Warrior 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_khalifa",
+      "br_yas"
+    ],
+    "description": "Built for players who do their best work on the weekend, the Weekend Warrior 10-Pack provides ten sessions for AED 1650 at Ajman, Khalifa City and Yas Island branches. Sessions are restricted to Fridays and Saturdays only, aligning with the region's typical rest days, and every booking must be confirmed at least 24 hours in advance to secure a court. This advance-booking requirement helps manage weekend demand and ensures availability for pack holders. The package suits members with structured weekday commitments who prefer to concentrate their padel around the weekend. No same-day bookings are permitted, and sessions cannot be used outside the Friday-Saturday window.",
+    "price_aed": 1650,
+    "sessions": 10,
+    "valid_from": "2025-08-06",
+    "valid_until": "2026-04-01",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_20_pack_2",
+    "name": "Flexi 20-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_majaz"
+    ],
+    "description": "The Flexi 20-Pack is our most adaptable offering, giving members twenty sessions for AED 3500 with genuine freedom over when and where they play. Valid at both Ajman and Al Majaz branches, sessions can be booked at any time of day, making this ideal for players with unpredictable schedules. A standout feature is its one-time transferability, allowing the pack to be passed on to another person once during its validity period, which suits households or friend groups sharing a single allocation. Beyond that single transfer, the pack reverts to standard non-transferable terms. This package rewards flexibility with fewer restrictions than most other multi-session bundles.",
+    "price_aed": 3500,
+    "sessions": 20,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_25_pack_2",
+    "name": "Ladies Daytime 25-Pack",
+    "branch_ids": [
+      "br_yas"
+    ],
+    "description": "Exclusively available at our Yas Island branch, the Ladies Daytime 25-Pack offers twenty-five sessions for AED 4400 within dedicated ladies-only programming. Bookings are restricted to the window between 09:00 and 16:00, making this a strong fit for members who play during daytime hours away from evening crowds. The pack is non-transferable, so it remains tied to the original purchaser throughout its use. This package is popular among members building consistent daytime routines within a ladies-only environment, whether for fitness, social play, or skill development. All sessions must be used within the designated hours, and no exceptions are made for evening or weekend bookings.",
+    "price_aed": 4400,
+    "sessions": 25,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-10-08",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_50_pack_2",
+    "name": "Junior Term 50-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "description": "The Junior Term 50-Pack is a substantial fifty-session package priced at AED 7500, created for young players aged nine to seventeen. Available at Ajman, Al Quoz and JVC branches, every session in this pack must be coach-led, meaning independent or unsupervised court time does not qualify for redemption. This structure ensures juniors receive consistent guidance and skill progression across the full term. The pack is non-transferable and tied specifically to the enrolled junior, so it cannot be passed to siblings or other players. Parents and guardians should confirm age eligibility before purchase, as the age bracket is strictly enforced across all participating branches.",
+    "price_aed": 7500,
+    "sessions": 50,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_5_pack_2",
+    "name": "Corporate Block 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "Designed for teams and workplace groups, the Corporate Block 5-Pack includes five sessions for AED 975 and is available across all eight branches: Ajman, Al Ain, Al Quoz, JVC, Khalifa City, Al Majaz, RAK and Yas Island. A minimum of four players is required per booking, making it unsuitable for solo or pair use. Payment is handled through invoice billing rather than upfront card payment, simplifying reconciliation for company accounts. The package carries a generous twelve-month validity period from the date of issue, giving organisations ample time to schedule sessions around work commitments. This option suits corporate wellness programmes and team-building initiatives well.",
+    "price_aed": 975,
+    "sessions": 5,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_10_pack_2",
+    "name": "Student 10-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_yas"
+    ],
+    "description": "The Student 10-Pack offers ten sessions for AED 1700 and is available at Al Ain and Yas Island branches, giving enrolled students an affordable way to play regularly. A valid student ID must be presented at the time of booking or check-in to confirm eligibility. Sessions are restricted to weekdays before 16:00, aligning with typical academic timetables and keeping the offer focused on daytime availability outside peak evening hours. This makes the pack particularly suitable for university or college students with free periods during the day. Bookings outside the specified weekday window, or without valid identification, will not be honoured under this package.",
+    "price_aed": 1700,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-12-07",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_10_pack_2",
+    "name": "Coaching Credit 10-Pack",
+    "branch_ids": [
+      "br_jvc",
+      "br_majaz"
+    ],
+    "description": "The Coaching Credit 10-Pack is a flexible ten-session package priced at AED 1950, available at JVC and Al Majaz branches. Rather than being tied to a single coach or fixed rate, credits can be redeemed against any coach rate offered at the branch, giving members freedom to choose sessions based on availability, specialism, or personal preference. This makes the pack well suited to players working on technique with multiple trainers over time. The pack is non-transferable, remaining linked to the original purchaser throughout its use. Members should check individual coach availability when booking, as credit value is applied per session regardless of the coach's standard rate.",
+    "price_aed": 1950,
+    "sessions": 10,
+    "valid_from": "2026-06-10",
+    "valid_until": "2027-02-05",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_20_pack_2",
+    "name": "Marina Season 20-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "Set against the waterside courts of our RAK branch, the Marina Season 20-Pack includes twenty sessions for AED 3500, redeemable exclusively at RAK Marina. This package is only available during the cooler-season months, when outdoor conditions are most comfortable for extended play. As sessions take place in an open-air setting, all bookings are weather-dependent, and courts may be temporarily unavailable during periods of strong wind, rain, or extreme heat. Members are encouraged to monitor conditions and rebook where necessary. This pack suits players who enjoy the marina setting and are happy to work bookings around seasonal weather patterns.",
+    "price_aed": 3500,
+    "sessions": 20,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-12-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_25_pack_2",
+    "name": "Sunrise 25-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_yas"
+    ],
+    "description": "Built for early risers, the Sunrise 25-Pack bundles twenty-five sessions for AED 3700 at our Ajman, Al Ain and Yas clubs. Every booking must fall before 09:00, making this a strong fit for members who prefer to train ahead of the day's heat and before the courts fill up. The reduced off-peak rate reflects these fixed hours, so sessions cannot be shifted into evenings or weekends. The pack is non-transferable, meaning it stays registered to the original purchaser and cannot be passed on or shared with another player. Ideal for early-bird regulars across any of the three participating branches, it rewards consistency with meaningful savings over standard court rates.",
+    "price_aed": 3700,
+    "sessions": 25,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-09-08",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_50_pack_2",
+    "name": "Prime Evening 50-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_majaz"
+    ],
+    "description": "The Prime Evening 50-Pack is designed for members who play after work, offering fifty sessions for AED 9750 across our Ajman, Al Ain and Majaz clubs. Bookings are restricted to the 18:00-22:00 window, the busiest period at all three venues, so courts are offered subject to availability rather than guaranteed on demand. Once purchased, the pack is non-refundable, so members should be confident in their regular evening playing habits before buying in. There is no age or membership restriction beyond standard club terms. This option suits committed evening players seeking long-term value across a high-volume block of prime-time court access.",
+    "price_aed": 9750,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2027-02-05",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_5_pack_2",
+    "name": "Weekend Warrior 5-Pack",
+    "branch_ids": [
+      "br_khalifa"
+    ],
+    "description": "The Weekend Warrior 5-Pack is a compact option for social and competitive players who only play on Fridays and Saturdays, offering five sessions for AED 850 at our Khalifa club. Every booking must be made at least twenty-four hours in advance, helping the club manage weekend demand fairly across all members. Sessions cannot be used on weekdays, and the pack is intended for players with a consistent weekend routine rather than flexible weekly bookings. There are no age restrictions, though courts are allocated on a first-booked basis once the advance-notice window opens. A simple, focused offer for regular weekend fixtures.",
+    "price_aed": 850,
+    "sessions": 5,
+    "valid_from": "2025-10-29",
+    "valid_until": "2026-02-07",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_10_pack_2",
+    "name": "Flexi 10-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_khalifa"
+    ],
+    "description": "The Flexi 10-Pack offers genuine flexibility for members who move between locations, bundling ten sessions for AED 1650 usable at any time of day at our Al Ain and Khalifa clubs. Sessions can be booked across either branch within the emirate, making it a practical choice for players who split time between venues or want freedom from fixed slots. The pack can be transferred once to another player, offering a useful option for households or playing partners who wish to share unused sessions. Beyond the single transfer allowance, standard booking rules apply. A flexible, low-commitment pack suited to varied schedules and shared use.",
+    "price_aed": 1650,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_10_pack_2",
+    "name": "Ladies Daytime 10-Pack",
+    "branch_ids": [
+      "br_majaz"
+    ],
+    "description": "The Ladies Daytime 10-Pack is tailored for members attending ladies-only sessions at our Majaz club, providing ten sessions for AED 2050 within the 09:00-16:00 daytime window. This pack is intended specifically for daytime players who prefer the ladies-only format, and bookings outside these hours are not permitted. The pack is non-transferable and remains linked to the purchasing member throughout its use. It suits those with flexible daytime availability, including members who play during school hours or between other commitments. As sessions are drawn from a dedicated ladies-only schedule, availability follows the standard programme at the Majaz club.",
+    "price_aed": 2050,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_20_pack_2",
+    "name": "Junior Term 20-Pack",
+    "branch_ids": [
+      "br_majaz",
+      "br_yas"
+    ],
+    "description": "Designed for younger players, the Junior Term 20-Pack includes twenty coach-led sessions for AED 2900 at our Majaz and Yas clubs, open to players aged nine to seventeen. All sessions must be used within structured, coach-supervised classes rather than casual court bookings, ensuring consistent skill development across the term. The pack is non-transferable and tied to the registered junior participant, with age verification required at enrolment. Parents or guardians should note that sessions cannot be redirected to adult family members or friends. This package suits juniors progressing through structured coaching pathways at either branch across a full term of dedicated instruction.",
+    "price_aed": 2900,
+    "sessions": 20,
+    "valid_from": "2025-11-17",
+    "valid_until": "2026-03-29",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_25_pack_2",
+    "name": "Corporate Block 25-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_jvc",
+      "br_rak"
+    ],
+    "description": "The Corporate Block 25-Pack is built for teams and companies, offering twenty-five sessions for AED 3700 across our Al Ain, JVC and RAK clubs. Bookings require a minimum of four players per session, making it suited to office groups, client hospitality or regular team fixtures rather than individual play. Billing is handled via invoice, simplifying reconciliation for corporate accounts, and the pack carries a twelve-month validity period from issue, giving businesses ample time to schedule sessions around varying work calendars. This option is ideal for companies seeking a recurring wellness or team-building activity without the administrative load of per-session payments.",
+    "price_aed": 3700,
+    "sessions": 25,
+    "valid_from": "2025-11-12",
+    "valid_until": "2026-06-02",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_50_pack_2",
+    "name": "Student 50-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Student 50-Pack offers exceptional value for eligible students, bundling fifty sessions for AED 7450 across eight branches including Ajman, Al Ain, Al Quoz, JVC, Khalifa, Majaz, RAK and Yas. A valid student identification card must be presented at registration and may be requested again during the pack's use. Sessions are restricted to weekdays before 16:00, aligning with typical academic schedules and keeping evening and weekend courts free for other members. This wide branch availability makes it a practical choice for students who move between campuses or home locations, needing consistent access to courts during weekday daytime hours.",
+    "price_aed": 7450,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_5_pack_2",
+    "name": "Coaching Credit 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_yas"
+    ],
+    "description": "The Coaching Credit 5-Pack provides five sessions of coaching credit for AED 975, redeemable against any coach rate at our Ajman and Yas clubs. Rather than being tied to a single instructor or fixed session type, this credit can be applied flexibly across whichever coaching level or format the member chooses, including private or small-group lessons. The pack is non-transferable, remaining registered to the original purchaser throughout its use. It suits players looking to invest in technique or match preparation without committing to a single coach in advance, offering flexibility in how and when coaching sessions are scheduled.",
+    "price_aed": 975,
+    "sessions": 5,
+    "valid_from": "2025-08-16",
+    "valid_until": "2026-02-18",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_10_pack_2",
+    "name": "Marina Season 10-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Marina Season 10-Pack is a location-specific offer for our RAK Marina courts, providing ten sessions for AED 1900 during the cooler-season months when outdoor play is most comfortable. Sessions are weather-dependent, and rescheduling may be required in the event of unsuitable conditions given the open-air marina setting. This pack cannot be used at other branches and is intended purely for the scenic marina courts, making it popular with members seeking a change of scenery from indoor or standard outdoor courts. Availability is seasonal, so members are encouraged to book sessions promptly once conditions are favourable for outdoor play.",
+    "price_aed": 1900,
+    "sessions": 10,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-10-08",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_10_pack_2",
+    "name": "Sunrise 10-Pack",
+    "branch_ids": [
+      "br_alain"
+    ],
+    "description": "The Sunrise 10-Pack is built for early risers, offering ten sessions for AED 1600 at our Al Ain branch. Bookings are restricted to off-peak hours before 09:00, making it ideal for members who prefer to train ahead of the working day while courts are quieter. The pack is priced accordingly to reward flexible scheduling, though sessions must fall strictly within the morning window to qualify. Each pack is issued to a single named member and cannot be transferred to another player or account. Once purchased, sessions can be drawn down at your own pace, subject to normal court availability at the branch during eligible hours.",
+    "price_aed": 1600,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_20_pack_2",
+    "name": "Prime Evening 20-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "Designed for members who play after work, the Prime Evening 20-Pack provides twenty sessions for AED 2950 at our Ras Al Khaimah branch. Sessions are valid only between 18:00 and 22:00, our busiest window, so bookings are subject to court availability and may require planning ahead during peak periods. This pack suits regular evening players looking for better per-session value than pay-as-you-go rates. Please note that once purchased, the pack is non-refundable regardless of usage, so members should be confident in their ability to use the sessions within the prime evening slot before committing. No branch transfers apply to this offer.",
+    "price_aed": 2950,
+    "sessions": 20,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-12-07",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_25_pack_2",
+    "name": "Weekend Warrior 25-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_yas"
+    ],
+    "description": "The Weekend Warrior 25-Pack is aimed at members whose schedules revolve around Friday and Saturday play, offering twenty-five sessions for AED 4125 across our Al Quoz and Yas branches. Sessions are restricted to weekends only and must be booked at least 24 hours in advance, helping the club manage court demand during these popular days. This pack suits regular weekend groups and social players who plan their padel sessions ahead rather than booking on the day. Availability is not guaranteed for last-minute requests, so early booking is strongly advised. The pack offers a meaningful saving for consistent weekend attendance across either participating branch.",
+    "price_aed": 4125,
+    "sessions": 25,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_50_pack_2",
+    "name": "Flexi 50-Pack",
+    "branch_ids": [
+      "br_majaz"
+    ],
+    "description": "The Flexi 50-Pack is our most adaptable offer, providing fifty sessions for AED 8250 with use permitted at any time of day and at any branch within the emirate where the pack is issued, currently based out of Al Majaz. There are no time restrictions, making it suitable for members with unpredictable schedules or those who like to mix up their playing venue. The pack can be transferred once to another member, offering added flexibility should circumstances change. Beyond that single transfer, ownership becomes fixed. This package suits frequent players seeking maximum freedom without the constraints applied to other packages.",
+    "price_aed": 8250,
+    "sessions": 50,
+    "valid_from": "2025-10-12",
+    "valid_until": "2026-02-05",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_5_pack_2",
+    "name": "Ladies Daytime 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alquoz",
+      "br_rak"
+    ],
+    "description": "The Ladies Daytime 5-Pack offers five sessions for AED 700, available at our Ajman, Al Quoz, and Ras Al Khaimah branches. Sessions are reserved exclusively for ladies-only court times, running between 09:00 and 16:00, and are intended for members who prefer to play during quieter daytime hours in a dedicated ladies' environment. The pack is non-transferable and tied to the purchasing member's account. It suits both newer players easing into the sport and established members who value the relaxed daytime atmosphere. Bookings remain subject to normal court availability within the eligible hours at any of the three participating branches.",
+    "price_aed": 700,
+    "sessions": 5,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_10_pack_2",
+    "name": "Junior Term 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_majaz",
+      "br_rak"
+    ],
+    "description": "The Junior Term 10-Pack is tailored for younger players aged between nine and seventeen, offering ten coach-led sessions for AED 2100 at our Ajman, Al Majaz, and Ras Al Khaimah branches. All sessions must be delivered under coaching supervision rather than booked as open court time, ensuring structured skill development appropriate to the junior age group. The pack is non-transferable and registered to the individual junior member, with age verification may be requested at enrolment. This option suits families looking for a consistent term of structured coaching rather than one-off lessons, with sessions redeemable across any of the three listed branches.",
+    "price_aed": 2100,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_10_pack_2",
+    "name": "Corporate Block 10-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_khalifa"
+    ],
+    "description": "The Corporate Block 10-Pack is designed for company groups, offering ten sessions for AED 1950 at our Al Ain and Khalifa branches. A minimum of four players per booking is required, making this suited to office teams or corporate social clubs rather than individual members. Billing is handled through invoice rather than upfront card payment, simplifying reconciliation for finance departments. The pack carries a twelve-month validity period from the date of issue, giving companies ample time to schedule sessions around business commitments. This offer is ideal for organisations seeking a simple, recurring team activity with straightforward administrative handling.",
+    "price_aed": 1950,
+    "sessions": 10,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-12-07",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_20_pack_2",
+    "name": "Student 20-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_yas"
+    ],
+    "description": "The Student 20-Pack rewards weekday flexibility, offering twenty sessions for AED 4200 at our Al Ain and Yas branches. A valid student identification card is required at the time of purchase and may be requested again at check-in. Sessions must be played on weekdays before 16:00, making this pack best suited to students with lecture-free afternoons or flexible academic schedules. It is not valid on weekends or during evening hours, and eligibility lapses once student status can no longer be verified. This package offers strong value for regular midweek daytime play across either of the two participating branches.",
+    "price_aed": 4200,
+    "sessions": 20,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-10-08",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_25_pack_2",
+    "name": "Coaching Credit 25-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Coaching Credit 25-Pack provides twenty-five sessions for AED 4825, redeemable against any coach rate across the majority of our branches, including Ajman, Al Ain, Al Quoz, JVC, Khalifa, Al Majaz, Ras Al Khaimah, and Yas. This makes it one of our most widely usable packages, suited to members who train with multiple coaches or move between locations regularly. Credits can be applied flexibly depending on the coach and session type booked, though the pack itself remains non-transferable and tied to the original purchaser. It is a practical option for committed players investing in ongoing coaching rather than casual court time.",
+    "price_aed": 4825,
+    "sessions": 25,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_50_pack_2",
+    "name": "Marina Season 50-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Marina Season 50-Pack is a location-specific offer providing fifty sessions for AED 8250, valid exclusively at our Ras Al Khaimah Marina courts during the cooler months of the year. Sessions are weather-dependent, reflecting the outdoor marina setting, and play may occasionally be rescheduled in the event of unsuitable conditions. This pack suits members who enjoy the scenic marina backdrop and plan to play consistently throughout the cooler season. As it is restricted to a single venue, it is not intended for members who split their play across multiple branches. Availability is seasonal and subject to court access at the marina.",
+    "price_aed": 8250,
+    "sessions": 50,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-10-08",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_5_pack_2",
+    "name": "Sunrise 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz"
+    ],
+    "description": "Start the day on court with the Sunrise 5-Pack, five sessions for AED 950, available at our Ajman, Al Ain and Al Quoz branches. Designed for early risers, this package is valid strictly for off-peak slots before 09:00, making it ideal for those who prefer to play before the day heats up or before work commitments begin. Sessions must be used by the account holder named on the package, as the pack is non-transferable and cannot be passed to another member or guest. A straightforward, value-focused option for regular early-morning players who already know their preferred branch and are happy to commit to a consistent early slot each week.",
+    "price_aed": 950,
+    "sessions": 5,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_10_pack_3",
+    "name": "Prime Evening 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_majaz"
+    ],
+    "description": "The Prime Evening 10-Pack offers ten sessions for AED 1500 across our Ajman, Al Ain and Al Majaz branches, tailored for players who prefer to book courts during the busy after-work window. Sessions are valid between 18:00 and 22:00, when demand is naturally higher, so bookings remain subject to court availability at the time of reservation rather than guaranteed on request. Once purchased, the pack is non-refundable, so members should be confident in their ability to use the full allocation within their usual playing routine. Well suited to regular evening players seeking predictable pricing across multiple locations without needing to commit to a single branch.",
+    "price_aed": 1500,
+    "sessions": 10,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-09-08",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_10_pack_3",
+    "name": "Weekend Warrior 10-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_yas"
+    ],
+    "description": "Built for those who play their best padel at the weekend, the Weekend Warrior 10-Pack includes ten sessions for AED 1850 and can be used at our Ajman, Al Ain and Yas branches. This package is restricted to Friday and Saturday play only, reflecting its focus on weekend fixtures rather than weekday flexibility. All bookings must be made at least 24 hours in advance, helping branches manage court allocation during the busiest days of the week. A practical choice for social groups, regular weekend doubles pairs or anyone whose schedule is built around end-of-week matches rather than midweek availability.",
+    "price_aed": 1850,
+    "sessions": 10,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_20_pack_3",
+    "name": "Flexi 20-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_rak"
+    ],
+    "description": "The Flexi 20-Pack is our most adaptable multi-session option, offering twenty sessions for AED 3550 with no restriction on time of day. Available at Al Quoz and RAK, the package can be used interchangeably at any Baseline Padel branch within the relevant emirate, giving members freedom to play wherever suits their schedule best. Uniquely among our packages, this pack can be transferred once to another player, making it a useful option for households, training partners or occasional gifting between members. With no peak or off-peak limitations, it suits frequent players who value flexibility above all else.",
+    "price_aed": 3550,
+    "sessions": 20,
+    "valid_from": "2026-07-10",
+    "valid_until": "2027-02-05",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_25_pack_3",
+    "name": "Ladies Daytime 25-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "description": "Created specifically for daytime play, the Ladies Daytime 25-Pack includes twenty-five sessions for AED 4825 and is available at our Al Quoz and JVC branches. This package is reserved exclusively for ladies-only sessions scheduled between 09:00 and 16:00, offering a comfortable, community-focused environment for players during standard daytime hours. As with several of our structured packages, this pack is non-transferable and intended solely for use by the purchasing member. A popular choice among regular daytime players who value both the ladies-only format and the generous session count for sustained, longer-term play across the cooler and warmer parts of the day alike.",
+    "price_aed": 4825,
+    "sessions": 25,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_50_pack_3",
+    "name": "Junior Term 50-Pack",
+    "branch_ids": [
+      "br_alain"
+    ],
+    "description": "The Junior Term 50-Pack is designed for young players aged between nine and seventeen, offering fifty coach-led sessions for AED 9000 exclusively at our Al Ain branch. Every session within this package must be coach-led, ensuring structured skill development rather than informal or unsupervised court time. Reflecting its purpose as a long-term development pathway, the pack is non-transferable and tied to the registered junior participant. With a substantial session count, it suits families committed to consistent, term-length coaching progression rather than occasional or casual play, giving younger members a structured route to improving technique, matchplay and confidence over an extended period.",
+    "price_aed": 9000,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_5_pack_3",
+    "name": "Corporate Block 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain"
+    ],
+    "description": "The Corporate Block 5-Pack is tailored for workplace groups, offering five sessions for AED 950 at our Ajman and Al Ain branches. Bookings require a minimum of four players per session, making it best suited to office teams, client outings or regular corporate social groups rather than individual members. Billing is handled through invoice rather than upfront payment, simplifying administration for companies managing court time as part of a wider wellness or team-building programme. The pack carries a twelve-month validity period from the date of issue, giving organisations ample time to schedule sessions around variable corporate calendars without pressure to use the allocation quickly.",
+    "price_aed": 950,
+    "sessions": 5,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-10-08",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_10_pack_3",
+    "name": "Student 10-Pack",
+    "branch_ids": [
+      "br_khalifa",
+      "br_majaz"
+    ],
+    "description": "The Student 10-Pack is available to eligible students holding valid identification, offering ten sessions for AED 1500 at our Khalifa and Al Majaz branches. Sessions must be played on weekdays before 16:00, aligning with typical study schedules and keeping the offer focused on daytime midweek availability rather than evenings or weekends. Valid student ID is required at the time of booking or check-in to confirm eligibility for this discounted rate. A practical option for students living or studying nearby who want regular access to quality courts without weekend pricing, provided their schedule allows for consistent daytime play during term time.",
+    "price_aed": 1500,
+    "sessions": 10,
+    "valid_from": "2025-12-16",
+    "valid_until": "2026-07-26",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_10_pack_3",
+    "name": "Coaching Credit 10-Pack",
+    "branch_ids": [
+      "br_alain",
+      "br_alquoz"
+    ],
+    "description": "The Coaching Credit 10-Pack provides ten sessions for AED 1900, redeemable at our Al Ain and Al Quoz branches, and is designed specifically for members focused on structured improvement through professional coaching. Rather than covering standalone court hire, credits within this pack can be applied against any coach rate, giving flexibility in choosing coaching intensity, format or individual coach preference. As with our other structured packages, this one is non-transferable and intended solely for the purchasing member's development. Ideal for players committed to regular lessons who want predictable coaching costs bundled together rather than paying per session as they go.",
+    "price_aed": 1900,
+    "sessions": 10,
+    "valid_from": "2025-07-19",
+    "valid_until": "2026-04-19",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_20_pack_3",
+    "name": "Marina Season 20-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "Exclusive to our RAK Marina location, the Marina Season 20-Pack includes twenty sessions for AED 3200, designed around the more temperate playing conditions found during the cooler months of the year. As an outdoor-facing package, sessions remain weather-dependent, meaning bookings may occasionally require rescheduling in the event of unsuitable conditions. This offer suits members who enjoy the marina setting and prefer to concentrate their play during the more comfortable seasonal window rather than year-round. With a generous session count, it rewards regular players keen to make the most of the location's atmosphere while conditions are at their best.",
+    "price_aed": 3200,
+    "sessions": 20,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-12-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  },
+  {
+    "id": "pkg_sunrise_25_pack_3",
+    "name": "Sunrise 25-Pack",
+    "branch_ids": [
+      "br_jvc",
+      "br_rak"
+    ],
+    "description": "The Sunrise 25-Pack is built for early risers, bundling twenty-five court sessions at a reduced rate for anyone happy to play before nine in the morning. Available at our JVC and Ras Al Khaimah clubs, this pack rewards flexibility with strong savings against standard rates. Sessions must be used during off-peak morning hours only and cannot be shifted to prime evening slots. The pack is issued to a single named member and is non-transferable, so it cannot be shared, gifted, or resold to another player. Ideal for early-bird regulars, coaches' clients, or anyone building a consistent morning training habit before the day heats up.",
+    "price_aed": 4875,
+    "sessions": 25,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-12-07",
+    "conditions": "Off-peak only, before 09:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_prime_evening_50_pack_3",
+    "name": "Prime Evening 50-Pack",
+    "branch_ids": [
+      "br_ajman"
+    ],
+    "description": "Designed for after-work players, the Prime Evening 50-Pack offers fifty sessions redeemable exclusively between six and ten in the evening at our Ajman club. This is our highest-volume evening package, suited to regular players who prefer floodlit courts once the working day winds down. As with all peak-hour bookings, slots are subject to availability and cannot be guaranteed at short notice, so early booking is strongly advised. Once purchased, the pack is non-refundable, meaning unused sessions cannot be exchanged for cash or credit. It suits committed players and small groups wanting dependable access to the club's busiest and most sought-after time window.",
+    "price_aed": 10450,
+    "sessions": 50,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Valid 18:00-22:00, subject to availability, non-refundable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_weekend_warrior_5_pack_3",
+    "name": "Weekend Warrior 5-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Weekend Warrior 5-Pack is a compact five-session bundle for players who do most of their padel on Fridays and Saturdays. Available exclusively at our Ras Al Khaimah branch, it suits members with predictable weekend routines who want a lighter commitment than our larger packs. Sessions are strictly limited to Friday and Saturday play and cannot be used on any other day of the week. All bookings must be confirmed at least twenty-four hours in advance, so last-minute reservations are not possible. This makes the pack best suited to organised groups or regular weekend pairings rather than spontaneous walk-in play.",
+    "price_aed": 800,
+    "sessions": 5,
+    "valid_from": "2026-06-10",
+    "valid_until": "2026-11-07",
+    "conditions": "Fri-Sat only, must be booked 24 hours ahead",
+    "status": "active"
+  },
+  {
+    "id": "pkg_flexi_10_pack_3",
+    "name": "Flexi 10-Pack",
+    "branch_ids": [
+      "br_alain"
+    ],
+    "description": "The Flexi 10-Pack is our most adaptable offer, giving ten sessions that can be used at any time of day and at any branch across the emirate where this package is honoured. Purchased through our Al Ain club, it suits players who move between locations or whose schedules change from week to week. Unlike most of our packs, this one can be transferred once to another player, making it a practical option for couples, families, or friends who want to share access. There is no restriction on time slots, so sessions can be booked during off-peak hours or prime time alike, subject to normal court availability.",
+    "price_aed": 1600,
+    "sessions": 10,
+    "valid_from": "2025-07-06",
+    "valid_until": "2026-02-18",
+    "conditions": "Any time, any branch in the emirate, transferable once",
+    "status": "active"
+  },
+  {
+    "id": "pkg_ladies_daytime_10_pack_3",
+    "name": "Ladies Daytime 10-Pack",
+    "branch_ids": [
+      "br_jvc"
+    ],
+    "description": "The Ladies Daytime 10-Pack offers ten sessions reserved for our ladies-only programme, available at our JVC club between nine in the morning and four in the afternoon. It has been created for members who prefer to play within dedicated ladies' sessions during daytime hours, away from the evening rush. All sessions must be used within this specific daytime window and cannot be applied to mixed or evening bookings. The pack is issued to a single member and is strictly non-transferable, so it cannot be passed on or shared with another player. A popular choice for social groups, beginners, and daytime regulars alike.",
+    "price_aed": 1400,
+    "sessions": 10,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Ladies-only sessions, 09:00-16:00, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_junior_term_20_pack_3",
+    "name": "Junior Term 20-Pack",
+    "branch_ids": [
+      "br_alquoz",
+      "br_jvc"
+    ],
+    "description": "The Junior Term 20-Pack is a coach-led programme for young players aged between nine and seventeen, available at our Al Quoz and JVC clubs. Twenty sessions are included, each delivered under the guidance of one of our coaching team rather than as unsupervised court time, ensuring structured skill development throughout the term. The pack is intended for the enrolled junior only and is non-transferable between siblings or friends. It suits families looking for a consistent, term-length commitment to coaching rather than casual drop-in play. Parents should note that sessions follow the coaching schedule set by the branch rather than open booking availability.",
+    "price_aed": 3500,
+    "sessions": 20,
+    "valid_from": "2025-11-16",
+    "valid_until": "2026-05-17",
+    "conditions": "Ages 9-17, coach-led sessions only, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_corporate_block_25_pack_3",
+    "name": "Corporate Block 25-Pack",
+    "branch_ids": [
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Corporate Block 25-Pack is built for companies and organised groups, offering twenty-five sessions at our Ras Al Khaimah and Yas branches for teams of four or more players. Billing is handled through invoice rather than individual card payment, simplifying reconciliation for HR or facilities teams managing staff wellness budgets. The pack remains valid for twelve months from the date of issue, giving groups ample time to schedule sessions around work commitments. A minimum of four players must be present for each booking, making this unsuitable for solo or pair bookings. It's a practical option for corporate wellness initiatives, staff socials, or interdepartmental leagues.",
+    "price_aed": 4450,
+    "sessions": 25,
+    "valid_from": "2026-04-11",
+    "valid_until": "2026-11-07",
+    "conditions": "Minimum four players, invoice billing, 12-month validity",
+    "status": "active"
+  },
+  {
+    "id": "pkg_student_50_pack_3",
+    "name": "Student 50-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alain",
+      "br_alquoz",
+      "br_jvc",
+      "br_khalifa",
+      "br_majaz",
+      "br_rak",
+      "br_yas"
+    ],
+    "description": "The Student 50-Pack is our largest value package for full-time students, offering fifty sessions redeemable across a wide network of branches including Ajman, Al Ain, Al Quoz, JVC, Khalifa, Majaz, Ras Al Khaimah, and Yas. Valid student identification must be presented at the time of purchase and may be requested again when booking. Sessions are restricted to weekdays before four in the afternoon, aligning with typical study and class schedules while keeping courts available for other members during peak hours. This pack suits students wanting frequent, affordable access to multiple locations without being tied to a single branch or fixed weekly slot.",
+    "price_aed": 9650,
+    "sessions": 50,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-10-08",
+    "conditions": "Valid student ID required, weekdays before 16:00",
+    "status": "active"
+  },
+  {
+    "id": "pkg_coaching_credit_5_pack_3",
+    "name": "Coaching Credit 5-Pack",
+    "branch_ids": [
+      "br_ajman",
+      "br_alquoz",
+      "br_majaz"
+    ],
+    "description": "The Coaching Credit 5-Pack provides five sessions worth of credit that can be redeemed against any coach's rate at our Ajman, Al Quoz, or Majaz clubs. Rather than booking fixed group sessions, members use this credit flexibly toward private lessons, clinics, or specialist coaching of their choice. This makes it particularly useful for players targeting specific technique goals rather than general court time. The credit is issued to a single member and is non-transferable, so it cannot be shared or reassigned. A straightforward option for anyone serious about structured improvement through personalised coaching across our three participating branches.",
+    "price_aed": 900,
+    "sessions": 5,
+    "valid_from": "2026-05-11",
+    "valid_until": "2026-09-08",
+    "conditions": "Redeemable against any coach rate, non-transferable",
+    "status": "active"
+  },
+  {
+    "id": "pkg_marina_season_10_pack_3",
+    "name": "Marina Season 10-Pack",
+    "branch_ids": [
+      "br_rak"
+    ],
+    "description": "The Marina Season 10-Pack is a location-specific offer for our Ras Al Khaimah Marina courts, available only during the cooler months of the year when outdoor conditions are most comfortable for play. Ten sessions are included, each subject to weather conditions given the open-air setting, so bookings may occasionally be rescheduled if conditions are unsuitable. This pack cannot be used at any other branch and is tied specifically to the Marina venue's seasonal calendar. It suits members who enjoy the marina backdrop and want to make the most of the milder weather window with a set of prearranged sessions.",
+    "price_aed": 1400,
+    "sessions": 10,
+    "valid_from": "2026-07-10",
+    "valid_until": "2026-12-07",
+    "conditions": "RAK Marina only, cooler-season months, weather-dependent",
+    "status": "active"
+  }
+]

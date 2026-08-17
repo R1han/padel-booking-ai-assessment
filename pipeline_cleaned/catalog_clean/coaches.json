@@ -1,0 +1,855 @@
+[
+  {
+    "id": "cch_diego_fernandez",
+    "name": "Diego Fernandez",
+    "branch_id": "br_alquoz",
+    "bio": "Diego Fernandez grew up around padel courts long before the sport became fashionable elsewhere, cutting his teeth on the competitive circuit back home in Spain before a knee injury nudged him toward coaching fourteen years ago. He has never looked back. At Baseline Al Quoz, Diego works primarily with intermediate to advanced players who already have the fundamentals and want to sharpen the sharper things: court positioning, smash variations, reading an opponent's shoulders before the ball is even struck. His sessions are demanding and detail-heavy, built around match-play scenarios rather than isolated drills, because he believes competition players learn fastest under realistic pressure. Diego speaks English and Spanish fluently, switching between them mid-sentence depending on who he is correcting. He gets the best out of players who already compete or plan to, who want honest feedback rather than encouragement for its own sake, and who are willing to lose a few practice points in pursuit of a better long-term game.",
+    "specialties": [
+      "court positioning",
+      "smash variations",
+      "reading an opponent's shoulders",
+      "match-play scenarios"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 14,
+    "rate_per_hour_aed": 480,
+    "internal_phone": "+971-50-200-1000",
+    "internal_email": "d.fernandez@internal.baseline.example"
+  },
+  {
+    "id": "cch_layla_nasser",
+    "name": "Layla Nasser",
+    "branch_id": "br_alquoz",
+    "bio": "Layla Nasser came to padel after years of playing tennis socially, drawn in by the format's friendliness and quickly by its addictiveness. Six years ago she began coaching, initially helping friends learn the basics, and found she had a genuine gift for making total beginners feel comfortable on court from the very first session. Based at Baseline Al Quoz, Layla now focuses almost entirely on beginner players and runs several of the club's ladies-only sessions, which have become a firm favourite among members wanting a relaxed, judgement-free introduction to the game. Her teaching philosophy centres on patience and small wins: mastering the underarm serve before worrying about the smash, understanding court geometry before chasing pace. She speaks English and Arabic, moving easily between the two so nothing gets lost in translation during a lesson. Layla works best with newcomers who feel a little nervous about starting a new sport, and with groups of friends who want to learn together in a supportive, unhurried environment.",
+    "specialties": [
+      "beginners",
+      "ladies-only sessions"
+    ],
+    "languages": [
+      "English",
+      "Arabic"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 6,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-207-1137",
+    "internal_email": "l.nasser@internal.baseline.example"
+  },
+  {
+    "id": "cch_tomas_aguirre",
+    "name": "Tomas Aguirre",
+    "branch_id": "br_alquoz",
+    "bio": "Tomas Aguirre grew up around padel courts long before the sport found its footing outside its traditional strongholds, and that early immersion shows in the precision of his game. He spent his playing years competing on regional circuits, where a growing fascination with technique gradually eclipsed his appetite for pure competition. Eleven years ago he stepped fully into coaching, drawn by the challenge of breaking down mechanics that most players feel but can't quite explain. Based at Baseline Al Quoz, Tomas now works predominantly with intermediate and advanced players who already have a foundation but want to refine it into something sharper. His sessions favour detail over drama: wall rebounds, racket angles, footwork sequencing, the small adjustments that separate a good shot from an automatic one. He's equally comfortable coaching in English or Spanish, moving fluidly between the two depending on who's on court. He works best with players who are self-critical in a useful way, those who want honest feedback rather than encouragement alone, and who are willing to slow down technically before speeding up competitively.",
+    "specialties": [
+      "wall rebounds",
+      "racket angles",
+      "footwork sequencing"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 11,
+    "rate_per_hour_aed": 430,
+    "internal_phone": "+971-50-214-1274",
+    "internal_email": "t.aguirre@internal.baseline.example"
+  },
+  {
+    "id": "cch_omar_farouk",
+    "name": "Omar Farouk",
+    "branch_id": "br_alquoz",
+    "bio": "Omar Farouk grew up chasing a tennis ball around municipal courts before padel pulled him in for good, drawn by the faster rallies and the way the glass walls forced him to think a shot ahead. He's spent seven years coaching since then, the last stretch based at Baseline Al Quoz, where he's built a reputation as the coach parents ask for first. His own playing background in tennis and squash gave him a sharp eye for footwork and positioning, which now shows up in how patiently he breaks down the basics for newcomers and juniors alike. Omar's sessions favour repetition over lecture: short explanations, then plenty of reps, then feedback that's specific rather than general. He teaches comfortably in English and Arabic, switching naturally depending on who's on court, and he's especially good with nervous first-timers or kids still finding their coordination. Players who do best under him are those willing to be beginners for a while, happy to drill the unglamorous stuff before chasing winners. He measures progress in confidence as much as scoreline.",
+    "specialties": [
+      "footwork and positioning",
+      "nervous first-timers",
+      "juniors/kids coordination"
+    ],
+    "languages": [
+      "English",
+      "Arabic"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 7,
+    "rate_per_hour_aed": 320,
+    "internal_phone": "+971-50-221-1411",
+    "internal_email": "o.farouk@internal.baseline.example"
+  },
+  {
+    "id": "cch_sofia_marchetti",
+    "name": "Sofia Marchetti",
+    "branch_id": "br_alquoz",
+    "bio": "Sofia Marchetti grew up on the courts of northern Italy, where padel sat naturally alongside a childhood spent in athletics and competitive swimming. That dual grounding in racquet sport and physical conditioning shaped the coach she'd eventually become. After nine years working with players across the UAE, Sofia now leads fitness and conditioning programmes at Baseline Al Quoz, drawing on a background that blends technical padel instruction with sports science fundamentals. Her transition into coaching came from a simple observation: most amateur players hit a ceiling not because of technique, but because their bodies weren't prepared for the sport's stop-start intensity. Sofia's sessions focus on building the movement quality, agility and endurance that underpin better padel, regardless of a player's starting point. She works comfortably with complete beginners through to advanced competitors, tailoring conditioning loads to each individual while keeping sessions engaging rather than purely gruelling. Fluent in English and Italian, she's especially popular with players who want structured, measurable progress and enjoy understanding the reasoning behind every drill. Patient, precise and quietly demanding, Sofia gets the best from players who are willing to put in genuine physical effort.",
+    "specialties": [
+      "fitness and conditioning",
+      "technical padel instruction",
+      "sports science fundamentals"
+    ],
+    "languages": [
+      "English",
+      "Italian"
+    ],
+    "level_focus": "all_levels",
+    "years_experience": 9,
+    "rate_per_hour_aed": 380,
+    "internal_phone": "+971-50-228-1548",
+    "internal_email": "s.marchetti@internal.baseline.example"
+  },
+  {
+    "id": "cch_rashid_al_blooshi",
+    "name": "Rashid Al Blooshi",
+    "branch_id": "br_alquoz",
+    "bio": "Rashid grew up playing football on Al Quoz's sun-baked pitches before a friend dragged him onto a padel court four years ago, and he was hooked within a single rally. What started as a weekend hobby quickly became a second career once he noticed how many newcomers walked onto court looking lost and left grinning an hour later. That transformation is what drives him now. Rashid specialises in beginners and social sessions, breaking the game down into simple, forgiving steps rather than overwhelming new players with jargon. He teaches comfortably in both Arabic and English, switching seamlessly depending on who's in front of him, which puts nervous first-timers instantly at ease. His sessions favour laughter over intensity, though he's quietly meticulous about footwork and wall reads. Rashid works best with people who've never picked up a racket, groups of friends wanting a fun introduction, or anyone who tried padel once, felt intimidated, and wants a patient second attempt.",
+    "specialties": [
+      "beginners",
+      "social sessions"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 4,
+    "rate_per_hour_aed": 260,
+    "internal_phone": "+971-50-235-1685",
+    "internal_email": "r.blooshi@internal.baseline.example"
+  },
+  {
+    "id": "cch_nicolas_prado",
+    "name": "Nicolas Prado",
+    "branch_id": "br_alquoz",
+    "bio": "Nicolas spent much of his twenties on the professional and semi-professional padel circuit, where matches were won or lost on tactical discipline rather than raw power. Sixteen years into the sport, he's coached everywhere from club academies to national squads, and he brings that competitive rigour to every session at Al Quoz. His specialty is advanced play: court positioning, shot selection under pressure, and the mental chess of doubles strategy. Nicolas came to coaching almost by accident, mentoring younger teammates during his playing days, and found he loved dissecting a match more than playing it. He teaches in English and Spanish, drawing on tactical language from both traditions of the game. Expect video review, structured drills, and honest feedback rather than easy encouragement. Nicolas works best with competitive, established players preparing for tournaments or league matches who want their weaknesses found and fixed quickly. Casual hitters looking for a gentle knock will likely find him relentless, and he wouldn't have it any other way.",
+    "specialties": [
+      "court positioning",
+      "shot selection under pressure",
+      "doubles strategy"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "advanced",
+    "years_experience": 16,
+    "rate_per_hour_aed": 520,
+    "internal_phone": "+971-50-242-1822",
+    "internal_email": "n.prado@internal.baseline.example"
+  },
+  {
+    "id": "cch_hana_kimura",
+    "name": "Hana Kimura",
+    "branch_id": "br_alquoz",
+    "bio": "Hana's padel journey began on courts far from the Gulf, coaching junior tennis before padel's rapid rise pulled her fully into the sport eight years ago. She's built her career around young players and the technical foundations that let them grow into confident, adaptable competitors rather than one-trick players. At Baseline Al Quoz she runs junior programmes alongside sessions for adults moving from beginner into intermediate territory, always with an eye on clean technique over quick shortcuts. Hana speaks English and Japanese, and brings a quietly structured, detail-oriented style shaped by years of junior development work, where patience and repetition matter more than flair. She believes technique learned properly early on prevents years of bad habits later, and her drills reflect that unhurried, building-block approach. Hana works best with juniors just starting competitive play, parents looking for a structured pathway for their children, and beginner-to-intermediate adults who want their fundamentals taken seriously rather than rushed.",
+    "specialties": [
+      "junior development",
+      "technical foundations"
+    ],
+    "languages": [
+      "English",
+      "Japanese"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 8,
+    "rate_per_hour_aed": 340,
+    "internal_phone": "+971-50-249-1959",
+    "internal_email": "h.kimura@internal.baseline.example"
+  },
+  {
+    "id": "cch_miguel_santana",
+    "name": "Miguel Santana",
+    "branch_id": "br_jvc",
+    "bio": "Miguel learned padel on crowded courts back home, where matches were fast, physical, and unforgiving, and he carried that competitive edge into twelve years of coaching across two continents. Now based at Baseline JVC, he's known for a technical eye that catches the small mechanical faults most players never notice in their own game, from grip angle to split-step timing. Miguel moved into coaching after a knee injury shortened his own competitive ambitions, and he's since built a reputation for turning solid intermediate players into genuinely advanced ones. He teaches in English and Spanish, often demonstrating shots himself before breaking them into repeatable pieces. His sessions are structured and demanding, built around video feedback and deliberate practice rather than casual rallying. Miguel works best with intermediate players hungry to reach the next level and advanced players refining specific weaknesses ahead of competition. Those wanting a relaxed social hit might find his intensity a lot, but committed improvers tend to progress quickly under him.",
+    "specialties": [
+      "technical analysis",
+      "video feedback",
+      "deliberate practice"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 12,
+    "rate_per_hour_aed": 440,
+    "internal_phone": "+971-50-256-2096",
+    "internal_email": "m.santana@internal.baseline.example"
+  },
+  {
+    "id": "cch_fatima_al_zaabi",
+    "name": "Fatima Al Zaabi",
+    "branch_id": "br_jvc",
+    "bio": "Fatima took up padel later than most of her peers, discovering the sport through a ladies' social group and falling for its mix of strategy and community. Five years on, she's become one of Baseline JVC's most requested coaches for exactly that demographic, running ladies' sessions and beginner programmes with warmth and real patience. Her own path from complete beginner to confident club player shapes how she teaches: she remembers every awkward first volley and uses that memory to keep new players relaxed rather than self-conscious. Fatima speaks Arabic and English fluently, moving between them naturally within a single session so nothing gets lost for either group. Her philosophy centres on steady, judgement-free progress, celebrating small wins like a clean serve or a successful lob before adding complexity. Fatima works best with women new to racket sports, mixed-ability beginner groups, and anyone who felt overwhelmed elsewhere and wants a calmer, more supportive introduction to the game.",
+    "specialties": [
+      "ladies' sessions",
+      "beginner programmes",
+      "women new to racket sports",
+      "mixed-ability beginner groups"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 5,
+    "rate_per_hour_aed": 290,
+    "internal_phone": "+971-50-263-2233",
+    "internal_email": "f.zaabi@internal.baseline.example"
+  },
+  {
+    "id": "cch_andres_rivas",
+    "name": "Andres Rivas",
+    "branch_id": "br_jvc",
+    "bio": "Andres grew up chasing tennis balls around clay courts before padel pulled him in for good, and he spent the better part of a decade competing on regional circuits before hanging up his match shirt for a coaching bib. That competitive streak never left him. At Baseline JVC he now works chiefly with intermediate and advanced players who want to sharpen tactical awareness rather than just hit cleaner shots, breaking down positioning, shot selection and match temperament with the same intensity he once brought to tournaments. He also has a soft spot for junior development, having mentored several young players into their first competitive brackets. Andres teaches in both English and Spanish, switching effortlessly depending on who's on court, and his sessions tend to be structured, drill-heavy and unapologetically demanding. He works best with players who already have solid fundamentals and are hungry to compete, though patient juniors willing to put in repetition will find him an encouraging, detail-obsessed presence. Ten years in, he still gets a thrill from a well-executed bandeja.",
+    "specialties": [
+      "tactical awareness",
+      "positioning",
+      "shot selection",
+      "match temperament",
+      "junior development"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 10,
+    "rate_per_hour_aed": 400,
+    "internal_phone": "+971-50-270-2370",
+    "internal_email": "a.rivas@internal.baseline.example"
+  },
+  {
+    "id": "cch_karim_mansour",
+    "name": "Karim Mansour",
+    "branch_id": "br_jvc",
+    "bio": "Karim's introduction to padel came almost by accident, filling in for a friend's doubles match and staying on court long after everyone else had gone home. That instant affection for the game led him toward coaching within a couple of years, and he has spent the six seasons since building a reputation at Baseline JVC as the coach parents ask for by name. His focus sits squarely with juniors and kids, and beginners more broadly, where his patience and easy humour put nervous first-timers at ease almost immediately. Fluent in both Arabic and English, he moves seamlessly between the two mid-sentence, which families particularly appreciate during group sessions. His philosophy is simple: make the first ten sessions fun enough that a child asks to come back, and the technique will follow naturally. Karim works best with young beginners and complete newcomers of any age who need encouragement rather than intensity, favouring games and small challenges over rigid drilling. Watching a shy eight-year-old land their first proper volley remains, he says, the best part of his week.",
+    "specialties": [
+      "juniors",
+      "kids",
+      "beginners"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 6,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-277-2507",
+    "internal_email": "k.mansour@internal.baseline.example"
+  },
+  {
+    "id": "cch_elena_popova",
+    "name": "Elena Popova",
+    "branch_id": "br_jvc",
+    "bio": "Elena's background is as much in sports science as in padel itself, having spent years working as a fitness coach before padel's rapid rise in the region gave her a new arena to apply that expertise. She competed socially and regionally for several seasons, but it was the crossover between conditioning and racket sports that truly captured her, and she made the switch to full-time padel coaching seven years ago. At Baseline JVC she now works across all levels, from total beginners to club regulars looking to move better on court, with a particular gift for translating fitness principles into padel-specific footwork, balance and recovery between points. She teaches in English and Russian, and her sessions often blend conditioning drills with technical work so players leave both fitter and sharper. Her philosophy centres on sustainable improvement: building a body that can execute technique reliably rather than chasing quick fixes. Elena works particularly well with beginners nervous about fitness levels, and with any player wanting a more physically rounded approach to their game.",
+    "specialties": [
+      "padel-specific footwork",
+      "balance",
+      "recovery between points",
+      "conditioning drills"
+    ],
+    "languages": [
+      "English",
+      "Russian"
+    ],
+    "level_focus": "all_levels",
+    "years_experience": 7,
+    "rate_per_hour_aed": 330,
+    "internal_phone": "+971-50-284-2644",
+    "internal_email": "e.popova@internal.baseline.example"
+  },
+  {
+    "id": "cch_yousef_halabi",
+    "name": "Yousef Halabi",
+    "branch_id": "br_jvc",
+    "bio": "Yousef is the newest face among Baseline's coaching staff, but what he lacks in years he makes up for in enthusiasm, having thrown himself into padel the moment he first picked up a racket a few years ago. He came to coaching quickly, encouraged by senior coaches at Baseline JVC who noticed how naturally beginners gravitated toward his relaxed, sociable manner. Specialising in beginners and social play, Yousef's court is usually the liveliest one, filled with laughter, rallies that go on far longer than they should, and plenty of encouragement. Speaking both Arabic and English, he's equally comfortable running a first lesson for a nervous newcomer or hosting a mixed social session for returning players who just want a fun, low-pressure game. His teaching philosophy leans heavily on enjoyment first, technique second, believing players stick with padel because they love the feeling of a good rally, not because they've mastered perfect form. Yousef works best with true beginners and social groups after an easygoing, welcoming introduction to the sport.",
+    "specialties": [
+      "beginners",
+      "social play"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 3,
+    "rate_per_hour_aed": 240,
+    "internal_phone": "+971-50-291-2781",
+    "internal_email": "y.halabi@internal.baseline.example"
+  },
+  {
+    "id": "cch_pablo_ortega",
+    "name": "Pablo Ortega",
+    "branch_id": "br_yas",
+    "bio": "Pablo has spent fifteen years immersed in padel, first as a competitive player on the professional fringe circuit and later as one of the most sought-after advanced coaches in the region. His playing career took him through a string of tournaments before a series of long-standing injuries nudged him toward coaching, a transition he describes as trading one obsession for another. Based at Baseline Yas Island, he now works almost exclusively with advanced and competitive players, refining the finer margins that separate a good player from a winning one: court positioning, shot disguise, doubles chemistry and match-day composure. Teaching fluently in English and Spanish, Pablo brings a no-nonsense, analytical style to every session, often reviewing footage and discussing tactics as thoroughly as he runs drills. He has little patience for shortcuts but plenty for players committed to serious improvement. Pablo works best with experienced, competition-minded players already comfortable with the game's fundamentals who are chasing that final layer of tactical sharpness needed to win consistently against strong opposition.",
+    "specialties": [
+      "court positioning",
+      "shot disguise",
+      "doubles chemistry",
+      "match-day composure"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "advanced",
+    "years_experience": 15,
+    "rate_per_hour_aed": 560,
+    "internal_phone": "+971-50-298-2918",
+    "internal_email": "p.ortega@internal.baseline.example"
+  },
+  {
+    "id": "cch_noor_al_hashimi",
+    "name": "Noor Al Hashimi",
+    "branch_id": "br_yas",
+    "bio": "Noor grew up playing racquet sports across the Emirates before padel took hold of her attention some eight years ago, and she has been on court teaching ever since. She started as a hitting partner for friends at weekend social sessions and found she had a natural knack for breaking down the game into simple, digestible pieces, which pulled her toward coaching full time. Fluent in both Arabic and English, Noor works comfortably with players from any background, though she has built a particular following among ladies' groups looking to move from beginner shakiness to confident, consistent intermediate play. Her sessions favour repetition drills, calm correction and plenty of encouragement over shouted instruction. She believes padel should feel social and rewarding long before it feels competitive. Noor is best suited to newer players and improvers who want a patient, structured hand guiding them through footwork, wall play and positioning, at a pace that respects where they actually are rather than where a syllabus says they should be.",
+    "specialties": [
+      "footwork",
+      "wall play",
+      "positioning"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 8,
+    "rate_per_hour_aed": 360,
+    "internal_phone": "+971-50-305-3055",
+    "internal_email": "n.hashimi@internal.baseline.example"
+  },
+  {
+    "id": "cch_lucas_benitez",
+    "name": "Lucas Benitez",
+    "branch_id": "br_yas",
+    "bio": "Lucas came up through competitive padel back home, spending over a decade on court before shifting his focus toward coaching, and he now carries thirteen years of combined playing and teaching experience into every session at Yas Island. His own game was built on technical precision and sharp tactical awareness, and that is exactly what he now drills into intermediate and advanced players hungry to refine their level. Speaking both English and Spanish fluently, Lucas moves easily between explaining a concept and demonstrating it at speed, which players tend to find clarifies things fast. His coaching leans heavily on video review, shot selection and reading the court, rather than simply hitting more balls harder. He is direct, detail-oriented and unafraid to challenge players who are coasting on natural ability without structure. Lucas works best with committed intermediate to advanced players who already have the basics settled and are chasing that next tactical edge, the kind of player who wants homework, not just a friendly hour on court.",
+    "specialties": [
+      "video review",
+      "shot selection",
+      "reading the court"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 13,
+    "rate_per_hour_aed": 470,
+    "internal_phone": "+971-50-312-3192",
+    "internal_email": "l.benitez@internal.baseline.example"
+  },
+  {
+    "id": "cch_ahmed_sultan",
+    "name": "Ahmed Sultan",
+    "branch_id": "br_yas",
+    "bio": "Ahmed's padel journey began almost by accident, filling in for a friend's group lesson nearly a decade ago, and he discovered a genuine love of teaching that has kept him on court ever since, now with nine years of coaching behind him. His focus has always stayed close to fundamentals: grip, swing path, footwork, the technical scaffolding that everything else in padel is built on. Comfortable teaching in both Arabic and English, Ahmed has a particular gift for putting complete beginners at ease, breaking the game down into small wins that build real confidence quickly. He is patient without being slow, correcting technique gently and repeatedly until it sticks, and he keeps sessions light-hearted so nerves never get in the way of learning. Ahmed works best with first-time players and those still shaping their basic technique, especially anyone who has felt intimidated by padel's pace elsewhere. Under his guidance, that nervousness tends to disappear within a handful of sessions, replaced by steady, technically sound progress.",
+    "specialties": [
+      "technique",
+      "beginners"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 9,
+    "rate_per_hour_aed": 370,
+    "internal_phone": "+971-50-319-3329",
+    "internal_email": "a.sultan@internal.baseline.example"
+  },
+  {
+    "id": "cch_chiara_rossi",
+    "name": "Chiara Rossi",
+    "branch_id": "br_yas",
+    "bio": "Chiara arrived at padel through a background in fitness training, and it shows in the energy she brings to every session at Yas Island. After six years coaching, she has built a reputation for sessions that leave players fitter, sharper and noticeably more mobile around the court, not just technically tidier. Speaking English and Italian, she moves easily between both, and has become a firm favourite among ladies' groups who appreciate her upbeat, no-nonsense approach to combining conditioning with genuine padel skill. Chiara designs her sessions around movement quality, agility and stamina alongside stroke work, believing that a stronger body underpins a stronger game at every level. She works with all levels, from complete beginners wanting a fun introduction to fitter movement patterns, through to established players looking to sharpen their physical edge. Her coaching style is encouraging and high-energy, with a good dose of humour, making her especially well suited to players who want their padel lesson to double as a proper workout.",
+    "specialties": [
+      "fitness",
+      "ladies"
+    ],
+    "languages": null,
+    "level_focus": "all_levels",
+    "years_experience": 6,
+    "rate_per_hour_aed": 320,
+    "internal_phone": "+971-50-326-3466",
+    "internal_email": "c.rossi@internal.baseline.example"
+  },
+  {
+    "id": "cch_bilal_chaudhry",
+    "name": "Bilal Chaudhry",
+    "branch_id": "br_yas",
+    "bio": "Bilal's own introduction to padel came through junior coaching programmes, and he quickly realised that working with younger players suited both his temperament and his energy levels, a discovery that shaped his entire coaching path over the five years since. He speaks English, Urdu and Hindi, which lets him connect easily with a genuinely mixed group of young players and their families at Yas Island. His sessions are built around games, challenges and plenty of positive reinforcement, keeping children engaged while quietly building real technique underneath the fun. Bilal has a knack for reading which kids need more encouragement and which need more structure, adjusting on the fly without losing the group's attention. He focuses squarely on beginners, particularly juniors and younger children taking their first swings at the sport, and he is best suited to families looking for a coach who treats padel as something to enjoy first and master gradually. Parents often note how quickly their children look forward to his sessions each week.",
+    "specialties": [
+      "juniors",
+      "kids"
+    ],
+    "languages": [
+      "English",
+      "Urdu",
+      "Hindi"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 5,
+    "rate_per_hour_aed": 280,
+    "internal_phone": "+971-50-333-3603",
+    "internal_email": "b.chaudhry@internal.baseline.example"
+  },
+  {
+    "id": "cch_reem_darwish",
+    "name": "Reem Darwish",
+    "branch_id": "br_yas",
+    "bio": "Reem Darwish grew up chasing tennis balls around Abu Dhabi before padel pulled her in for good, drawn by the glass walls and the constant chatter between points. She spent her early twenties playing socially before realising she loved the teaching moments more than the winning ones, and made the switch to coaching four years ago at Baseline Yas Island. Reem's sessions are built for people who have never picked up a racket, or who last played at a birthday party and want to actually understand the game. She keeps things relaxed and conversational, moving comfortably between Arabic and English so nerves never get in the way of learning. Expect a lot of laughter, plenty of repetition on the basics, and genuine patience with mistakes. She's especially good with groups of friends or colleagues booking their first social sessions together, and she has a knack for making even the most hesitant beginner feel like a padel player by the end of the hour.",
+    "specialties": [
+      "beginners",
+      "social"
+    ],
+    "languages": null,
+    "level_focus": "beginner",
+    "years_experience": 4,
+    "rate_per_hour_aed": 270,
+    "internal_phone": "+971-50-340-3740",
+    "internal_email": "r.darwish@internal.baseline.example"
+  },
+  {
+    "id": "cch_marwan_haddad",
+    "name": "Marwan Haddad",
+    "branch_id": "br_khalifa",
+    "bio": "Marwan Haddad has spent nine years on court at Baseline Khalifa City, and in that time he's coached everyone from nervous first-timers to sharp juniors chasing their first tournament win. He played competitively through his teens before a shoulder injury nudged him toward coaching, and he's never looked back. Marwan is known for breaking technique down into small, digestible pieces, whether he's correcting a junior's grip or explaining wall play to an adult beginner for the first time. Fluent in both Arabic and English, he moves easily between generations and backgrounds, which suits his mixed roster of family bookings and youth groups. His philosophy centres on fundamentals done properly rather than flashy shortcuts, believing that a clean, repeatable technique pays off far more than chasing power too early. He works best with players ready to put in the reps, particularly those bridging the gap from beginner to intermediate, and with young players whose habits are still being formed on court.",
+    "specialties": [
+      "beginners",
+      "juniors",
+      "technique"
+    ],
+    "languages": [
+      "English",
+      "Arabic"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 9,
+    "rate_per_hour_aed": 350,
+    "internal_phone": "+971-50-347-3877",
+    "internal_email": "m.haddad@internal.baseline.example"
+  },
+  {
+    "id": "cch_javier_molina",
+    "name": "Javier Molina",
+    "branch_id": "br_khalifa",
+    "bio": "Javier Molina brought fourteen years of competitive padel experience with him from Spain, including a stretch on the professional circuit before injuries and, frankly, a growing love of coaching pulled him toward the sideline. Based at Baseline Khalifa City, he now works almost exclusively with advanced players and competitive squads preparing for tournaments, treating every session like preparation for a real match rather than a casual hit. Javier is direct, detail-obsessed, and unapologetically demanding, breaking down footwork, shot selection, and match tactics with the same intensity he once brought to his own matches. He teaches in both English and Spanish, and his sessions often include video review, drills under pressure, and honest feedback that doesn't sugarcoat weaknesses. He works best with players who already have solid technique and want to sharpen their competitive edge, particularly those aiming for club championships or regional tournaments. Casual beginners tend to find him intense; serious competitors tend to find him exactly what they've been missing.",
+    "specialties": [
+      "advanced",
+      "competition"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "advanced",
+    "years_experience": 14,
+    "rate_per_hour_aed": 490,
+    "internal_phone": "+971-50-354-4014",
+    "internal_email": "j.molina@internal.baseline.example"
+  },
+  {
+    "id": "cch_aisha_al_marri",
+    "name": "Aisha Al Marri",
+    "branch_id": "br_khalifa",
+    "bio": "Aisha Al Marri came to padel later than most, discovering the sport through a ladies' social league and falling for it almost immediately. Six years on, she coaches at Baseline Khalifa City with a particular focus on beginners and women's sessions, having built a reputation as the coach who makes first-timers feel instantly comfortable on court. Her own path from complete novice to confident player shapes everything about how she teaches: patient, encouraging, and full of practical tips that come from having made the same mistakes herself. Aisha runs her sessions in both Arabic and English, adapting easily to whichever language puts a player more at ease. She's especially popular with women's groups and beginners who felt intimidated by other sports and want a lower-pressure entry point into padel. Her courts tend to be relaxed but genuinely productive, with steady technical progress disguised as an enjoyable hour with friends. Players who want encouragement over intensity gravitate naturally toward her.",
+    "specialties": [
+      "ladies",
+      "beginners"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 6,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-361-4151",
+    "internal_email": "a.marri@internal.baseline.example"
+  },
+  {
+    "id": "cch_ravi_menon",
+    "name": "Ravi Menon",
+    "branch_id": "br_khalifa",
+    "bio": "Ravi Menon has spent eight years coaching at Baseline Khalifa City, building a strong following among juniors and technique-focused adults who want to understand the mechanics behind their shots rather than just hit the ball harder. He played competitively growing up before an early interest in sports science pulled him toward coaching, and that analytical streak still shows in how he breaks down every stroke into clear, teachable parts. Ravi is fluent in English, Hindi, and Malayalam, which makes him a natural fit for Khalifa City's diverse junior programmes and family bookings. His teaching style is methodical and encouraging, favouring measurable progress over quick fixes, and he's particularly effective with young players developing foundational skills as well as adults moving from beginner to intermediate level. Sessions with Ravi often include drills aimed at footwork and racket control, with plenty of explanation along the way. Players who like understanding the 'why' behind a technique tend to get the most out of working with him.",
+    "specialties": [
+      "technique",
+      "juniors"
+    ],
+    "languages": null,
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 8,
+    "rate_per_hour_aed": 330,
+    "internal_phone": "+971-50-368-4288",
+    "internal_email": "r.menon@internal.baseline.example"
+  },
+  {
+    "id": "cch_salem_al_ketbi",
+    "name": "Salem Al Ketbi",
+    "branch_id": "br_khalifa",
+    "bio": "Salem Al Ketbi grew up chasing tennis balls before padel took hold across the region, and he made the switch early enough to ride the sport's rise from the front row. A decade of tournament play sharpened his eye for patterns others miss, and these days he's known at Baseline Khalifa City for breaking down matches point by point until the tactics feel obvious rather than mysterious. He moved into coaching almost by accident, helping club mates prepare for a regional event, and found he preferred the chess of it to the competing. Salem works comfortably in Arabic or English, switching mid-sentence when it helps a point land. His sessions lean heavily on match situations, positioning, and shot selection under pressure rather than pure technique drilling. He's at his best with intermediate to advanced players who already have the strokes and want to know why the best pairs win the points that matter. Expect video review, honest feedback, and a genuine appetite for competition.",
+    "specialties": [
+      "competition",
+      "tactics"
+    ],
+    "languages": null,
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 11,
+    "rate_per_hour_aed": 420,
+    "internal_phone": "+971-50-375-4425",
+    "internal_email": "s.ketbi@internal.baseline.example"
+  },
+  {
+    "id": "cch_marta_vidal",
+    "name": "Marta Vidal",
+    "branch_id": "br_khalifa",
+    "bio": "Marta Vidal arrived in padel through athletics, spending years building conditioning programmes for racket sport players before picking up a bat herself and getting hooked. That background shows in how she coaches at Baseline Khalifa City, where fitness and movement quality sit at the centre of everything she teaches. Marta speaks English and Spanish fluently and moves between them depending on who's on court, though her cues around footwork and recovery translate regardless of language. She came to padel coaching wanting to fix a gap she kept seeing, players with decent technique who tired or broke down physically in the closing stages of matches. Her sessions blend on-court movement work with practical conditioning, always tied back to how it shows up in actual points rather than abstract fitness for its own sake. Marta works with all levels, from newcomers building basic movement patterns to competitive players fine-tuning recovery between points, and she's particularly effective with anyone who wants to feel less gassed by the third set.",
+    "specialties": [
+      "fitness",
+      "conditioning"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "all_levels",
+    "years_experience": 7,
+    "rate_per_hour_aed": 340,
+    "internal_phone": "+971-50-382-4562",
+    "internal_email": "m.vidal@internal.baseline.example"
+  },
+  {
+    "id": "cch_hamad_al_dhaheri",
+    "name": "Hamad Al Dhaheri",
+    "branch_id": "br_alain",
+    "bio": "Hamad Al Dhaheri has spent his life around Al Ain's sporting community, first as a football coach for youth teams before padel pulled him across sports entirely. He picked up a racket to join friends for a social hit and stayed for what he calls the friendliest competitive sport he's played. That warmth defines his coaching now at Baseline Al Ain, where he's built a reputation as the coach who makes total beginners feel instantly comfortable on court. Hamad teaches in Arabic and English, often within the same session, and keeps his sessions light on jargon and heavy on encouragement. His philosophy is simple: people learn fastest when they're relaxed and having fun, so his classes mix genuine instruction with plenty of games and social play. He specialises entirely in beginners and social groups, the sort of players trying padel for the first time or returning after years away. If you've never held a padel racket, or you're bringing a group of friends who haven't either, Hamad is the coach built for that first step.",
+    "specialties": [
+      "beginners",
+      "social"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 5,
+    "rate_per_hour_aed": 250,
+    "internal_phone": "+971-50-389-4699",
+    "internal_email": "h.dhaheri@internal.baseline.example"
+  },
+  {
+    "id": "cch_gonzalo_ferrer",
+    "name": "Gonzalo Ferrer",
+    "branch_id": "br_alain",
+    "bio": "Gonzalo Ferrer built his playing career on the professional circuit back home before relocating to the UAE, bringing over a decade of competitive experience with him. Injuries eventually pushed him off court more than he liked, and coaching became the natural next chapter, letting him stay close to the game at the level he'd always played it. At Baseline Al Ain he's known specifically for technique, the sort of granular stroke correction that takes a functional shot and turns it into a reliable weapon. Gonzalo teaches in English and Spanish, and his sessions have a distinctly technical feel, full of repetition, video comparison, and small adjustments that compound over weeks. He works almost exclusively with intermediate to advanced players, the ones who've plateaued and can feel something isn't quite right in their swing but can't identify what. Patience is his trademark; he'd rather spend a month fixing a grip properly than paper over it with tactics. Players who want precision, who are willing to slow down before they speed up, get the most from him.",
+    "specialties": [
+      "technique",
+      "advanced"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 12,
+    "rate_per_hour_aed": 400,
+    "internal_phone": "+971-50-396-4836",
+    "internal_email": "g.ferrer@internal.baseline.example"
+  },
+  {
+    "id": "cch_mariam_al_ameri",
+    "name": "Mariam Al Ameri",
+    "branch_id": "br_alain",
+    "bio": "Mariam Al Ameri took up padel as a teenager, drawn in by a ladies' social league before she'd ever considered coaching as a path. She kept playing through university and started helping younger players informally, coaching juniors at weekend clinics almost before she realised that's what she was doing. That grounding shapes her work now at Baseline Al Ain, where she's built her coaching entirely around ladies' sessions and junior programmes. Mariam teaches in Arabic and English, adapting easily for family groups where parents and children are learning side by side. Her philosophy centres on confidence first, technique second, believing that players who feel comfortable and unselfconscious on court improve far faster than those drilled too hard too early. She focuses on beginners exclusively, whether that's a group of women trying padel for the first time or juniors picking up a racket for the very first session. Patient, encouraging, and quick to celebrate small wins, Mariam is best suited to anyone starting from zero who wants a genuinely supportive introduction to the sport.",
+    "specialties": [
+      "ladies",
+      "juniors"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 4,
+    "rate_per_hour_aed": 260,
+    "internal_phone": "+971-50-403-4973",
+    "internal_email": "m.ameri@internal.baseline.example"
+  },
+  {
+    "id": "cch_ibrahim_saleh",
+    "name": "Ibrahim Saleh",
+    "branch_id": "br_alain",
+    "bio": "Ibrahim Saleh grew up hitting tennis balls against the wall of his family's garage in Al Ain before switching codes to padel almost a decade ago, drawn in by the faster exchanges and the social side of the game. He spent his early twenties competing in local leagues before realising his real satisfaction came from watching others improve rather than chasing his own ranking. Over seven years on court, he has built a reputation for breaking down technique into small, digestible pieces, particularly for players picking up a racket for the first time. Fluent in both Arabic and English, Ibrahim moves easily between explaining grip changes to a nervous newcomer and cracking jokes to keep a session relaxed. His philosophy centres on patience: he believes confidence comes before consistency, and consistency before power. He works best with beginners and early intermediates who want a calm, structured introduction to the sport, and he takes real pride in seeing a hesitant first-timer eventually rally with control and a smile.",
+    "specialties": [
+      "technique",
+      "beginners"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 7,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-410-5110",
+    "internal_email": "i.saleh@internal.baseline.example"
+  },
+  {
+    "id": "cch_noura_al_suwaidi",
+    "name": "Noura Al Suwaidi",
+    "branch_id": "br_majaz",
+    "bio": "Noura Al Suwaidi discovered padel almost by accident, joining a friend's ladies session at Al Majaz and staying long after the friend had moved on to other hobbies. What began as a casual weekend habit turned into serious study of the game, and within a couple of years she was coaching the very sessions she once attended as a guest. With eight years of experience now behind her, she has become one of the club's most requested coaches for women starting out or returning to sport after time away. Noura teaches in both Arabic and English, adapting her explanations to whatever puts a player most at ease. Her approach is warm but exacting, built around repetition, encouragement, and an insistence that footwork matters as much as the swing itself. She is happiest working with beginner and intermediate ladies groups, where trust builds quickly and progress becomes a shared achievement rather than an individual pursuit. Many of her students describe her court as the friendliest place to fail forward at Baseline Al Majaz.",
+    "specialties": [
+      "ladies",
+      "beginners"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 8,
+    "rate_per_hour_aed": 330,
+    "internal_phone": "+971-50-417-5247",
+    "internal_email": "n.suwaidi@internal.baseline.example"
+  },
+  {
+    "id": "cch_shaikha_al_qasimi",
+    "name": "Shaikha Al Qasimi",
+    "branch_id": "br_majaz",
+    "bio": "Shaikha Al Qasimi came to padel through squash, a sport she played competitively through her school years before a shoulder injury pushed her toward something gentler on the joints but no less demanding tactically. She found padel's angles and wall play suited her instincts immediately, and coaching followed naturally once teammates began asking her to explain what she saw before they did. Six years into her coaching career at Baseline Al Majaz, she specialises in ladies sessions for those already comfortable with the basics and ready to sharpen positioning, shot selection, and net play. She teaches fluently in Arabic and English, often switching mid-sentence depending on who is listening. Shaikha's philosophy leans on match awareness over raw technique: she wants players thinking a shot ahead rather than simply reacting. She works best with beginner to intermediate players who have some court time behind them and are hungry to understand the why behind each movement, not just the how.",
+    "specialties": [
+      "ladies",
+      "intermediate"
+    ],
+    "languages": null,
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 6,
+    "rate_per_hour_aed": 310,
+    "internal_phone": "+971-50-424-5384",
+    "internal_email": "s.qasimi@internal.baseline.example"
+  },
+  {
+    "id": "cch_ricardo_duarte",
+    "name": "Ricardo Duarte",
+    "branch_id": "br_majaz",
+    "bio": "Ricardo Duarte spent over a decade on the competitive padel circuit before joining Baseline Al Majaz, playing tournaments across several countries and testing himself against some of the sport's sharpest minds. Coaching found him almost by necessity, as fellow players began asking for feedback on match footage and tactical decisions, and he realised he enjoyed dissecting a point as much as playing one. With thirteen years of experience spanning both playing and coaching, he now focuses exclusively on advanced players and those preparing for competition, from club tournaments to more serious regional events. Fluent in English and Portuguese, Ricardo brings a direct, no-nonsense coaching style shaped by years of high-pressure matches. His philosophy is built on repetition under pressure, treating practice points as seriously as match points so that composure becomes habitual rather than hoped for. He works best with committed, technically sound players looking to close the gap between training form and competition performance, and he has little patience for shortcuts.",
+    "specialties": [
+      "advanced",
+      "competition"
+    ],
+    "languages": [
+      "English",
+      "Portuguese"
+    ],
+    "level_focus": "advanced",
+    "years_experience": 87,
+    "rate_per_hour_aed": 450,
+    "internal_phone": "+971-50-431-5521",
+    "internal_email": "r.duarte@internal.baseline.example"
+  },
+  {
+    "id": "cch_zayed_al_nuaimi",
+    "name": "Zayed Al Nuaimi",
+    "branch_id": "br_majaz",
+    "bio": "Zayed Al Nuaimi still remembers being handed his first padel racket as a child at a Baseline holiday camp, an experience that stuck with him long after he moved on to studying sports science. Returning to the club a few years later as a coach felt less like a career change and more like completing a loop, and he has spent five years since working almost exclusively with the club's youngest members. Specialising in juniors and kids, Zayed teaches in both Arabic and English, keeping instructions short, visual, and full of energy to match young attention spans. His philosophy treats fun as the foundation of everything else, believing that children who enjoy their first sessions on court are the ones who stick with the sport long enough to genuinely improve. Games, small challenges, and plenty of encouragement feature heavily in his classes. He works best with beginner-level children and young players, particularly those trying padel for the very first time, and takes pride in being the coach who makes that first hour memorable.",
+    "specialties": [
+      "juniors",
+      "kids"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 5,
+    "rate_per_hour_aed": 270,
+    "internal_phone": "+971-50-438-5658",
+    "internal_email": "z.nuaimi@internal.baseline.example"
+  },
+  {
+    "id": "cch_amina_belhaj",
+    "name": "Amina Belhaj",
+    "branch_id": "br_majaz",
+    "bio": "Amina Belhaj grew up chasing tennis balls around community courts before padel pulled her in for good, drawn by the social buzz and the tactical puzzle packed into a smaller frame. She spent her early twenties playing recreational leagues before realising that her real talent lay in explaining the game rather than winning it outright, and she moved into coaching four years ago at Baseline Al Majaz. Amina's sessions are unhurried and encouraging, built around the idea that confidence with the wall and the serve matters more than early flair. She works comfortably in Arabic, French, or English, switching between them mid-rally without breaking a beginner's concentration, which makes her a favourite for ladies' clinics and first-timers who feel self-conscious on court. She has a particular gift for calming nervous newcomers and turning awkward first sessions into ones people want to repeat. If you have never held a padel racket, or you are returning to sport after a long break, Amina is the coach who will make the first month feel achievable rather than intimidating.",
+    "specialties": [
+      "beginners",
+      "ladies"
+    ],
+    "languages": [
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 4,
+    "rate_per_hour_aed": 260,
+    "internal_phone": "+971-50-445-5795",
+    "internal_email": "a.belhaj@internal.baseline.example"
+  },
+  {
+    "id": "cch_carlos_ibanez",
+    "name": "Carlos Ibanez",
+    "branch_id": "br_majaz",
+    "bio": "Carlos Ibanez played competitive padel across Spain for the best part of a decade, moving through club leagues and regional tournaments before a persistent shoulder issue nudged him towards coaching rather than retirement. That competitive background shows in how he teaches at Baseline Al Majaz, where his sessions are structured, demanding, and unapologetically focused on detail: footwork patterns, wall rebounds, shot selection under pressure. Carlos speaks English and Spanish fluently and uses both to break down tactics with a precision that intermediate and advanced players tend to appreciate immediately. He has little interest in flashy drills for their own sake, preferring to build a player's decision-making so that technique holds up in match conditions rather than just on a quiet practice court. Players who already have the basics down and want to sharpen positioning, net play, and doubles strategy get the most out of his coaching. He is direct, sometimes blunt, but consistently generous with feedback for those serious about improving their competitive game.",
+    "specialties": [
+      "technique",
+      "tactics"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 10,
+    "rate_per_hour_aed": 390,
+    "internal_phone": "+971-50-452-5932",
+    "internal_email": "c.ibanez@internal.baseline.example"
+  },
+  {
+    "id": "cch_saif_al_shamsi",
+    "name": "Saif Al Shamsi",
+    "branch_id": "br_ajman",
+    "bio": "Saif is the newest face among Baseline's coaching staff, but what he lacks in years he makes up for in enthusiasm, having thrown himself into padel the moment he first picked up a racket a few years ago. He came to coaching quickly, encouraged by senior coaches at Baseline JVC who noticed how naturally beginners gravitated toward his relaxed, sociable manner. Specialising in beginners and social play, Saif's court is usually the liveliest one, filled with laughter, rallies that go on far longer than they should, and plenty of encouragement. Speaking both Arabic and English, he's equally comfortable running a first lesson for a nervous newcomer or hosting a mixed social session for returning players who just want a fun, low-pressure game. His teaching philosophy leans heavily on enjoyment first, technique second, believing players stick with padel because they love the feeling of a good rally, not because they've mastered perfect form. Saif works best with true beginners and social groups after an easygoing, welcoming introduction to the sport.",
+    "specialties": [
+      "beginners",
+      "social"
+    ],
+    "languages": null,
+    "level_focus": "beginner",
+    "years_experience": 3,
+    "rate_per_hour_aed": 220,
+    "internal_phone": "+971-50-459-6069",
+    "internal_email": "s.shamsi@internal.baseline.example"
+  },
+  {
+    "id": "cch_valentina_cruz",
+    "name": "Valentina Cruz",
+    "branch_id": "br_ajman",
+    "bio": "Valentina Cruz built her playing career on clay and hard courts back home before switching codes to padel almost a decade ago, quickly finding that the faster, more tactical format suited her instincts better than traditional tennis ever had. She has spent nine years coaching since then, the last several at Baseline Ajman Corniche, where she has become known for her sharp eye on technique and her enthusiasm for working with younger players. Valentina teaches in English and Spanish, tailoring her language and pace depending on whether she is guiding a nervous junior or a returning adult player rebuilding their swing. Her coaching philosophy centres on clean fundamentals first: grip, stance, and controlled shot-making, built up gradually so that more advanced tactics have something solid to sit on. She is particularly effective with players moving from beginner into intermediate territory, spotting the small technical habits that hold people back and correcting them without dampening enthusiasm. Juniors and adults alike tend to describe her sessions as encouraging, technically sharp, and quietly thorough.",
+    "specialties": [
+      "technique",
+      "juniors"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 9,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-466-6206",
+    "internal_email": "v.cruz@internal.baseline.example"
+  },
+  {
+    "id": "cch_hassan_nofal",
+    "name": "Hassan Nofal",
+    "branch_id": "br_ajman",
+    "bio": "Hassan Nofal came to padel through years of coaching youth football, and when a knee injury ended his own playing ambitions on the pitch, he found in padel a sport he could still compete in and, more importantly, one he loved teaching to children. Five years into coaching at Baseline Ajman Corniche, he has built a reputation as the go-to instructor for juniors and kids' programmes, running sessions in both Arabic and English so that young players and their parents are equally comfortable. Hassan's approach favours games and challenges over repetitive drills, believing that children learn footwork and racket control far faster when they are having fun and barely notice they are training. He is endlessly patient with short attention spans and takes real pride in tracking a child's progress over months rather than single sessions. Families looking for a coach who understands how to keep young beginners engaged, safe, and steadily improving tend to find Hassan's classes the easiest entry point into the sport for kids of almost any age.'",
+    "specialties": [
+      "juniors",
+      "kids"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 87,
+    "rate_per_hour_aed": 240,
+    "internal_phone": "+971-50-473-6343",
+    "internal_email": "h.nofal@internal.baseline.example"
+  },
+  {
+    "id": "cch_dina_kamal",
+    "name": "Dina Kamal",
+    "branch_id": "br_ajman",
+    "bio": "Dina Kamal grew up playing racquet sports along the Corniche long before padel had a court to call its own in the emirate, switching codes the moment she first felt the double bounce off the glass. What began as a curiosity became a six-year coaching career built almost entirely around welcoming newcomers, particularly women stepping onto a court for the first time. Comfortable teaching in both Arabic and English, she moves fluidly between the two mid-rally, translating instructions so nothing gets lost between explanation and execution. Her sessions are unhurried and encouraging, built on the belief that confidence arrives before consistency, and that a beginner who enjoys their first hour is far more likely to return for a second. Dina works best with players who feel a little apprehensive about starting, especially in ladies-only groups where the pace can be gentler and the questions more open. Patient, warm, and endlessly repeatable in her explanations, she has a knack for making the geometry of the court feel obvious rather than intimidating.",
+    "specialties": [
+      "ladies",
+      "beginners"
+    ],
+    "languages": [
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 6,
+    "rate_per_hour_aed": 250,
+    "internal_phone": "+971-50-480-6480",
+    "internal_email": "d.kamal@internal.baseline.example"
+  },
+  {
+    "id": "cch_adam_whitfield",
+    "name": "Adam Whitfield",
+    "branch_id": "br_rak",
+    "bio": "Adam Whitfield discovered padel almost by accident, filling in for a friend at a mixed social match and never quite leaving the court again. Seven years on, he has built a coaching identity around exactly that spirit of accidental discovery, specialising in beginners and social players who want padel to feel like a good night out as much as a workout. English is his only language on court, but it rarely needs backup, delivered with the sort of easy humour that puts nervous first-timers at ease within minutes. His philosophy is simple: rallies before rules, fun before form, and technical correction only once someone is actually enjoying themselves. Sessions with Adam tend to be loud, sociable, and light on jargon, favouring shadow drills and mini-games over lengthy explanations. He works best with groups rather than solitary improvers, particularly those coming along for a laugh with colleagues or friends, and he has a genuine gift for turning a slightly awkward first session into a standing weekly booking.",
+    "specialties": [
+      "beginners",
+      "social"
+    ],
+    "languages": [
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 7,
+    "rate_per_hour_aed": 300,
+    "internal_phone": "+971-50-487-6617",
+    "internal_email": "a.whitfield@internal.baseline.example"
+  },
+  {
+    "id": "cch_maya_khoury",
+    "name": "Maya Khoury",
+    "branch_id": "br_rak",
+    "bio": "Maya Khoury's playing career took her across several countries before padel became her sole focus, and that well-travelled background shows in a coaching style that draws on French, Arabic, and English almost interchangeably depending on who is stood opposite her. Eight years of coaching have sharpened a particular specialism in technique, especially for women moving from complete beginner into genuinely competitive intermediate play. She came to coaching after realising she preferred dissecting a swing to perfecting her own, and her sessions reflect that analytical streak, full of small adjustments to grip, footwork, and racquet face that compound quickly into real improvement. Maya works best with players who have got past the basics and are hungry for detail, the ones asking why a shot didn't work rather than just whether it did. Her ladies-focused technique clinics have become something of a fixture at the Marina, prized for their clarity and for Maya's ability to explain the same correction three different ways until it finally clicks.",
+    "specialties": [
+      "ladies",
+      "technique"
+    ],
+    "languages": [
+      "Arabic",
+      "English",
+      "French"
+    ],
+    "level_focus": "beginner_to_intermediate",
+    "years_experience": 8,
+    "rate_per_hour_aed": 320,
+    "internal_phone": "+971-50-494-6754",
+    "internal_email": "m.khoury@internal.baseline.example"
+  },
+  {
+    "id": "cch_sergio_lima",
+    "name": "Sergio Lima",
+    "branch_id": "br_rak",
+    "bio": "Sergio Lima spent over a decade competing on padel courts before he ever picked up a coaching whistle, and eleven years into his coaching career, that competitive instinct still shapes everything he teaches. Fluent in English and Portuguese, he brings a no-nonsense, results-driven approach to advanced players and anyone eyeing serious tournament play, treating every session like preparation for a match rather than a casual hit. His philosophy centres on pressure: recreating it in training so it feels familiar in competition, and building tactical awareness alongside raw shot-making. Sergio has little patience for aimless drilling, preferring sharp, purposeful sessions that mimic real point structures and force decision-making under fatigue. He works best with intermediate-to-advanced players who already have solid fundamentals and want to sharpen their competitive edge, particularly those preparing for club tournaments or ladder matches. Expect direct feedback, high intensity, and a coach who measures success by what happens in matches, not in the rhythm of a friendly practice session.",
+    "specialties": [
+      "advanced",
+      "competition"
+    ],
+    "languages": null,
+    "level_focus": "intermediate_to_advanced",
+    "years_experience": 11,
+    "rate_per_hour_aed": 410,
+    "internal_phone": "+971-50-501-6891",
+    "internal_email": "s.lima@internal.baseline.example"
+  },
+  {
+    "id": "cch_khalid_al_mazrouei",
+    "name": "Khalid Al Mazrouei",
+    "branch_id": "br_rak",
+    "bio": "Khalid Al Mazrouei started out coaching junior football before padel pulled him across to the glass courts at the Marina, and four years in, that background with young players remains central to how he teaches. Speaking both Arabic and English, he has built a reputation for sessions that keep children and total beginners genuinely engaged, using games and small challenges rather than long-winded technical explanations. His philosophy leans heavily on encouragement and repetition, believing that young or new players learn fastest when mistakes feel low-stakes and progress is visibly celebrated. Khalid works best with junior groups and first-time adult players who want a relaxed introduction rather than an intense one, often mixing the two so families can learn together. He is particularly attentive with nervous parents watching from the sidelines, happy to explain what their children are working on and why. Structured but never stiff, his coaching style has made him a popular choice for beginner packages built around younger members.",
+    "specialties": [
+      "beginners",
+      "juniors"
+    ],
+    "languages": [
+      "Arabic",
+      "English"
+    ],
+    "level_focus": "beginner",
+    "years_experience": 87,
+    "rate_per_hour_aed": 250,
+    "internal_phone": "+971-50-508-7028",
+    "internal_email": "k.mazrouei@internal.baseline.example"
+  }
+]

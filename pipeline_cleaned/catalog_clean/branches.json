@@ -1,0 +1,238 @@
+[
+  {
+    "id": "br_alquoz",
+    "name": "Baseline Al Quoz",
+    "emirate": "Dubai",
+    "area": "Al Quoz Industrial 3",
+    "coordinates": {
+      "lat": 25.1421,
+      "lng": 55.2384
+    },
+    "description": "Tucked among the warehouses, art galleries, and design studios of Al Quoz Industrial 3, Baseline Al Quoz has a raw, converted-warehouse energy that feels distinct from the group's more polished suburban branches. Exposed ducting, concrete floors, and tall industrial ceilings over the indoor courts give the place a stripped-back, almost loft-like feel, while the four outdoor courts sit on a rooftop deck catching the breeze during the cooler months. With six indoor and four outdoor courts, the split works well for players who want reliable air-conditioned sessions during summer alongside open-air evening matches once temperatures ease. Parking is plentiful and free, sprawled across the surrounding industrial plots, though it can feel a touch improvised compared with mall-adjacent branches. The cafe leans casual and creative, with strong coffee, simple all-day plates, and a communal bench seating area that draws as many laptop-toting regulars as it does players. The crowd here is an eclectic mix of creative professionals from nearby studios, weekend hobbyists, and a loyal contingent of after-work leagues, giving it a slightly more laid-back, community feel than the group's flagship venues. Evenings and weekends are consistently busy, particularly once the sun dips and the rooftop courts fill up, while weekday mornings offer a quieter, more relaxed window for casual games or coaching sessions.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "kids_area",
+      "padel_shop"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-4-246-5537",
+    "court_count": 10
+  },
+  {
+    "id": "br_jvc",
+    "name": "Baseline JVC",
+    "emirate": "Dubai",
+    "area": "Jumeirah Village Circle",
+    "coordinates": {
+      "lat": 25.0587,
+      "lng": 55.2093
+    },
+    "description": "Baseline JVC sits at the heart of one of Dubai's busiest residential circles, and it feels exactly like that: a community court rather than a destination venue. Eight courts split evenly between four indoor and four outdoor give members options whatever the season, with the indoor courts filling first once the sun gets serious and the outdoor ones drawing a steady crowd through the cooler months when evening play under lights becomes the real draw. Parking is plentiful and unfussy, with direct access from the circle's main loop road, so pre-match faff is kept to a minimum. The cafe leans casual, think all-day breakfasts, protein-heavy wraps, and a coffee counter that keeps regulars fuelled between back-to-back matches, with a handful of tables spilling out to watch the outdoor courts. The crowd here is a genuine mix, young professionals living nearby, families with juniors in weekend clinics, and a fair number of walk-up players who booked that morning rather than weeks in advance. It suits players who want a straightforward, no-pretence club experience, strong on playability, light on ceremony. Evenings from midweek onward get properly busy, and weekend mornings fill quickly too, so early booking pays off. Compared to some of the group's more polished branches, JVC has a rougher, friendlier energy, the kind of place where everybody seems to know the guy running the stringing machine.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "gym",
+      "kids_area",
+      "physio",
+      "pro_shop"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-4-373-7089",
+    "court_count": 8
+  },
+  {
+    "id": "br_yas",
+    "name": "Baseline Yas Island",
+    "emirate": "Abu Dhabi",
+    "area": "Yas Island",
+    "coordinates": {
+      "lat": 24.4991,
+      "lng": 54.6086
+    },
+    "description": "Baseline Yas Island sits at the heart of one of the emirate's busiest leisure districts, and the branch carries that same buzz. With nine courts in total, five tucked indoors under cool, consistent lighting and four open to the sky, the club gives players a genuine choice depending on mood and weather, from crisp air-conditioned rallies during the warmer months to balmy evening sessions outdoors once the heat eases off. The atmosphere leans social and energetic, drawing a mix of island residents, weekend visitors, and groups making a day of it alongside nearby attractions. Parking is plentiful and straightforward, with well-lit bays close to the entrance, so arriving with kit bags and children in tow is never a hassle. The on-site cafe has become something of a gathering point in its own right, serving strong coffee, fresh juices, and light meals to players refuelling between matches or spectators settling in to watch. Expect a friendly, slightly buzzier crowd than your typical neighbourhood club, with plenty of first-timers alongside regulars who treat the place as a social fixture. Evenings and weekends are, unsurprisingly, the busiest stretch, particularly once the sun dips and the outdoor courts fill with players chasing the cooler air, so early bookings are worth making. It suits players who want variety, a lively backdrop, and the option to move between indoor and outdoor play as the day unfolds.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "gym",
+      "padel_shop"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-2-568-2885",
+    "court_count": 9
+  },
+  {
+    "id": "br_khalifa",
+    "name": "Baseline Khalifa City",
+    "emirate": "Abu Dhabi",
+    "area": "Khalifa City A",
+    "coordinates": {
+      "lat": 24.4194,
+      "lng": 54.5776
+    },
+    "description": "Baseline Khalifa City has the feel of a neighbourhood club that just happens to have eight courts, three of them tucked indoors for the months when the outdoor glass panels turn into a sauna by mid-morning. It sits comfortably within Khalifa City A, drawing a crowd that's heavy on families, compound residents, and groups of friends who treat their weekly match as much as a social fixture as a workout. Parking is generous and unfussy, with space rarely an issue even when the car park fills up around peak evening slots. The five outdoor courts get booked out fast once the weather turns kind, while the indoor trio keeps the schedule steady through the hotter stretches, giving this branch a rhythm that shifts with the seasons rather than staying flat all year. The on-site cafe leans toward comfort over polish, serving proper coffee, fresh juices, and enough shawarma wraps and protein bowls to keep both post-match players and waiting parents happy. Evenings and weekends are when the place really comes alive, with junior clinics filling the mornings and the courts humming with mixed doubles by sunset. It suits players who want a relaxed, community feel rather than a slick corporate one, and regulars will tell you the club's real charm lies in how well the staff know your name and your usual court preference.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "gym",
+      "padel_shop",
+      "physio"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-2-876-8769",
+    "court_count": 8
+  },
+  {
+    "id": "br_alain",
+    "name": "Baseline Al Ain",
+    "emirate": "Abu Dhabi",
+    "area": "Al Jimi, Al Ain",
+    "coordinates": {
+      "lat": 24.2075,
+      "lng": 55.7447
+    },
+    "description": "Baseline Al Ain occupies a quieter corner of Al Jimi, and it plays that way — unhurried, community-minded, and shaped by the inland calm that sets Al Ain apart from its coastal siblings. All six courts sit open to the sky, making the most of the city's famously gentler climate; play here leans toward early mornings and evenings, when the air cools and the courts fill with regulars who know each other by name. There's no indoor option, so the rhythm of the club follows the sun rather than a schedule, with the cooler months bringing out the biggest crowds and long queues for the later slots. Parking is straightforward and rarely a concern, with a wide open lot right by the entrance that suits family cars and group arrivals alike. The cafe leans homely rather than polished — good coffee, proper breakfasts, and a shaded terrace where matches get replayed in detail long after they've finished. The crowd is a mix of long-time Al Ain residents, university players, and families treating the club as a weekend fixture rather than a fitness chore. It suits players who want space, a slower pace, and a genuine sense of neighbourhood rather than spectacle. Weekends and evenings are busiest; midweek afternoons remain a good bet for anyone wanting the courts largely to themselves.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "gym",
+      "kids_area",
+      "pro_shop"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-3-319-9641",
+    "court_count": 6
+  },
+  {
+    "id": "br_majaz",
+    "name": "Baseline Al Majaz",
+    "emirate": "Sharjah",
+    "area": "Al Majaz 3",
+    "coordinates": {
+      "lat": 25.3213,
+      "lng": 55.3865
+    },
+    "description": "Baseline Al Majaz sits close to the waterfront buzz of Al Majaz 3, and that easy, sociable energy carries straight into the club. With seven courts in total, four tucked away indoors and three set outdoors beneath shaded surrounds, it's a branch built for year-round flexibility, whether players want the open air during the cooler months or a controlled, breeze-cooled setting when the sun has other plans. The atmosphere leans lively rather than clinical: rallies are punctuated by laughter from the seating areas, and there's a genuine community feel among regulars who treat the place as much a social base as a sports venue. It suits a broad mix, from competitive weekend leaguers to families easing into their first sessions together, and evenings tend to draw a younger, more energetic crowd that spills over into the café long after matches finish. Parking is straightforward, with dedicated bays close to the entrance, so there's little of the circling around that busier corners of the emirate are known for. The on-site café is a highlight in its own right, serving proper coffee and light, freshly made bites that make it easy to linger. Expect the courts to fill quickly on weekend evenings and during the milder months generally, so early bookings are worth making if you have a preferred slot in mind.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "kids_area",
+      "physio",
+      "prayer_room"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-6-494-2606",
+    "court_count": 7
+  },
+  {
+    "id": "br_ajman",
+    "name": "Baseline Ajman Corniche",
+    "emirate": "Ajman",
+    "area": "Al Rashidiya 2",
+    "coordinates": {
+      "lat": 25.4052,
+      "lng": 55.4384
+    },
+    "description": "Baseline Ajman Corniche sits just back from the waterfront in Al Rashidiya 2, and it carries a relaxed, breezy character that feels distinctly coastal compared to the rest of the group. The six-court setup, two indoor and four outdoor, means play carries on comfortably regardless of the weather, with the outdoor courts especially popular in the cooler months when players linger long after their booking has ended. The atmosphere leans social rather than intensely competitive, drawing a mix of families, retirees looking for a gentle hitting session, and groups of friends who treat the evening slot as much as a social outing as a workout. Parking is straightforward, with a dedicated lot right beside the entrance that rarely feels stretched even during weekend peaks. The on-site cafe is a genuine draw in its own right, serving proper coffee and simple all-day plates, and its corniche-facing seating area has become something of a meeting point for members before and after matches. Evenings and weekend mornings are the busiest stretches, particularly once the sea breeze picks up and outdoor conditions turn ideal. Beginners tend to gravitate here thanks to the unhurried pace and approachable staff, though the indoor courts see plenty of use from those wanting a more focused, climate-controlled session. Altogether, it's a branch built around ease, community, and a proper sense of place by the water.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "gym",
+      "prayer_room",
+      "pro_shop"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-6-550-7131",
+    "court_count": 6
+  },
+  {
+    "id": "br_rak",
+    "name": "Baseline RAK Marina",
+    "emirate": "Ras Al Khaimah",
+    "area": "Al Hamra Marina",
+    "coordinates": null,
+    "description": "Set along the waterline at Al Hamra Marina, this branch trades the urban hum of the bigger cities for something altogether more unhurried. Boats bob gently beyond the outdoor courts, and there's a leisurely, holiday-club feel that suits players who want their padel with a side of sea air rather than a queue. The three outdoor courts catch the marina breeze and are the ones to book during the cooler months, when late-afternoon sessions run right into a lingering dusk; the three indoor courts, cooled and steady, take the strain once the sun properly asserts itself. Parking is plentiful and unhurried too, with space right beside the entrance, so there's none of the circling you get at busier clubs. The cafe leans relaxed rather than rushed, with shaded seating that looks out over the water, popular with families lingering after junior coaching and with retirees who treat the club as a daily fixture. The crowd here is a genuine mix, longer-term residents of the marina community, weekending visitors from further along the coast, and a loyal core of members who know the staff by name. Weekday mornings are calm and sociable, while weekend evenings, particularly once temperatures ease, draw the fullest courts and the liveliest cafe tables. It's a branch built for people who want their game folded into a slower, more scenic kind of day.",
+    "amenities": [
+      "cafe",
+      "showers",
+      "parking",
+      "kids_area",
+      "physio",
+      "prayer_room"
+    ],
+    "opening_hours": {
+      "sun": "06:00-00:00",
+      "mon": "06:00-00:00",
+      "tue": "06:00-00:00",
+      "wed": "06:00-00:00",
+      "thu": "06:00-00:00",
+      "fri": "06:00-00:00",
+      "sat": "06:00-00:00"
+    },
+    "phone": "+971-7-355-6472",
+    "court_count": 6
+  }
+]
