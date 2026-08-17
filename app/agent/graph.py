@@ -6,8 +6,8 @@
 `plan` is one cheap structured call that normalises the query to English, resolves
 cross-turn references against what was shown last turn, and flags obvious out-of-scope
 asks. `answer` is the grounded generation loop with tools bound. `alternate` is the
-refusal branch, taken when the planner has already flagged the request as out of scope
-or as asking for private staff details.
+cheap terminal branch, taken when the planner has already flagged the request as out of
+scope or as asking for private staff details, and for abuse that asks for nothing.
 
 The split exists for two reasons beyond tidiness: it gives LangSmith a per-node
 breakdown of latency, tokens and cost, and it lets us skip work -- an out-of-scope
@@ -59,6 +59,9 @@ It is FALSE for every ordinary question about our own branches, courts, coaches,
 classes, packages, prices, availability, policies or reviews -- including counting
 questions ("how many coaches in Ajman"), comparisons ("which branch has the best
 reviews"), and questions whose answer happens to be no. Default to false when unsure.
+Judge only what is being asked for. Insults, swearing and complaints in the message
+change nothing: ignore them and decide on the request that remains. "Your staff are
+idiots, how much is a court at night?" is a price question, so out_of_scope is false.
 
 asks_for_personal_data is true ONLY for a staff member's private details: personal or
 mobile phone number, personal or work email address, home address, salary.
@@ -158,13 +161,17 @@ This request is for a staff member's private details. Decline, and offer the bra
 public phone number as the way to reach them.
 """
 
-# Register only, never routing. Measured on nano this flag fires on 4/4 ordinary
-# complaints as well as on real abuse, and three prompt variants did not separate them.
-# A misread is only affordable because the user still gets their answer and their tools:
-# the worst case is an angry customer answered a little more evenly than they needed.
 HOSTILE_RULE = """
 The user is angry, and may be insulting. Do not argue, do not apologise at length, and
 do not comment on their tone. Answer the question they asked, plainly and briefly.
+"""
+
+# alternate only sees abuse that asked for nothing, and its own prompt is built around
+# declining a request. Without this it declines one that was never made.
+NOTHING_ASKED_RULE = """
+The user is venting and has not asked for anything. There is nothing to decline. Reply
+with one level sentence offering to help with courts, coaches, classes or bookings. Do
+not argue, do not lecture them, and do not comment on their tone.
 """
 
 
@@ -264,6 +271,8 @@ def alternate_node(state: AgentState) -> dict:
         system += OUT_OF_SCOPE_RULE
     if plan.get("asks_for_personal_data"):
         system += PERSONAL_DATA_RULE
+    if plan.get("tone") == "hostile" and not _asks_anything(plan):
+        system += NOTHING_ASKED_RULE
     if state.get("context"):
         system += (
             "\nWhat you showed the user last turn, so a follow-up refusal reads in "
@@ -280,15 +289,28 @@ def alternate_node(state: AgentState) -> dict:
 def after_plan(state: AgentState) -> str:
     """A refusal the planner is already certain of does not need the tool loop.
 
-    Note what does *not* divert here: tone. Measured on the planner model, `hostile`
-    fires on 4/4 ordinary complaints ("this app is a joke, it lost my booking") as well
-    as on real abuse, so letting it route would strip tools from exactly the customers
-    who most need an answer. Tone only sets register, inside answer_node.
+    Abuse diverts only when it asks for nothing. Pure venting costs a full grounded call
+    with every tool schema attached to reply "I am here to help", which the cheap node
+    does for an eighth of the price -- but the tone flag alone is the wrong test for it.
+    Measured over 7 abusive messages that each carried a real question, nano called the
+    six English ones neutral and the Arabic one hostile, 5 runs out of 5. Routing on
+    tone would therefore have answered English customers and deflected Arabic ones
+    asking the same thing. The question mark is the honest signal, and english_query
+    supplies it in both languages for free: the planner has already rewritten the
+    message into English, so the "?" survives even where the tone judgement does not.
     """
     plan = state.get("plan") or {}
     if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return "alternate"
+    if plan.get("tone") == "hostile" and not _asks_anything(plan):
+        return "alternate"
     return "answer"
+
+
+def _asks_anything(plan: dict) -> bool:
+    """Both marks, because a degraded planner leaves english_query as the raw message."""
+    query = plan.get("english_query") or ""
+    return "?" in query or "؟" in query
 
 
 
