@@ -10,9 +10,6 @@ from __future__ import annotations
 
 import re
 
-# ponytail: duplicated in spirit with NOISE_PATTERNS in app/ingest.py, which
-# screens noisy reviews out of the search index. Different job, different
-# package, three lines — unify only if a third consumer appears.
 NOISE_PATTERNS = re.compile(
     r"<[a-z]+[^>]*>"                    # raw HTML tags
     r"|session (has )?expired"

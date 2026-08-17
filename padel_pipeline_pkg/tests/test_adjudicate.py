@@ -137,8 +137,6 @@ def test_list_conflict_under_quarantine_authority_is_quarantined_not_crashed():
 
 
 def test_extraction_failure_records_an_issue_and_leaves_an_empty_claim():
-    """extractor returning None (an API error or a refusal) must never fall back
-    to a guess: collect_claims records it and stores an empty claim object."""
     data = {"courts": [_court("c1", "indoor"), _court("c2", "indoor")]}
     ledger = Ledger()
     ok_claim = CourtClaims(type={"value": "outdoor", "stated": True,

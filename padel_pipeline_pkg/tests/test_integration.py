@@ -1,27 +1,4 @@
-"""In-process integration test against the real shipped data.
-
-No API key and no subprocess: claims are hand-authored the way test_adjudicate.py
-authors them, standing in for what the LLM would extract from these specific
-descriptions (each evidence string below is a verbatim quote from the real
-catalog text). The fixture is routed through the real collect_claims, so the
-real prose gate (is_prose) decides what happens to the two noise-description
-courts — they reach their unflipped state by the actual mechanism, not by
-fixture fiat. This exercises the actual reconciliation pipeline —
-collect_claims -> adjudicate -> resolve -> verify_post_fix — against the real
-data, rather than a weaker offline stand-in for it. run_pipeline.py's own
-wiring (arg parsing, writing catalog_clean/structured_clean, the
-LLM-required hard-fail) is verified by running it for real in the next task,
-against a human-reviewed diff.
-
-The records covered here are exactly the ones that matter: the eight
-court/description type disputes (two of which are noise-description courts —
-see COURT_CLAIMS below), every branch's stated indoor/outdoor split, the one
-shipped inverted-age class, the one sentinel-priced package, and the three
-coaches whose shipped years_experience is implausible (87) but whose bios
-state the real figure. Every other record's stub-extractor call returns an
-empty claim object — "text says nothing" is the honest default collect_claims
-would also produce for anything the LLM declines to extract.
-"""
+"""Integration test: real shipped data, no API key, no subprocess."""
 import json
 from pathlib import Path
 
@@ -39,7 +16,6 @@ STRUCTURED = ["price_rules", "bookings", "coach_schedules", "slots"]
 
 
 def _load_data() -> dict:
-    """Read-only: catalog/ and structured/ are the source of truth and are never written to."""
     data = {}
     for name in CATALOG + STRUCTURED:
         folder = "catalog" if name in CATALOG else "structured"
@@ -51,16 +27,6 @@ def _claim(value, evidence: str, confidence: float = 0.9) -> dict:
     return {"value": value, "stated": True, "evidence": evidence, "confidence": confidence}
 
 
-# -- courts: the eight description/type disputes in the shipped data -------
-# crt_alquoz_sc03 and crt_majaz_sc01 are two of the three noise-description
-# courts (crt_rak_rc02, the third, isn't disputed). They are deliberately
-# absent from this dict: collect_claims runs the real is_prose gate on every
-# record before it ever calls the stub extractor below, and their shipped
-# descriptions fail that gate (confirmed against test_prose.py's frozen
-# KNOWN_NOISE set) — so the stub is never even asked for a claim on them, and
-# they get an "unusable_text" ledger issue plus an empty CourtClaims() by the
-# same real code path a live LLM extractor would go through. That's the
-# mechanism test_noise_gated_courts_produce_no_claim below checks.
 COURT_CLAIMS = {
     "crt_jvc_pc04": CourtClaims(type=_claim(
         "outdoor", "An open-air court with nothing overhead but sky")),
@@ -68,11 +34,6 @@ COURT_CLAIMS = {
         "indoor", "A fully enclosed, air-conditioned court with a sealed roof")),
     "crt_yas_sc02": CourtClaims(type=_claim(
         "indoor", "A fully enclosed, air-conditioned court with a sealed roof")),
-    # Real prose (passes the prose gate) but generic marketing boilerplate, not
-    # a genuine description of the court — it only carries the bare word
-    # "indoor" among a keyword list. A real extractor could plausibly still
-    # pull this as a low-confidence claim; either way it must not win, because
-    # br_khalifa's stated split already matches the shipped data exactly.
     "crt_khalifa_sc01": CourtClaims(type=_claim("indoor", "indoor", confidence=0.65)),
     "crt_alain_sc04": CourtClaims(type=_claim(
         "outdoor", "An open-air court with nothing overhead but sky")),
@@ -80,7 +41,6 @@ COURT_CLAIMS = {
         "indoor", "A fully enclosed, air-conditioned court with a sealed roof")),
 }
 
-# -- branches: every stated indoor/outdoor split, verbatim from the real prose --
 BRANCH_CLAIMS = {
     "br_alquoz": BranchClaims(
         indoor_courts=_claim(6, "six indoor and four outdoor courts"),
@@ -108,19 +68,16 @@ BRANCH_CLAIMS = {
         outdoor_courts=_claim(3, "The three outdoor courts")),
 }
 
-# -- the one shipped inverted-age class (min_age=21, max_age=15) ------------
 CLASS_CLAIMS = {
     "cls_junior_academy_yas": ClassClaims(
         min_age=_claim(9, "aged nine to fifteen"),
         max_age=_claim(15, "aged nine to fifteen")),
 }
 
-# -- the one sentinel-priced package (price_aed=99999) -----------------------
 PACKAGE_CLAIMS = {
     "pkg_prime_evening_10_pack": PackageClaims(price_aed=_claim(1450, "AED 1450")),
 }
 
-# -- the three coaches shipped with an implausible years_experience (87) ----
 COACH_CLAIMS = {
     "cch_ricardo_duarte": CoachClaims(years_experience=_claim(
         13, "thirteen years of experience spanning both playing and coaching")),
@@ -138,21 +95,11 @@ OVERRIDES = {
     "coaches": COACH_CLAIMS,
 }
 
-# The branch-split constraint must veto every one of these five, either because
-# the court's own description never produces a claim (the two noise courts) or
-# because flipping it would break its branch's stated indoor/outdoor split.
 FALSE_POSITIVES = {"crt_alquoz_sc03", "crt_yas_sc02", "crt_khalifa_sc01",
                     "crt_majaz_sc01", "crt_ajman_sc02"}
 
 
 def _stub_extractor(entity: str, record: dict, text: str):
-    """Stands in for llm.Extractor.extract: same signature, no network call.
-
-    collect_claims only reaches this for records whose text already passed
-    the real is_prose gate, so this never needs to reimplement that check —
-    it just answers "what would the LLM have found" for the records this
-    fixture hand-authors, and "nothing" for everything else.
-    """
     schema = CLAIM_MODELS[entity]
     return OVERRIDES.get(entity, {}).get(record["id"], schema())
 
@@ -183,9 +130,6 @@ def test_false_positive_courts_are_not_flipped(result):
 
 
 def test_noise_gated_courts_produce_no_claim(result):
-    """crt_alquoz_sc03 and crt_majaz_sc01 are absent from COURT_CLAIMS on purpose:
-    this confirms it's the real is_prose gate, not the fixture, keeping them
-    unflipped — collect_claims never reaches the stub extractor for either."""
     _, ledger, _ = result
     noisy = {i.entity_id for i in ledger.issues if i.issue_type == "unusable_text"}
     assert {"crt_alquoz_sc03", "crt_majaz_sc01"} <= noisy

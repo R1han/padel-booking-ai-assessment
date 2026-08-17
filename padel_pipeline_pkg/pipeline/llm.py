@@ -20,7 +20,7 @@ from .claims import CLAIM_MODELS
 log = logging.getLogger("pipeline.llm")
 
 MODEL = "claude-opus-5"
-MAX_TOKENS = 16000  # thinking is on by default on Opus 5 and shares this budget
+MAX_TOKENS = 16000 
 
 SYSTEM = """You extract structured claims from padel-club catalogue copy.
 

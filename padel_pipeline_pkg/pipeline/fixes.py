@@ -12,16 +12,13 @@ from collections import Counter
 from .ledger import Ledger, Issue, Action
 from .checks_rules import day_type, PRICE_SENTINELS
 
-AGREEMENT_MIN = 0.8   # modal share required to auto-apply an inferred court price
-
+AGREEMENT_MIN = 0.8   
 
 def _index(data: dict, entity: str) -> dict:
     return {r["id"]: r for r in data.get(entity, [])}
 
 
-# ---------------------------------------------------------------------------
 # Court price inference by inverting slot prices through price rules
-# ---------------------------------------------------------------------------
 def infer_court_price(court: dict, slots: list[dict], price_rules: list[dict]) -> tuple[int | None, float, str]:
     rules_idx = {}
     for r in price_rules:

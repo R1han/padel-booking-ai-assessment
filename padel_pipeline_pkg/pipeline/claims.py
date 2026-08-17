@@ -24,7 +24,6 @@ class FieldClaim(BaseModel):
     confidence: float = 0.0
 
 
-# -- enum-constrained claims -------------------------------------------------
 class TypeClaim(FieldClaim):
     value: Literal["indoor", "outdoor"] | None = None
 

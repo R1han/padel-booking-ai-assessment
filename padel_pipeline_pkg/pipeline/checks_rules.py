@@ -27,8 +27,7 @@ PRICE_SENTINELS = {99999, 9999, -1, 0}
 YEXP_MAX_PLAUSIBLE = 40
 
 # Dataset-verified: slot prices match rules 1664/1680 under Fri/Sat weekend vs 1224 under Sat/Sun.
-WEEKEND_WEEKDAYS = (4, 5)  # Friday, Saturday
-
+WEEKEND_WEEKDAYS = (4, 5)  
 
 def day_type(iso_date: str) -> str:
     wd = datetime.date.fromisoformat(iso_date).weekday()

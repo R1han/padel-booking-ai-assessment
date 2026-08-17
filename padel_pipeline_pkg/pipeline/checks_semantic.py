@@ -12,9 +12,7 @@ import re
 
 from .checks_rules import day_type, PRICE_SENTINELS
 
-# ---------------------------------------------------------------------------
 # Court type vs description
-# ---------------------------------------------------------------------------
 OUTDOOR_KW = [
     "open-air", "open air", "outdoor", "under the sky", "nothing overhead",
     "no roof", "no shade", "desert breeze", "floodlit", "sun drops",
@@ -70,9 +68,7 @@ def price_band_evidence(court: dict, slots: list[dict], price_rules: list[dict])
     return result
 
 
-# ---------------------------------------------------------------------------
 # Coach bio extraction: years of experience, languages
-# ---------------------------------------------------------------------------
 WORD_NUM = {
     "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
     "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
@@ -127,16 +123,12 @@ def extract_languages_from_bio(bio: str) -> tuple[list[str], str]:
     return found, " / ".join(ev_sentences[:2])
 
 
-# ---------------------------------------------------------------------------
 # Class ages vs description
-# ---------------------------------------------------------------------------
 AGE_RANGE_PAT = re.compile(r"\b(?:aged?|ages?)\s+(\d{1,2})\s*(?:to|-|–|and)\s*(\d{1,2})", re.I)
 AGE_MIN_PAT = re.compile(r"\b(?:aged?|ages?)\s+(\w+|\d{1,2})\s+(?:and\s+(?:over|above|up)|\+)", re.I)
 
 
-# ---------------------------------------------------------------------------
 # Package description vs structured numbers
-# ---------------------------------------------------------------------------
 TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50}
 
 
