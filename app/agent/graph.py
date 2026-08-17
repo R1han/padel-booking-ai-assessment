@@ -49,6 +49,7 @@ Return JSON with exactly these keys:
       using the context below. Keep proper nouns as written.
   "out_of_scope": see the rule below.
   "asks_for_personal_data": see the rule below.
+  "tone": "neutral" or "hostile" -- see the rule below.
   "referenced_ids": ids from the context below that the message points at, or [].
 
 out_of_scope is true ONLY when the club could not possibly serve the request:
@@ -63,6 +64,14 @@ asks_for_personal_data is true ONLY for a staff member's private details: person
 mobile phone number, personal or work email address, home address, salary.
 It is FALSE for a coach's name, specialities, experience, rates or working hours, and
 FALSE for a branch's public phone number. Default to false when unsure.
+
+tone is "hostile" when the message insults a person -- staff, the club's people, or you
+-- and "neutral" otherwise, which is the default. Casual wording is not a tone: slang,
+emoji, lowercase and "lol" are neutral. Anger about the service, the prices or a failed
+booking is a complaint, and complaints are neutral.
+  "yo any courts tonight lol" -> neutral
+  "this is ridiculous, my booking failed twice" -> neutral
+  "your bot is useless, you people are idiots" -> hostile
 
 Context from the previous turn (may be empty):
 {context}
@@ -149,6 +158,15 @@ This request is for a staff member's private details. Decline, and offer the bra
 public phone number as the way to reach them.
 """
 
+# Register only, never routing. Measured on nano this flag fires on 4/4 ordinary
+# complaints as well as on real abuse, and three prompt variants did not separate them.
+# A misread is only affordable because the user still gets their answer and their tools:
+# the worst case is an angry customer answered a little more evenly than they needed.
+HOSTILE_RULE = """
+The user is angry, and may be insulting. Do not argue, do not apologise at length, and
+do not comment on their tone. Answer the question they asked, plainly and briefly.
+"""
+
 
 
 # Stated separately and last so it cannot be diluted by the rest of the prompt. Without
@@ -205,7 +223,7 @@ def plan_node(state: AgentState) -> dict:
     """Normalise the query and resolve cross-turn references before any retrieval."""
     message = _last_user_text(state)
     plan: dict[str, Any] = {
-        "language": "en", "english_query": message,
+        "language": "en", "english_query": message, "tone": "neutral",
         "out_of_scope": False, "asks_for_personal_data": False, "referenced_ids": [],
     }
     if not llm.has_credentials():
@@ -260,7 +278,13 @@ def alternate_node(state: AgentState) -> dict:
 
 
 def after_plan(state: AgentState) -> str:
-    """A refusal the planner is already certain of does not need the tool loop."""
+    """A refusal the planner is already certain of does not need the tool loop.
+
+    Note what does *not* divert here: tone. Measured on the planner model, `hostile`
+    fires on 4/4 ordinary complaints ("this app is a joke, it lost my booking") as well
+    as on real abuse, so letting it route would strip tools from exactly the customers
+    who most need an answer. Tone only sets register, inside answer_node.
+    """
     plan = state.get("plan") or {}
     if plan.get("out_of_scope") or plan.get("asks_for_personal_data"):
         return "alternate"
@@ -293,6 +317,8 @@ def answer_node(state: AgentState) -> dict:
         system += "\nThis looks outside what the club offers. Verify, then say so plainly.\n"
     if plan.get("asks_for_personal_data"):
         system += "\nThis asks for private staff details. Decline and offer the branch line.\n"
+    if plan.get("tone") == "hostile":
+        system += HOSTILE_RULE
     language = detect_language(_last_user_text(state))
     system += "\n" + LANGUAGE_RULE[language]
 

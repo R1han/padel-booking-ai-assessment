@@ -262,6 +262,33 @@ def _claims() -> int:
         return conn.execute("SELECT count(*) c FROM slot_claims").fetchone()["c"]
 
 
+def test_one_request_cannot_take_the_estate_off_the_market():
+    """/chat is unauthenticated and the agent will hold whatever it is asked to hold, so
+    the cap is the only thing between one request and the whole club's inventory. This
+    is deliberately not a judgement about the request's tone: a script asking for 200
+    slots does not sound like a joke, and a model gate would wave it through."""
+    from app.config import settings
+
+    cap = settings().booking_max_slots_per_request
+    with db.read_conn() as conn:
+        greedy = [r["id"] for r in conn.execute(
+            "SELECT id FROM slots WHERE id NOT IN (SELECT slot_id FROM slot_claims)"
+            " AND id NOT IN (SELECT slot_id FROM slot_overhang) LIMIT ?", (cap + 50,)
+        ).fetchall()]
+    assert len(greedy) > cap, "fixture needs more free slots than the cap"
+
+    before = _claims()  # the shipped data already carries thousands of legacy bookings
+    with pytest.raises(booking.InvalidRequest):
+        booking.create_hold(greedy, 60, "greedy")
+    with pytest.raises(booking.InvalidRequest):
+        booking.create_booking(greedy, "usr_greedy", 60)
+    assert _claims() == before, "a rejected request must not claim anything"
+
+    # The cap sits above every real group booking, so it costs legitimate users nothing.
+    option = _group_option(courts=3)
+    assert len(booking.create_hold(option["slot_ids"], 60, "legit-group").slot_ids) == 3
+
+
 # --- branch scoping in prose search -------------------------------------------------
 
 
@@ -433,6 +460,82 @@ def test_the_alternate_node_declines_personal_details_in_the_users_language(monk
     system = Recorder.messages[0].text
     assert "private" in system and "branch" in system
     assert system.endswith(agent_graph.LANGUAGE_RULE["ar"]), "Arabic asks get an Arabic reply"
+
+
+# --- tone ---------------------------------------------------------------------------
+#
+# Measured on nano, the tone flag scores 3/3 on real abuse and 4/4 FALSE POSITIVES on
+# ordinary complaints ("this app is a joke, it lost my booking"). Three prompt variants
+# did not shift it. So tone is not allowed to decide whether we answer -- it only sets
+# the register of an answer that happens anyway, which makes a misread free. Any change
+# that lets tone route, refuse or withhold tools reintroduces a cost we measured.
+
+
+def test_tone_never_decides_whether_we_answer():
+    from app.agent import graph as agent_graph
+
+    assert agent_graph.after_plan({"plan": {"tone": "hostile"}}) == "answer"
+    assert agent_graph.after_plan({"plan": {"tone": "neutral"}}) == "answer"
+    # And a genuine refusal still routes, whatever the tone alongside it.
+    assert agent_graph.after_plan(
+        {"plan": {"tone": "hostile", "out_of_scope": True}}) == "alternate"
+
+
+def test_an_abusive_message_still_gets_answered_with_tools(monkeypatch):
+    """The 4/4 false positives are only harmless while this holds. If hostility ever
+    costs the user their tools, every angry customer loses their answer."""
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+        bound = False
+
+        def bind_tools(self, tools):
+            Recorder.bound = True
+            return self
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("Ajman has 4 coaches.")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+
+    agent_graph.answer_node({
+        "messages": [HumanMessage("how many coaches in ajman you useless idiots")],
+        "plan": {"tone": "hostile"},
+        "loops": 0,
+    })
+
+    assert Recorder.bound, "an abusive message is still a question, and questions need tools"
+    assert agent_graph.HOSTILE_RULE in Recorder.messages[0].text
+
+
+def test_an_ordinary_request_is_not_told_to_manage_the_users_temper(monkeypatch):
+    from langchain_core.messages import AIMessage, HumanMessage
+
+    from app.agent import graph as agent_graph
+
+    class Recorder:
+        messages: list = []
+
+        def bind_tools(self, tools):
+            return self
+
+        def invoke(self, messages, *args, **kwargs):
+            Recorder.messages = messages
+            return AIMessage("...")
+
+    monkeypatch.setattr(agent_graph.llm, "get_model", lambda *a, **k: Recorder())
+
+    agent_graph.answer_node({
+        "messages": [HumanMessage("Book court AQ-1 tomorrow at 19:00")],
+        "plan": {"tone": "neutral"},
+        "loops": 0,
+    })
+
+    assert agent_graph.HOSTILE_RULE not in Recorder.messages[0].text
 
 
 # --- request limits ----------------------------------------------------------------
