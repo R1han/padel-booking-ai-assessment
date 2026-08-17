@@ -1,72 +1,106 @@
-"""Optional LLM tier for semantic checks.
+"""LLM claim extraction over the official Anthropic SDK.
 
-Only invoked for records the deterministic heuristics flag or cannot decide,
-which keeps API cost bounded (dozens of calls, not thousands).
-Requires ANTHROPIC_API_KEY in the environment; without it, get_llm() returns
-None and the pipeline runs heuristics-only.
+One call per catalog record. The response schema is enforced by the API via
+`messages.parse`, so there is no JSON to parse and no retry-on-parse loop.
+
+Without ANTHROPIC_API_KEY, get_llm() returns None and the caller falls back to
+pipeline/heuristics.py. The pipeline always runs to completion; without a key
+it simply finds less.
 """
 from __future__ import annotations
 
-import json
+import logging
 import os
 
-import requests
+import anthropic
+from pydantic import BaseModel
 
-API_URL = "https://api.anthropic.com/v1/messages"
-MODEL = "claude-sonnet-4-6"
+from .claims import CLAIM_MODELS
+
+log = logging.getLogger("pipeline.llm")
+
+MODEL = "claude-opus-5"
+MAX_TOKENS = 16000  # thinking is on by default on Opus 5 and shares this budget
+
+SYSTEM = """You extract structured claims from padel-club catalogue copy.
+
+Rules, both absolute:
+
+1. Return a field only if the text EXPLICITLY states it. If the text does not
+   mention a field, leave `stated` false and `value` null. Do not infer, do not
+   guess, and do not carry a value over from a neighbouring field. A plausible
+   answer you cannot point to in the text is a wrong answer.
+
+2. Every field you mark `stated` must carry a VERBATIM quote from the text in
+   `evidence` — copied character for character, not paraphrased.
+
+Note the difference between a field the text is silent about (`stated` false)
+and a field the text explicitly says is unbounded, such as a class open to all
+ages above a minimum (`stated` true, `value` null).
+
+`confidence` is how strongly the quote supports the value, 0 to 1."""
+
+ENTITY_NOUN = {
+    "courts": "padel court",
+    "coaches": "padel coach",
+    "classes": "padel class or course",
+    "packages": "membership or session package",
+    "branches": "padel club branch",
+}
 
 
-class AnthropicChecker:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
+def build_prompt(entity: str, text: str) -> str:
+    return (
+        f"Extract claims about this {ENTITY_NOUN[entity]} from the text below.\n"
+        f"Any field not explicitly stated in the text must be left unstated.\n\n"
+        f"---\n{text}\n---"
+    )
 
-    def _ask_json(self, prompt: str) -> dict | None:
+
+def verify_evidence(obj: BaseModel, text: str) -> BaseModel:
+    """Downgrade any stated claim whose evidence is not a verbatim quote.
+
+    An unquotable claim is an invented one. Cheap, deterministic, and it costs
+    nothing to run on every field.
+    """
+    haystack = " ".join(text.split()).lower()
+    for attr in obj.__class__.model_fields:
+        claim = getattr(obj, attr)
+        if not claim.stated:
+            continue
+        quote = " ".join((claim.evidence or "").split()).lower()
+        if not quote or quote not in haystack:
+            claim.stated = False
+            claim.confidence = 0.0
+            claim.evidence = f"discarded: quote not found in source text ({claim.evidence!r})"
+    return obj
+
+
+class Extractor:
+    def __init__(self, client: anthropic.Anthropic) -> None:
+        self.client = client
+
+    def extract(self, entity: str, record: dict, text: str) -> BaseModel | None:
+        """Return the entity's claim object, or None if the call failed."""
+        schema = CLAIM_MODELS[entity]
         try:
-            resp = requests.post(
-                API_URL,
-                headers={
-                    "x-api-key": self.api_key,
-                    "anthropic-version": "2023-06-01",
-                    "content-type": "application/json",
-                },
-                json={
-                    "model": MODEL,
-                    "max_tokens": 300,
-                    "system": "Respond ONLY with a single JSON object. No prose, no markdown fences.",
-                    "messages": [{"role": "user", "content": prompt}],
-                },
-                timeout=30,
+            resp = self.client.messages.parse(
+                model=MODEL,
+                max_tokens=MAX_TOKENS,
+                system=SYSTEM,
+                messages=[{"role": "user", "content": build_prompt(entity, text)}],
+                output_format=schema,
             )
-            resp.raise_for_status()
-            text = "".join(b.get("text", "") for b in resp.json()["content"] if b.get("type") == "text")
-            return json.loads(text.strip().removeprefix("```json").removesuffix("```").strip())
-        except Exception:
+        except anthropic.APIError as e:
+            log.warning("extraction failed for %s/%s: %s", entity, record.get("id"), e)
             return None
-
-    # -- verdicts --------------------------------------------------------
-    def classify_court_type(self, description: str) -> tuple[str | None, float, str]:
-        out = self._ask_json(
-            "Does this padel court description describe an INDOOR or OUTDOOR court?\n"
-            f"Description: {description}\n"
-            'Reply JSON: {"verdict": "indoor"|"outdoor"|"ambiguous", '
-            '"confidence": 0..1, "evidence": "short quote or reason"}'
-        )
-        if not out or out.get("verdict") not in ("indoor", "outdoor"):
-            return None, 0.0, "llm: ambiguous or unavailable"
-        return out["verdict"], float(out.get("confidence", 0.8)), f"llm: {out.get('evidence', '')}"
-
-    def extract_years(self, bio: str) -> tuple[int | None, str]:
-        out = self._ask_json(
-            "How many years of coaching/professional experience does this coach bio state? "
-            "If not stated, use null.\n"
-            f"Bio: {bio}\n"
-            'Reply JSON: {"years": int|null, "evidence": "short quote"}'
-        )
-        if not out or not isinstance(out.get("years"), int):
-            return None, "llm: not stated or unavailable"
-        return out["years"], f"llm: {out.get('evidence', '')}"
+        if resp.stop_reason == "refusal":
+            log.warning("extraction refused for %s/%s", entity, record.get("id"))
+            return None
+        return verify_evidence(resp.parsed_output, text)
 
 
-def get_llm() -> AnthropicChecker | None:
-    key = os.environ.get("ANTHROPIC_API_KEY")
-    return AnthropicChecker(key) if key else None
+def get_llm() -> Extractor | None:
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None
+    return Extractor(anthropic.Anthropic())
