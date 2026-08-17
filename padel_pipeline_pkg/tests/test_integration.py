@@ -3,21 +3,24 @@
 No API key and no subprocess: claims are hand-authored the way test_adjudicate.py
 authors them, standing in for what the LLM would extract from these specific
 descriptions (each evidence string below is a verbatim quote from the real
-catalog text). This exercises the actual reconciliation pipeline —
-adjudicate -> resolve -> verify_post_fix — against the real data, rather than
-a weaker offline stand-in for it. run_pipeline.py's own wiring (arg parsing,
-writing catalog_clean/structured_clean, the LLM-required hard-fail) is
-verified by running it for real in the next task, against a human-reviewed
-diff.
+catalog text). The fixture is routed through the real collect_claims, so the
+real prose gate (is_prose) decides what happens to the two noise-description
+courts — they reach their unflipped state by the actual mechanism, not by
+fixture fiat. This exercises the actual reconciliation pipeline —
+collect_claims -> adjudicate -> resolve -> verify_post_fix — against the real
+data, rather than a weaker offline stand-in for it. run_pipeline.py's own
+wiring (arg parsing, writing catalog_clean/structured_clean, the
+LLM-required hard-fail) is verified by running it for real in the next task,
+against a human-reviewed diff.
 
-The records covered here are exactly the ones that matter: the three
-noise-description courts, the eight court/description type disputes, every
-branch's stated indoor/outdoor split, the one shipped inverted-age class, the
-one sentinel-priced package, and the three coaches whose shipped
-years_experience is implausible (87) but whose bios state the real figure.
-Every other record gets an empty claim object — "text says nothing" is the
-honest default collect_claims would also produce for anything the LLM
-declines to extract.
+The records covered here are exactly the ones that matter: the eight
+court/description type disputes (two of which are noise-description courts —
+see COURT_CLAIMS below), every branch's stated indoor/outdoor split, the one
+shipped inverted-age class, the one sentinel-priced package, and the three
+coaches whose shipped years_experience is implausible (87) but whose bios
+state the real figure. Every other record's stub-extractor call returns an
+empty claim object — "text says nothing" is the honest default collect_claims
+would also produce for anything the LLM declines to extract.
 """
 import json
 from pathlib import Path
@@ -25,7 +28,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.checks_rules import run_rule_checks
-from pipeline.adjudicate import adjudicate
+from pipeline.adjudicate import adjudicate, collect_claims
 from pipeline.claims import CLAIM_MODELS, BranchClaims, ClassClaims, CoachClaims, CourtClaims, PackageClaims
 from pipeline.fixes import resolve, verify_post_fix
 from pipeline.ledger import Action, Ledger
@@ -50,11 +53,15 @@ def _claim(value, evidence: str, confidence: float = 0.9) -> dict:
 
 # -- courts: the eight description/type disputes in the shipped data -------
 # crt_alquoz_sc03 and crt_majaz_sc01 are two of the three noise-description
-# courts (crt_rak_rc02, the third, isn't disputed) — the prose gate would
-# exclude them for real, so no claim is ever produced: CourtClaims() (empty).
+# courts (crt_rak_rc02, the third, isn't disputed). They are deliberately
+# absent from this dict: collect_claims runs the real is_prose gate on every
+# record before it ever calls the stub extractor below, and their shipped
+# descriptions fail that gate (confirmed against test_prose.py's frozen
+# KNOWN_NOISE set) — so the stub is never even asked for a claim on them, and
+# they get an "unusable_text" ledger issue plus an empty CourtClaims() by the
+# same real code path a live LLM extractor would go through. That's the
+# mechanism test_noise_gated_courts_produce_no_claim below checks.
 COURT_CLAIMS = {
-    "crt_alquoz_sc03": CourtClaims(),
-    "crt_majaz_sc01": CourtClaims(),
     "crt_jvc_pc04": CourtClaims(type=_claim(
         "outdoor", "An open-air court with nothing overhead but sky")),
     "crt_jvc_sc01": CourtClaims(type=_claim(
@@ -138,13 +145,16 @@ FALSE_POSITIVES = {"crt_alquoz_sc03", "crt_yas_sc02", "crt_khalifa_sc01",
                     "crt_majaz_sc01", "crt_ajman_sc02"}
 
 
-def _build_claims(data: dict) -> dict:
-    claims = {}
-    for entity, schema in CLAIM_MODELS.items():
-        entity_overrides = OVERRIDES.get(entity, {})
-        for record in data.get(entity, []):
-            claims[(entity, record["id"])] = entity_overrides.get(record["id"], schema())
-    return claims
+def _stub_extractor(entity: str, record: dict, text: str):
+    """Stands in for llm.Extractor.extract: same signature, no network call.
+
+    collect_claims only reaches this for records whose text already passed
+    the real is_prose gate, so this never needs to reimplement that check —
+    it just answers "what would the LLM have found" for the records this
+    fixture hand-authors, and "nothing" for everything else.
+    """
+    schema = CLAIM_MODELS[entity]
+    return OVERRIDES.get(entity, {}).get(record["id"], schema())
 
 
 @pytest.fixture
@@ -152,7 +162,7 @@ def result():
     data = _load_data()
     ledger = Ledger()
     run_rule_checks(data, ledger)
-    claims = _build_claims(data)
+    claims = collect_claims(data, _stub_extractor, ledger)
     adjudicate(data, claims, ledger)
     resolve(data, ledger)
     problems = verify_post_fix(data, ledger)
@@ -170,6 +180,15 @@ def test_false_positive_courts_are_not_flipped(result):
     courts = {c["id"]: c["type"] for c in data["courts"]}
     for cid in FALSE_POSITIVES:
         assert courts[cid] == raw[cid], f"{cid} should not have been flipped"
+
+
+def test_noise_gated_courts_produce_no_claim(result):
+    """crt_alquoz_sc03 and crt_majaz_sc01 are absent from COURT_CLAIMS on purpose:
+    this confirms it's the real is_prose gate, not the fixture, keeping them
+    unflipped — collect_claims never reaches the stub extractor for either."""
+    _, ledger, _ = result
+    noisy = {i.entity_id for i in ledger.issues if i.issue_type == "unusable_text"}
+    assert {"crt_alquoz_sc03", "crt_majaz_sc01"} <= noisy
 
 
 def test_alain_sc04_is_corrected_to_outdoor(result):

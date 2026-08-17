@@ -1,6 +1,6 @@
-from pipeline.adjudicate import adjudicate
+from pipeline.adjudicate import adjudicate, collect_claims
 from pipeline.claims import BranchClaims, CoachClaims, CourtClaims, PackageClaims
-from pipeline.ledger import Action, Ledger
+from pipeline.ledger import Action, Ledger, Severity
 
 BRANCH = {"id": "br_x", "name": "Baseline X", "emirate": "Dubai", "area": "X",
           "court_count": 2, "amenities": [], "description": "d" * 200}
@@ -134,3 +134,33 @@ def test_list_conflict_under_quarantine_authority_is_quarantined_not_crashed():
     adjudicate(data, {("packages", "p1"): c}, ledger)
     assert data["packages"][0]["branch_ids"] == ["br_x"]
     assert _find(ledger, "packages", "branch_ids")[0].action == Action.QUARANTINED
+
+
+def test_extraction_failure_records_an_issue_and_leaves_an_empty_claim():
+    """extractor returning None (an API error or a refusal) must never fall back
+    to a guess: collect_claims records it and stores an empty claim object."""
+    data = {"courts": [_court("c1", "indoor"), _court("c2", "indoor")]}
+    ledger = Ledger()
+    ok_claim = CourtClaims(type={"value": "outdoor", "stated": True,
+                                 "evidence": "nothing overhead but sky", "confidence": 0.9})
+
+    def flaky_extractor(entity, record, text):
+        return None if record["id"] == "c1" else ok_claim
+
+    claims = collect_claims(data, flaky_extractor, ledger)
+
+    failed_issues = _find(ledger, "courts", "description")
+    failed_issues = [i for i in failed_issues if i.entity_id == "c1"]
+    assert len(failed_issues) == 1
+    issue = failed_issues[0]
+    assert issue.issue_type == "extraction_failed"
+    assert issue.severity == Severity.ERROR
+    assert issue.action == Action.QUARANTINED
+
+    failed_claim = claims[("courts", "c1")]
+    assert isinstance(failed_claim, CourtClaims)
+    for attr in failed_claim.__class__.model_fields:
+        assert getattr(failed_claim, attr).stated is False
+
+    assert not [i for i in ledger.issues if i.entity_id == "c2"]
+    assert claims[("courts", "c2")] is ok_claim
